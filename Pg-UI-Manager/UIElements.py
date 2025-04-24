@@ -2,7 +2,7 @@
 # reusing code is not something I know
 from math import sqrt
 import pygame as pg
-from modules.misc.helpers import mapRange, allIn, squish, fit, fill
+from .helpers import mapRange, allIn, squish, fit, fill
 from typing import Union, Optional, Callable, Dict, Iterable, Any
 
 numType = Union[int, float]
