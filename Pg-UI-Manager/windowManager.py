@@ -1,6 +1,6 @@
-from typing import Iterable, Optional, Union, Dict, List
+from typing import Iterable, Optional, Union, Dict
 import pygame as pg
-from modules.UI.UIElements import DynamicValue as DV, System
+from UIElements import DynamicValue as DV, System
 
 numType = Union[int, float]
 
