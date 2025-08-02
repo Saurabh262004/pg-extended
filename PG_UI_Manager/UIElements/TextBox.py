@@ -1,0 +1,39 @@
+from typing import Optional
+import pygame as pg
+from .Section import Section
+
+class TextBox:
+  def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, drawSectionDefault: Optional[bool] = False, centerText: Optional[bool] = True):
+    self.section = section
+    self.text = text
+    self.fontPath = fontPath
+    self.textColor = textColor
+    self.drawSectionDefault = drawSectionDefault
+    self.active = True
+    self.activeDraw = True
+    self.activeUpdate = True
+    self.centerText = centerText
+
+  def update(self):
+    if not (self.active and self.activeUpdate):
+      return None
+
+    self.section.update()
+
+    self.fontSize = max(10, int(self.section.height * .6))
+    self.font = pg.font.SysFont(self.fontPath, self.fontSize)
+
+    self.textSurface = self.font.render(self.text, True, self.textColor)
+    if self.centerText:
+      self.textRect = self.textSurface.get_rect(center=self.section.rect.center)
+    else:
+      self.textRect = self.textSurface.get_rect(midleft=self.section.rect.midleft)
+
+  def draw(self, surface: pg.surface.Surface, drawSection: Optional[bool] = None):
+    if not (self.active and self.activeDraw):
+      return None
+
+    if (drawSection is None and self.drawSectionDefault) or drawSection:
+      self.section.draw(surface)
+
+    surface.blit(self.textSurface, self.textRect)
