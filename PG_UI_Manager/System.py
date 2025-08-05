@@ -1,14 +1,9 @@
 from typing import Optional, Dict, Iterable, Union
 import pygame as pg
 from .helpers import allIn
-from .UIElements import Section
-from .UIElements import Circle
-from .UIElements import TextBox
-from .UIElements import Button
-from .UIElements import Toggle
-from .UIElements import Slider
+from .UIElements import Section, Circle, TextBox, Button, Toggle, Slider
 
-elementType = Union[Section, Circle, Button, Toggle, Slider]
+elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider]
 
 '''
 System is a class that represents a collection of UI elements and manages their processes, such as drawing, updating and event handling.
@@ -16,7 +11,7 @@ System is a class that represents a collection of UI elements and manages their 
 Parameters:
 - [Optional] surface:       A pygame surface to draw the elements on. If not provided, the system will be locked by default.
 - [Optional] preLoadState:  Whether the system should be locked in a pre-loaded state (default is False).
-                            If True, the system will not be able to draw or update until it is initiated with a surface.
+-                           If True, the system will not be able to draw or update until it is initiated with a surface.
 
 Usable methods:
 - addElement:    Adds a new UI element to the system.
