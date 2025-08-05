@@ -1,6 +1,6 @@
-from math import sqrt
 from typing import Union, Iterable, Optional
 from pygame import Surface as pgSurface, transform as pgTransform
+from math import sqrt
 
 numType = Union[int, float]
 

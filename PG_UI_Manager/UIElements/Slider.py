@@ -1,7 +1,7 @@
 from typing import Optional, Union, Iterable, Dict
 import pygame as pg
 from ..helpers import mapRange
-from .DynamicValue import DynamicValue
+from .Core import DynamicValue
 from .Section import Section
 from .Circle import Circle
 
@@ -10,6 +10,32 @@ backgroundType = Union[pg.Color, pg.surface.Surface]
 
 SLIDER_ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
+'''
+Slider is a class that represents a slider UI element.
+
+Parameters:
+- [required] orientation:             The orientation of the slider ('vertical' or 'horizontal').
+- [required] section:                 A Section object that defines the slider's base model (position and size).
+- [required] dragElement:             A Section or Circle object that represents the draggable element of the slider.
+- [required] valueRange:              A tuple or list containing the minimum and maximum values of the slider.
+- [required] scrollSpeed:             The speed at which the slider value changes when scrolling (pass a negative value for reverse scrolling).
+- [required] filledSliderBackground:  The background color or surface of the filled part of the slider.
+- [Optional] onChangeInfo:            A dictionary containing information for the onChange callback function.
+-                                     structure of the dictionary:
+-                                     {
+-                                       'callable':  Callable function to be called when the slider value changes.
+-                                       'params':    Parameters to pass to the callable function (default is None).
+-                                       'sendValue': Whether to send the slider value as a parameter to the callable function.
+-                                     }
+- [Optional] hoverToScroll:           Whether the slider should only scroll when the mouse is hovered over it (default is True).
+
+Usable methods:
+- update:      Updates the slider's dimensions and background based on the provided Section object.
+- draw:        Draws the slider on the provided surface.
+- checkEvent:  Checks for mouse button events and updates the slider value accordingly.
+- updateValue: Updates the slider value based on the current mouse position.
+- callback:    Calls the onChangeInfo callable with the current slider value and parameters.
+'''
 class Slider():
   def __init__(self, orientation: str, section: Section, dragElement: Union[Section, Circle], valueRange: Iterable[numType], scrollSpeed: numType, filledSliderBackground: backgroundType, onChangeInfo: Optional[Dict] = None, hoverToScroll: Optional[bool] = True):
     self.orientation = orientation
@@ -71,24 +97,24 @@ class Slider():
 
     if self.dragElementType == 'circle':
       if self.orientation == 'horizontal':
-        self.dragElement.dimensions['x'] = DynamicValue('customCallable', getDragElementPos, ('x', 'circle', self))
-        self.dragElement.dimensions['y'] = DynamicValue('customCallable', lambda section: section.y + (section.height / 2), self.section)
+        self.dragElement.dimensions['x'] = DynamicValue('callable', getDragElementPos, ('x', 'circle', self))
+        self.dragElement.dimensions['y'] = DynamicValue('callable', lambda section: section.y + (section.height / 2), self.section)
       else:
-        self.dragElement.dimensions['x'] = DynamicValue('customCallable', lambda section: section.x + (section.width / 2), self.section)
-        self.dragElement.dimensions['y'] = DynamicValue('customCallable', getDragElementPos, ('y', 'circle', self))
+        self.dragElement.dimensions['x'] = DynamicValue('callable', lambda section: section.x + (section.width / 2), self.section)
+        self.dragElement.dimensions['y'] = DynamicValue('callable', getDragElementPos, ('y', 'circle', self))
     else:
       if self.orientation == 'horizontal':
-        self.dragElement.dimensions['x'] = DynamicValue('customCallable', getDragElementPos, ('x', 'section', self))
-        self.dragElement.dimensions['y'] = DynamicValue('customCallable', lambda params: params[0].y + ((params[0].height - params[1].height) / 2), (self.section, self.dragElement))
+        self.dragElement.dimensions['x'] = DynamicValue('callable', getDragElementPos, ('x', 'section', self))
+        self.dragElement.dimensions['y'] = DynamicValue('callable', lambda params: params[0].y + ((params[0].height - params[1].height) / 2), (self.section, self.dragElement))
       else:
-        self.dragElement.dimensions['x'] = DynamicValue('customCallable', lambda params: params[0].x + ((params[0].width - params[1].width) / 2), (self.section, self.dragElement))
-        self.dragElement.dimensions['y'] = DynamicValue('customCallable', getDragElementPos, ('y', 'section', self))
+        self.dragElement.dimensions['x'] = DynamicValue('callable', lambda params: params[0].x + ((params[0].width - params[1].width) / 2), (self.section, self.dragElement))
+        self.dragElement.dimensions['y'] = DynamicValue('callable', getDragElementPos, ('y', 'section', self))
 
     if self.dragElementType == 'section':
       if self.orientation == 'horizontal':
-        self.mapPosition = DynamicValue('customCallable', lambda element: element.x + (element.width / 2), self.dragElement)
+        self.mapPosition = DynamicValue('callable', lambda element: element.x + (element.width / 2), self.dragElement)
       else:
-        self.mapPosition = DynamicValue('customCallable', lambda element: element.y + (element.height / 2), self.dragElement)
+        self.mapPosition = DynamicValue('callable', lambda element: element.y + (element.height / 2), self.dragElement)
     else:
       if self.orientation == 'horizontal':
         self.mapPosition = self.dragElement.dimensions['x']
@@ -98,11 +124,11 @@ class Slider():
     filledSliderWidth = None
     filledSliderHeight = None
     if self.orientation == 'horizontal':
-      filledSliderWidth = DynamicValue('customCallable', lambda params: params[0].value - params[1].x, (self.mapPosition, self.section))
+      filledSliderWidth = DynamicValue('callable', lambda params: params[0].value - params[1].x, (self.mapPosition, self.section))
       filledSliderHeight = self.section.dimensions['height']
     else:
       filledSliderWidth = self.section.dimensions['width']
-      filledSliderHeight = DynamicValue('customCallable', lambda params: params[0].value - params[1].y, (self.mapPosition, self.section))
+      filledSliderHeight = DynamicValue('callable', lambda params: params[0].value - params[1].y, (self.mapPosition, self.section))
 
     self.filledSlider = Section(
       {

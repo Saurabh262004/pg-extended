@@ -1,9 +1,31 @@
 from typing import Iterable, Optional, Union, Dict
 import pygame as pg
-from .UIElements import DynamicValue as DV, System
+from .UIElements.Core import DynamicValue as DV
+from .System import System
 
 numType = Union[int, float]
 
+'''
+Window is a class that represents your main application window.
+It is used to create and manage the main window of your application, handle events, and manage UI systems.
+
+Parameters:
+- [required] title:               The title of the window.
+- [required] screenRes:           The resolution of the window (width, height).
+- [Optional] minRes:              The minimum resolution of the window (default is (480, 270)).
+- [Optional] customLoopProcess:   A custom function to be called in the main loop (default is None).
+- [Optional] customUpdateProcess: A custom function to be called in the update process (default is None).
+- [Optional] customEventHandler:  A custom function to handle events (default is None).
+
+Usable methods:
+- addSystem:         Adds a system to the window.
+- activateSystems:   Activates the specified systems.
+- deactivateSystems: Deactivates the specified systems.
+- setSystemZ:        Sets the z-index of a system.
+- changeTitle:       Changes the title of the window.
+- openWindow:        Opens the main window and starts the main loop.
+- closeWindow:       Closes the main window and cleans up resources.
+'''
 class Window:
   def __init__(self, title: str, screenRes: Iterable[int], minRes: Optional[Iterable[int]] = (480, 270), customLoopProcess: Optional[callable] = None, customUpdateProcess: Optional[callable] = None, customEventHandler: Optional[callable] = None, fps : Optional[int] = 60):
     self.title = title

@@ -2,6 +2,25 @@ from typing import Optional, Callable
 import pygame as pg
 from .Section import Section
 
+'''
+Toggle is a class that represents a toggle switch UI element.
+
+Parameters:
+- [required] section:              A Section object that defines the toggle's base model (position and size).
+- [required] indicatorColor:       The color of the toggle when it is toggled on.
+- [required] borderColor:          The color of the toggle's border when it is toggled off.
+- [required] borderColorToggled:   The color of the toggle's border when it is toggled on.
+- [Optional] onClick:              A callable function to execute when the toggle is clicked.
+- [Optional] onClickParams:        Parameters to pass to the onClick function.
+- [Optional] sendStateInfoOnClick: Whether to send the toggled state to the onClick function (default is False).
+- [Optional] border:               Width of the toggle's border (default is 0).
+
+Usable methods:
+- checkEvent: Checks for mouse button events and toggles the toggle state accordingly.
+- update:     Updates the toggle's dimensions and background based on the provided Section object.
+- draw:       Draws the toggle on the provided surface.
+'''
+
 class Toggle:
   def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, onClick: Optional[Callable] = None, onClickParams = None, sendStateInfoOnClick: Optional[bool] = False, border: int = 0):
     self.section = section

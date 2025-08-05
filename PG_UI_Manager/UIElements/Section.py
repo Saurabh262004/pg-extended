@@ -1,13 +1,29 @@
 from typing import Optional, Union, Dict
-from ..helpers import allIn, squish, fit, fill
 import pygame as pg
-from .DynamicValue import DynamicValue
+from ..helpers import allIn, squish, fit, fill
+from .Core import DynamicValue
 
 numType = Union[int, float]
 backgroundType = Union[pg.Color, pg.surface.Surface]
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
+'''
+Section is a class that represents a rectangular area on the screen.
+It is used as a base / container for other UI elements.
+
+Parameters:
+- [required] dimensions:            A dictionary containing the dimensions of the section (x, y, width, height).
+-                                   The values in the dictionary must be instances of DynamicValue.
+- [required] background:            The background color or surface of the section (pg.Color or pg.surface.Surface).
+- [Optional] borderRadius:          The border radius of the section (default is 0).
+- [Optional] backgroundSizeType:    The type of background size adjustment (fit, fill, squish, none).
+- [Optional] backgroundSizePercent: The percentage of the background size adjustment (default is 100).
+
+Usable methods:
+- update: Updates the section's dimensions and background based on the provided DynamicValue objects.
+- draw:   Draws the section on the provided surface.
+'''
 class Section:
   def __init__(self, dimensions: Dict['str', DynamicValue], background: backgroundType, borderRadius: Optional[numType] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundSizePercent: Optional[int] = 100):
     self.dimensions = dimensions
