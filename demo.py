@@ -27,7 +27,8 @@ topToBottom = AnimatedValue(
     DV('classPer', app, classAttr='screenHeight', percent=89)
   ),
   duration=500,
-  interpolation='easeInOut'
+  defaultPos='end',
+  interpolation='linear'
 )
 
 leftToRight = AnimatedValue(
@@ -35,8 +36,9 @@ leftToRight = AnimatedValue(
     DV('classPer', app, classAttr='screenWidth', percent=1),
     DV('classPer', app, classAttr='screenWidth', percent=89)
   ),
-  duration=500,
-  interpolation='easeInOut'
+  duration=400,
+  defaultPos='end',
+  interpolation='easeIn'
 )
 
 swTolw = AnimatedValue(
@@ -44,8 +46,9 @@ swTolw = AnimatedValue(
     DV('classPer', app, classAttr='screenWidth', percent=98),
     DV('classPer', app, classAttr='screenWidth', percent=10)
   ),
-  duration=500,
-  interpolation='easeInOut'
+  duration=300,
+  defaultPos='end',
+  interpolation='easeOut'
 )
 
 shTolh = AnimatedValue(
@@ -53,7 +56,8 @@ shTolh = AnimatedValue(
     DV('classPer', app, classAttr='screenHeight', percent=98),
     DV('classPer', app, classAttr='screenHeight', percent=10)
   ),
-  duration=500,
+  duration=200,
+  defaultPos='end',
   interpolation='easeInOut'
 )
 

@@ -3,25 +3,35 @@ from typing import Iterable, Optional, Union
 from .DynamicValue import DynamicValue
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
+DEFAULT_POS_VALS = ['start', 'end']
 
 numType = Union[int, float]
 
 class AnimatedValue:
-  def __init__(self, values: Iterable[DynamicValue], duration: numType, interpolation: Optional[str] = 'linear', callback: Optional[callable] = None, customInterpolation: Optional[callable] = None):
+  def __init__(self, values: Iterable[DynamicValue], duration: numType, defaultPos: Optional[str] = 'start', interpolation: Optional[str] = 'linear', callback: Optional[callable] = None, customInterpolation: Optional[callable] = None):
     if len(values) < 2:
       raise ValueError("Animator requires a minimum of two values to animate between.")
 
     if not interpolation in INTERPOLATION_TYPES:
-      raise ValueError(f'Invalid interpolation type: {self.interpolation}. Must be one of: {INTERPOLATION_TYPES}')
+      raise ValueError(f'Invalid interpolation type: {interpolation}. Must be one of: {INTERPOLATION_TYPES}')
 
     if interpolation == 'custom' and customInterpolation is None:
       raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
+    
+    if not defaultPos in DEFAULT_POS_VALS:
+      raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
 
     self.values = values
     self.duration = duration
     self.interpolation = interpolation
     self.callback = callback
-    self.value = values[0].value
+    self.defaultPos = defaultPos
+
+    if self.defaultPos == 'start':
+      self.value = values[0].value
+    else:
+      self.value = values[-1].value
+
     self.animStart = None
     self.reverse = False
 
@@ -110,6 +120,9 @@ class AnimatedValue:
         self.value = self.values[-1].value
 
       self.animStart = None
+
+      if self.callback is not None:
+        self.callback()
     else:
       [value.resolveValue() for value in self.values]
 
