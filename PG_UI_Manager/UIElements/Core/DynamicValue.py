@@ -17,7 +17,7 @@ It supports the following reference types:
 - 'dictPer':  A percentage of a number value from a dictionary using a specified key.
 - 'classPer': A percentage of a number value from a class attribute.
 - 'callable': A callable that returns a value.
-              You can also specify parameters for the callable.
+-             You can also specify parameters for the callable.
 
 Parameters:
 - [required] referenceType:      The type of the reference (one of the REFERENCE_TYPES).

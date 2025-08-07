@@ -1,5 +1,5 @@
 import pygame as pg
-from PG_UI_Manager.UIElements.Core import DynamicValue as DV
+from PG_UI_Manager.UIElements.Core import DynamicValue as DV, AnimatedValue
 from PG_UI_Manager.UIElements import *
 from PG_UI_Manager import System, Window
 
@@ -19,6 +19,65 @@ system.addElement(
     background=pg.Color(200, 200, 200)),
   elementID='mainSection'
 )
+
+# animators
+topToBottom = AnimatedValue(
+  values=(
+    DV('classPer', app, classAttr='screenHeight', percent=1),
+    DV('classPer', app, classAttr='screenHeight', percent=89)
+  ),
+  duration=500,
+  interpolation='easeInOut'
+)
+
+leftToRight = AnimatedValue(
+  values=(
+    DV('classPer', app, classAttr='screenWidth', percent=1),
+    DV('classPer', app, classAttr='screenWidth', percent=89)
+  ),
+  duration=500,
+  interpolation='easeInOut'
+)
+
+swTolw = AnimatedValue(
+  values=(
+    DV('classPer', app, classAttr='screenWidth', percent=98),
+    DV('classPer', app, classAttr='screenWidth', percent=10)
+  ),
+  duration=500,
+  interpolation='easeInOut'
+)
+
+shTolh = AnimatedValue(
+  values=(
+    DV('classPer', app, classAttr='screenHeight', percent=98),
+    DV('classPer', app, classAttr='screenHeight', percent=10)
+  ),
+  duration=500,
+  interpolation='easeInOut'
+)
+
+# animated section
+system.addElement(
+  element=Section(
+    dimensions={
+     'x': DV('classNum', leftToRight, classAttr='value'),
+     'y': DV('classNum', topToBottom, classAttr='value'),
+     'width': DV('classNum', swTolw, classAttr='value'),
+     'height': DV('classNum', shTolh, classAttr='value')
+    },
+    background=pg.Color(0, 0, 0)
+  ),
+  elementID='animSection'
+)
+
+def triggerAnimations():
+  rev = not topToBottom.reverse
+
+  topToBottom.trigger(rev)
+  leftToRight.trigger(rev)
+  swTolw.trigger(rev)
+  shTolh.trigger(rev)
 
 # Button
 system.addElement(
@@ -41,7 +100,7 @@ system.addElement(
     text='Click Me',
     fontPath='Helvetica',
     textColor=pg.Color(255, 255, 255),
-    onClick=lambda: print('Button clicked!'),
+    onClick=triggerAnimations,
     border=1,
     onClickActuation='buttonDown'
   ),
@@ -135,6 +194,16 @@ system.addElement(
   ),
   elementID='myTextBox'
 )
+
+def customLoopProcess():
+  topToBottom.update()
+  leftToRight.update()
+  swTolw.update()
+  shTolh.update()
+
+  system.elements['animSection'].update()
+
+app.customLoopProcess = customLoopProcess
 
 app.addSystem(system, 'mainSystem')
 

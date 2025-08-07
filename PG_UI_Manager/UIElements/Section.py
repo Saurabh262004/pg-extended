@@ -57,30 +57,38 @@ class Section:
     if not (self.active and self.activeUpdate):
       return None
 
-    # This is really not ideal but I don't know what else I can do
-    unstable = True
-    totalIterations = 0
-    maxIterations = len(self.dimensions)
-    while unstable:
-      if totalIterations > maxIterations:
-        raise ValueError('Provided dimensions are referencing each other in a cyclic pattern, please provide valid dimenisons')
+    # # This is really not ideal but I don't know what else I can do
+    # unstable = True
+    # totalIterations = 0
+    # maxIterations = len(self.dimensions)
+    # while unstable:
+    #   if totalIterations > maxIterations:
+    #     raise ValueError('Provided dimensions are referencing each other in a cyclic pattern, please provide valid dimenisons')
 
-      for dim in self.dimensions:
-        self.dimensions[dim].resolveValue()
+    #   for dim in self.dimensions:
+    #     self.dimensions[dim].resolveValue()
 
-      if (
-        self.x == self.dimensions['x'].value and
-        self.y == self.dimensions['y'].value and
-        self.width == self.dimensions['width'].value and
-        self.height == self.dimensions['height'].value
-        ): unstable = False
-      else:
-        totalIterations += 1
+    #   if (
+    #     self.x == self.dimensions['x'].value and
+    #     self.y == self.dimensions['y'].value and
+    #     self.width == self.dimensions['width'].value and
+    #     self.height == self.dimensions['height'].value
+    #     ): unstable = False
+    #   else:
+    #     totalIterations += 1
 
-      self.x = self.dimensions['x'].value
-      self.y = self.dimensions['y'].value
-      self.width = self.dimensions['width'].value
-      self.height = self.dimensions['height'].value
+    #   self.x = self.dimensions['x'].value
+    #   self.y = self.dimensions['y'].value
+    #   self.width = self.dimensions['width'].value
+    #   self.height = self.dimensions['height'].value
+
+    for dim in self.dimensions:
+      self.dimensions[dim].resolveValue()
+
+    self.x = self.dimensions['x'].value
+    self.y = self.dimensions['y'].value
+    self.width = self.dimensions['width'].value
+    self.height = self.dimensions['height'].value
 
     self.rect.update(self.x, self.y, self.width, self.height)
 
