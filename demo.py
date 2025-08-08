@@ -61,6 +61,8 @@ shTolh = AnimatedValue(
   interpolation='easeInOut'
 )
 
+app.customAnimatedValues.extend((topToBottom, leftToRight, swTolw, shTolh))
+
 # animated section
 system.addElement(
   element=Section(
@@ -74,6 +76,8 @@ system.addElement(
   ),
   elementID='animSection'
 )
+
+system.elements['animSection'].lazyUpdate = False
 
 def triggerAnimations():
   rev = not topToBottom.reverse
@@ -198,16 +202,6 @@ system.addElement(
   ),
   elementID='myTextBox'
 )
-
-def customLoopProcess():
-  topToBottom.update()
-  leftToRight.update()
-  swTolw.update()
-  shTolh.update()
-
-  system.elements['animSection'].update()
-
-app.customLoopProcess = customLoopProcess
 
 app.addSystem(system, 'mainSystem')
 

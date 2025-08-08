@@ -17,7 +17,7 @@ class AnimatedValue:
 
     if interpolation == 'custom' and customInterpolation is None:
       raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
-    
+
     if not defaultPos in DEFAULT_POS_VALS:
       raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
 
@@ -107,7 +107,7 @@ class AnimatedValue:
 
     self.value = processingVals[0]
 
-  def update(self):
+  def resolveValue(self):
     if self.animStart is None:
       return
 
@@ -132,6 +132,14 @@ class AnimatedValue:
         t = elapsedTime / self.duration
 
       self.interpolate(t)
+
+  def updateRestingPos(self):
+    [value.resolveValue() for value in self.values]
+
+    if self.reverse:
+      self.value = self.values[0].value
+    else:
+      self.value = self.values[-1].value
 
   def trigger(self, reverse: Optional[bool] = False):
     self.animStart = time.perf_counter() * 1000

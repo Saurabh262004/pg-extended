@@ -110,7 +110,21 @@ class System:
 
     self.firstDraw = False
 
-  def update(self, elementIDs: Optional[Iterable] = None):
+  def update(self, elementIDs: Optional[Iterable[str]] = None):
+    if self.locked:
+      print('System is currently locked')
+      return None
+
+    idList = self.__validateIDs(elementIDs)
+
+    if not idList == None:
+      for elementID in idList:
+        element = self.elements[elementID]
+
+        if not element.lazyUpdate and element.active:
+          element.update()
+
+  def lazyUpdate(self, elementIDs: Optional[Iterable[str]] = None):
     if self.locked:
       print('System is currently locked')
       return None

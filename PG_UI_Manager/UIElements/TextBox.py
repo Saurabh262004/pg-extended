@@ -24,10 +24,11 @@ class TextBox:
     self.fontPath = fontPath
     self.textColor = textColor
     self.drawSectionDefault = drawSectionDefault
+    self.centerText = centerText
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
-    self.centerText = centerText
+    self.lazyUpdate = True
 
   def update(self):
     if not (self.active and self.activeUpdate):

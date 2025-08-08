@@ -46,12 +46,13 @@ class Slider():
     self.filledSliderBackground = filledSliderBackground
     self.onChangeInfo = onChangeInfo
     self.hoverToScroll = hoverToScroll
+    self.pressed = False
+    self.value = self.valueRange[0]
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
     self.activeEvents = True
-    self.pressed = False
-    self.value = self.valueRange[0]
+    self.lazyUpdate = True
 
     if not self.orientation in ('vertical', 'horizontal'):
       raise ValueError('Slider orientation must be \'vertical\' or \'horizontal\'')

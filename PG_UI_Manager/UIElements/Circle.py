@@ -35,6 +35,7 @@ class Circle:
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
+    self.lazyUpdate = True
 
     if len(self.dimensions) != 3:
       raise ValueError(f'dimensions must contain 4 Dimension objects, received: {len(self.dimensions)}')

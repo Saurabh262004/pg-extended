@@ -38,6 +38,7 @@ class Toggle:
     self.activeDraw = True
     self.activeUpdate = True
     self.activeEvents = True
+    self.lazyUpdate = True
 
     self.innerBoxPadding = .1
     self.innerBox = pg.Rect(0, 0, 0, 0)

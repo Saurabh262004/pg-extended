@@ -1,9 +1,7 @@
-from typing import Iterable, Optional, Union, Dict
+from typing import Iterable, Optional, Union, Dict, List
 import pygame as pg
-from .UIElements.Core import DynamicValue as DV
+from .UIElements.Core import DynamicValue, AnimatedValue
 from .System import System
-
-numType = Union[int, float]
 
 '''
 Window is a class that represents your main application window.
@@ -28,21 +26,23 @@ Usable methods:
 '''
 class Window:
   def __init__(self, title: str, screenRes: Iterable[int], minRes: Optional[Iterable[int]] = (480, 270), customLoopProcess: Optional[callable] = None, customUpdateProcess: Optional[callable] = None, customEventHandler: Optional[callable] = None, fps : Optional[int] = 60):
-    self.title = title
-    self.screenRes = screenRes
-    self.customLoopProcess = customLoopProcess
-    self.customEventHandler = customEventHandler
-    self.customUpdateProcess = customUpdateProcess
-    self.minRes = minRes
-    self.screenWidth = max(self.screenRes[0], self.minRes[0])
-    self.screenHeight = max(self.screenRes[1], self.minRes[1])
-    self.fps = fps
-    self.running = False
+    self.title: str = title
+    self.screenRes: Iterable[int] = screenRes
+    self.customLoopProcess: Union[callable, None] = customLoopProcess
+    self.customEventHandler: Union[callable, None] = customEventHandler
+    self.customUpdateProcess: Union[callable, None] = customUpdateProcess
+    self.minRes: Iterable[int] = minRes
+    self.screenWidth: int = max(self.screenRes[0], self.minRes[0])
+    self.screenHeight: int = max(self.screenRes[1], self.minRes[1])
+    self.fps: int = fps
+    self.running: bool = False
     self.systems: Dict[str, System] = {}
     self.activeSystems: Dict[str, System] = {}
     self.systemZ: Dict[str, int] = {}
-    self.loggedSystemSwitch = None
-    self.customData = {}
+    self.customDynamicValues: List[DynamicValue] = []
+    self.lazyDynamicValues: List[DynamicValue] = []
+    self.customAnimatedValues: List[AnimatedValue] = []
+    self.customData: dict = {}
 
   def addSystem(self, system: System, systemID: str) -> bool:
     if systemID in self.systems:
@@ -58,8 +58,8 @@ class Window:
       print('the system must have a section with id \"mainSection\"')
       return False
 
-    system.elements['mainSection'].dimensions['width'] = DV('classNum', self, classAttr='screenWidth')
-    system.elements['mainSection'].dimensions['height'] = DV('classNum', self, classAttr='screenHeight')
+    system.elements['mainSection'].dimensions['width'] = DynamicValue('classNum', self, classAttr='screenWidth')
+    system.elements['mainSection'].dimensions['height'] = DynamicValue('classNum', self, classAttr='screenHeight')
 
     self.systems[systemID] = system
 
@@ -147,42 +147,60 @@ class Window:
     self.title = title
     pg.display.set_caption(self.title)
 
+  def __updateLoop(self):
+    self.__handleEvents()
+
+    if self.secondResize or self.__screenResized():
+      self.secondResize = not self.secondResize
+      self.__resetUI()
+
+    self.currentFPS = self.clock.get_fps()
+
+    self.screen.fill((0, 0, 0))
+
+    [dynamicValue.resolveValue() for dynamicValue in self.customDynamicValues]
+
+    [animatedValue.resolveValue() for animatedValue in self.customAnimatedValues]
+
+    for systemID in self.systemZ:
+      if systemID in self.activeSystems:
+        self.activeSystems[systemID].update()
+
+    if self.customLoopProcess is not None:
+      self.customLoopProcess()
+
+    for systemID in self.systemZ:
+      if systemID in self.activeSystems:
+        self.activeSystems[systemID].draw()
+
+    pg.display.flip()
+    self.clock.tick(self.fps)
+
+
   def openWindow(self):
     pg.init()
 
     self.time = pg.time
     self.clock = self.time.Clock()
+    self.currentFPS: int = self.clock.get_fps()
+
     pg.display.set_caption(self.title)
+
     self.screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.RESIZABLE)
+
+    self.running = True
+    self.secondResize = False
 
     self.__initiateActiveSystems(self.screen)
 
-    self.running = True
     self.__resetUI()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:
         self.activeSystems[systemID].draw()
 
-    self.secondResize = False
     while self.running:
-      self.__handleEvents()
-
-      if self.secondResize or self.__screenResized():
-        self.secondResize = not self.secondResize
-        self.__resetUI()
-
-      self.screen.fill((0, 0, 0))
-
-      if self.customLoopProcess is not None:
-        self.customLoopProcess()
-
-      for systemID in self.systemZ:
-        if systemID in self.activeSystems:
-          self.activeSystems[systemID].draw()
-
-      pg.display.flip()
-      self.clock.tick(self.fps)
+      self.__updateLoop()
 
     self.closeWindow()
 
@@ -242,9 +260,13 @@ class Window:
     if not self.running:
       return None
 
+    [dynamicValue.resolveValue() for dynamicValue in self.lazyDynamicValues]
+
+    [animatedValue.updateRestingPos() for animatedValue in self.customAnimatedValues]
+
     if self.customUpdateProcess is not None:
       self.customUpdateProcess()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:
-        self.activeSystems[systemID].update()
+        self.activeSystems[systemID].lazyUpdate()
