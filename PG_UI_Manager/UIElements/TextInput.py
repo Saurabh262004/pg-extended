@@ -47,11 +47,11 @@ class TextInput:
 
   @staticmethod
   def getSplitText(text):
-    splitArr = []
+    splitArr = ['']
 
     for char in text:
       if char in LINE_SPLIT_UNICODES:
-        if not (splitArr[-1] == '') and splitArr[-1][-1] == char:
+        if splitArr[-1][-1] == char:
           splitArr[-1] += char
         else:
           splitArr.append(char)
