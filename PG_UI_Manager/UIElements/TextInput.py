@@ -34,6 +34,7 @@ class TextInput:
     self.activeEvents = True
     self.lazyUpdate = True
     self.inputText = ''
+    self.lastKey = ''
 
     if self.placeholderTextColor is None:
       self.placeholderTextColor = self.textColor
@@ -51,7 +52,7 @@ class TextInput:
 
     for char in text:
       if char in LINE_SPLIT_UNICODES:
-        if splitArr[-1][-1] == char:
+        if splitArr[-1] == '' or splitArr[-1][-1] == char:
           splitArr[-1] += char
         else:
           splitArr.append(char)
@@ -84,7 +85,11 @@ class TextInput:
           if event.mod == 4160: # CTRL + Backspace
             splitArr = self.getSplitText(self.inputText)
 
-            self.inputText = ''.join(splitArr[0:-1])
+            self.inputText = ''.join(splitArr[:-1])
+            self.typing = True
+            self.typingStart = time.perf_counter()
+            self.lastKey = 'ctrlbackspace'
+            self.lazyUpdate = False
           else:
             self.inputText = self.inputText[:-1]
 
@@ -122,7 +127,10 @@ class TextInput:
 
     # auto rapid input on key hold
     if self.typing and (time.perf_counter() - self.typingStart > 0.5):
-      if self.lastKey == 'backspace':
+      if self.lastKey == 'ctrlbackspace':
+        splitArr = self.getSplitText(self.inputText)
+        self.inputText = ''.join(splitArr[:-1])
+      elif self.lastKey == 'backspace':
         self.inputText = self.inputText[:-1]
       else:
         self.inputText += self.lastKey
