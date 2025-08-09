@@ -45,7 +45,7 @@ class TextBox:
     else:
       self.textRect = self.textSurface.get_rect(midleft=self.section.rect.midleft)
 
-  def draw(self, surface: pg.surface.Surface, drawSection: Optional[bool] = None):
+  def draw(self, surface: pg.Surface, drawSection: Optional[bool] = None):
     if not (self.active and self.activeDraw):
       return None
 

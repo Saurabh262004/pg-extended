@@ -102,7 +102,7 @@ class Toggle:
 
     self.updateInnerBox()
 
-  def draw(self, surface: pg.surface.Surface):
+  def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 

@@ -3,7 +3,7 @@ import pygame as pg
 from .Section import Section
 from .TextBox import TextBox
 
-backgroundType = Union[pg.Color, pg.surface.Surface]
+backgroundType = Union[pg.Color, pg.Surface]
 
 '''
 Button is a class that represents a button UI element.
@@ -33,11 +33,12 @@ class Button:
     self.onClickParams = onClickParams
     self.onClickActuation = onClickActuation
     self.border = border
-    self.pressed = False
     self.defaultBackground = section.background
     self.pressedBackground = pressedBackground
     self.borderColor = borderColor
     self.borderColorPressed = borderColorPressed
+    self.pressed = False
+
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -95,14 +96,13 @@ class Button:
     if not (self.active and self.activeUpdate):
       return None
 
-    if not isinstance(self.section, pg.Rect):
-      if self.hasText and self.activeDraw:
-        try:
-          self.textBox.update()
-        except Exception as e:
-          print(e)
-      else:
-        self.section.update()
+    if self.hasText and self.activeDraw:
+      try:
+        self.textBox.update()
+      except Exception as e:
+        print(e)
+    else:
+      self.section.update()
 
     newX, newY = self.section.x - self.border, self.section.y - self.border
     newWidth, newHeight = self.section.width + (self.border * 2), self.section.height + (self.border * 2)
@@ -110,7 +110,7 @@ class Button:
     if self.border > 0:
       self.borderRect.update(newX, newY, newWidth, newHeight)
 
-  def draw(self, surface: pg.surface.Surface):
+  def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 

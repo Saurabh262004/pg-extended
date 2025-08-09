@@ -6,7 +6,7 @@ from .Section import Section
 from .Circle import Circle
 
 numType = Union[int, float]
-backgroundType = Union[pg.Color, pg.surface.Surface]
+backgroundType = Union[pg.Color, pg.Surface]
 
 SLIDER_ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
@@ -175,7 +175,7 @@ class Slider():
     self.mapPosition.resolveValue()
     self.filledSlider.update()
 
-  def draw(self, surface: pg.surface.Surface):
+  def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 

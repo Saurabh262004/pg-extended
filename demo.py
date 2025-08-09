@@ -26,7 +26,7 @@ topToBottom = AnimatedValue(
     DV('classPer', app, classAttr='screenHeight', percent=1),
     DV('classPer', app, classAttr='screenHeight', percent=89)
   ),
-  duration=500,
+  duration=400,
   defaultPos='end',
   interpolation='linear'
 )
@@ -36,7 +36,7 @@ leftToRight = AnimatedValue(
     DV('classPer', app, classAttr='screenWidth', percent=1),
     DV('classPer', app, classAttr='screenWidth', percent=89)
   ),
-  duration=400,
+  duration=300,
   defaultPos='end',
   interpolation='easeIn'
 )
@@ -46,7 +46,7 @@ swTolw = AnimatedValue(
     DV('classPer', app, classAttr='screenWidth', percent=98),
     DV('classPer', app, classAttr='screenWidth', percent=10)
   ),
-  duration=300,
+  duration=200,
   defaultPos='end',
   interpolation='easeOut'
 )
@@ -56,7 +56,7 @@ shTolh = AnimatedValue(
     DV('classPer', app, classAttr='screenHeight', percent=98),
     DV('classPer', app, classAttr='screenHeight', percent=10)
   ),
-  duration=200,
+  duration=100,
   defaultPos='end',
   interpolation='easeInOut'
 )
@@ -201,6 +201,32 @@ system.addElement(
     centerText=True
   ),
   elementID='myTextBox'
+)
+
+# TextInput
+system.addElement(
+  TextInput(
+    section=Section(
+      dimensions={
+        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttr='screenWidth', percent=42),
+        'width': DV('classPer', app, classAttr='screenWidth', percent=25),
+        'height': DV('classPer', app, classAttr='screenWidth', percent=5)
+      },
+      background=pg.Color(100, 100, 100),
+      borderRadius=6,
+      backgroundSizeType='fit',
+      backgroundSizePercent=100
+    ),
+    fontPath='Helvetica',
+    textColor=pg.Color(255, 255, 255),
+    placeholder='placeholder',
+    placeholderTextColor=pg.Color(200, 200, 200),
+    border=1,
+    borderColor=pg.Color(0, 0, 0),
+    focusBorderColor=pg.Color(255, 0, 0),
+    focusBackground=pg.Color(80, 80, 80)
+  ), 'myTextInput'
 )
 
 app.addSystem(system, 'mainSystem')

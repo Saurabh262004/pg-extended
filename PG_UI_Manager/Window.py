@@ -229,19 +229,16 @@ class Window:
         new_height = max(self.minRes[1], event.h)
         self.screen = pg.display.set_mode((new_width, new_height), pg.RESIZABLE)
       else:
-        cursorChange = 'arrow'
-
         for systemID in self.systemZ:
           if systemID in self.activeSystems:
-            cursorChangeTMP = self.activeSystems[systemID].handleEvents(event)
-
-            if cursorChangeTMP == 'hand':
-              cursorChange = cursorChangeTMP
+            cursorChange = self.activeSystems[systemID].handleEvents(event)
 
         if cursorChange == 'hand':
           pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
-        else:
+        elif cursorChange == 'arrow':
           pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
+        elif cursorChange == 'ibeam':
+          pg.mouse.set_cursor(pg.SYSTEM_CURSOR_IBEAM)
 
   def __screenResized(self) -> bool:
     if not self.running:

@@ -1,9 +1,9 @@
 from typing import Optional, Dict, Iterable, Union
 import pygame as pg
 from .helpers import allIn
-from .UIElements import Section, Circle, TextBox, Button, Toggle, Slider
+from .UIElements import *
 
-elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider]
+elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]
 
 '''
 System is a class that represents a collection of UI elements and manages their processes, such as drawing, updating and event handling.
@@ -22,7 +22,7 @@ Usable methods:
 - initiate:      Initiates the system with a surface, unlocking it for drawing and updating.
 '''
 class System:
-  def __init__(self, surface: Optional[pg.surface.Surface] = None, preLoadState: Optional[bool] = False):
+  def __init__(self, surface: Optional[pg.Surface] = None, preLoadState: Optional[bool] = False):
     self.locked = preLoadState
 
     if not self.locked:
@@ -39,6 +39,7 @@ class System:
     self.buttons: Dict[str, Button] = {}
     self.toggles: Dict[str, Toggle] = {}
     self.sliders: Dict[str, Slider] = {}
+    self.textInputs: Dict[str, TextInput] = {}
 
     self.firstDraw = True
 
@@ -60,6 +61,8 @@ class System:
       self.toggles[elementID] = element
     elif isinstance(element, Slider):
       self.sliders[elementID] = element
+    elif isinstance(element, TextInput):
+      self.textInputs[elementID] = element
 
     return True
 
@@ -81,6 +84,8 @@ class System:
       del self.toggles[elementID]
     elif isinstance(element, Slider):
       del self.sliders[elementID]
+    elif isinstance(element, TextInput):
+      del self.textInputs[elementID]
 
     del self.elements[elementID]
 
@@ -146,31 +151,39 @@ class System:
     changeCursor = None
     for buttonID in self.buttons:
       if self.buttons[buttonID].active:
+        self.buttons[buttonID].checkEvent(event)
+
         if not changeCursor and self.buttons[buttonID].activeEvents:
           if self.buttons[buttonID].section.rect.collidepoint(mousePos):
             changeCursor = 'hand'
 
-        self.buttons[buttonID].checkEvent(event)
-
     for toggleID in self.toggles:
       if self.toggles[toggleID].active:
+        self.toggles[toggleID].checkEvent(event)
+
         if not changeCursor and self.toggles[toggleID].activeEvents:
           if self.toggles[toggleID].section.rect.collidepoint(mousePos):
             changeCursor = 'hand'
 
-        self.toggles[toggleID].checkEvent(event)
-
     for sliderID in self.sliders:
       if self.sliders[sliderID].active:
+        self.sliders[sliderID].checkEvent(event)
+
         if not changeCursor and self.sliders[sliderID].activeEvents:
           if self.sliders[sliderID].section.rect.collidepoint(mousePos):
             changeCursor = 'hand'
 
-        self.sliders[sliderID].checkEvent(event)
+    for textInputID in self.textInputs:
+      if self.textInputs[textInputID].active:
+        self.textInputs[textInputID].checkEvent(event)
 
-    return changeCursor
+        if not changeCursor and self.textInputs[textInputID].activeEvents:
+          if self.textInputs[textInputID].section.rect.collidepoint(mousePos):
+            changeCursor = 'ibeam'
 
-  def initiate(self, surface: pg.surface.Surface):
+    return 'arrow' if changeCursor is None else changeCursor
+
+  def initiate(self, surface: pg.Surface):
     self.surface = surface
 
     self.locked = False

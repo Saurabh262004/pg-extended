@@ -4,7 +4,7 @@ import pygame as pg
 from ..helpers import fit, fill, squish, allIn
 from .Core import DynamicValue
 
-backgroundType = Union[pg.Color, pg.surface.Surface]
+backgroundType = Union[pg.Color, pg.Surface]
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
@@ -15,7 +15,7 @@ It is similar to Section just with a circular shape.
 Parameters:
 - [required] dimensions:            A dictionary containing the dimensions of the circle (x, y, radius).
 -                                   The values in the dictionary must be instances of DynamicValue.
-- [required] background:            The background color or surface of the circle (pg.Color or pg.surface.Surface).
+- [required] background:            The background color or surface of the circle (pg.Color or pg.Surface).
 - [Optional] backgroundSizeType:    The type of background size adjustment (fit, fill, squish, none).
 - [Optional] backgroundSizePercent: The percentage of the background size adjustment (default is 100).
 
@@ -86,7 +86,7 @@ class Circle:
     self.y = self.dimensions['y'].value
     self.radius = self.dimensions['radius'].value
 
-    if isinstance(self.background, pg.surface.Surface):
+    if isinstance(self.background, pg.Surface):
       if self.backgroundSizeType == 'fit':
         self.drawImage = fit(self.background, (self.radius * self.sqrt2, self.radius * self.sqrt2), self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
@@ -94,11 +94,11 @@ class Circle:
       else:
         self.drawImage = squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
 
-  def draw(self, surface: pg.surface.Surface):
+  def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 
-    if isinstance(self.background, pg.surface.Surface):
+    if isinstance(self.background, pg.Surface):
       surface.blit(self.drawImage, (self.x - (self.drawImage.get_width() / 2), self.y - (self.drawImage.get_height() / 2)))
     elif isinstance(self.background, pg.Color):
       pg.draw.circle(surface, self.background, (self.x, self.y), self.radius)
