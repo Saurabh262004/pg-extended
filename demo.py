@@ -16,15 +16,15 @@ system.addElement(
       'width': DV('number', 1),
       'height': DV('number', 1)
     },
-    background=pg.Color(200, 200, 200)),
+    background=pg.Color(0, 0, 10)),
   elementID='mainSection'
 )
 
 # animators
 topToBottom = AnimatedValue(
   values=(
-    DV('classPer', app, classAttr='screenHeight', percent=1),
-    DV('classPer', app, classAttr='screenHeight', percent=89)
+    DV('classPer', app, classAttribute='screenHeight', percent=1),
+    DV('classPer', app, classAttribute='screenHeight', percent=89)
   ),
   duration=400,
   defaultPos='end',
@@ -33,8 +33,8 @@ topToBottom = AnimatedValue(
 
 leftToRight = AnimatedValue(
   values=(
-    DV('classPer', app, classAttr='screenWidth', percent=1),
-    DV('classPer', app, classAttr='screenWidth', percent=89)
+    DV('classPer', app, classAttribute='screenWidth', percent=1),
+    DV('classPer', app, classAttribute='screenWidth', percent=89)
   ),
   duration=300,
   defaultPos='end',
@@ -43,8 +43,8 @@ leftToRight = AnimatedValue(
 
 swTolw = AnimatedValue(
   values=(
-    DV('classPer', app, classAttr='screenWidth', percent=98),
-    DV('classPer', app, classAttr='screenWidth', percent=10)
+    DV('classPer', app, classAttribute='screenWidth', percent=98),
+    DV('classPer', app, classAttribute='screenWidth', percent=10)
   ),
   duration=200,
   defaultPos='end',
@@ -53,8 +53,8 @@ swTolw = AnimatedValue(
 
 shTolh = AnimatedValue(
   values=(
-    DV('classPer', app, classAttr='screenHeight', percent=98),
-    DV('classPer', app, classAttr='screenHeight', percent=10)
+    DV('classPer', app, classAttribute='screenHeight', percent=98),
+    DV('classPer', app, classAttribute='screenHeight', percent=10)
   ),
   duration=100,
   defaultPos='end',
@@ -67,12 +67,12 @@ app.customAnimatedValues.extend((topToBottom, leftToRight, swTolw, shTolh))
 system.addElement(
   element=Section(
     dimensions={
-     'x': DV('classNum', leftToRight, classAttr='value'),
-     'y': DV('classNum', topToBottom, classAttr='value'),
-     'width': DV('classNum', swTolw, classAttr='value'),
-     'height': DV('classNum', shTolh, classAttr='value')
+     'x': DV('classNum', leftToRight, classAttribute='value'),
+     'y': DV('classNum', topToBottom, classAttribute='value'),
+     'width': DV('classNum', swTolw, classAttribute='value'),
+     'height': DV('classNum', shTolh, classAttribute='value')
     },
-    background=pg.Color(0, 0, 0)
+    background=pg.Color(0, 200, 200)
   ),
   elementID='animSection'
 )
@@ -92,10 +92,10 @@ system.addElement(
   element=Button(
     section=Section(
       dimensions={
-        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'width': DV('classPer', app, classAttr='screenWidth', percent=10),
-        'height': DV('classPer', app, classAttr='screenWidth', percent=5)
+        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'width': DV('classPer', app, classAttribute='screenWidth', percent=10),
+        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=5,
@@ -120,10 +120,10 @@ system.addElement(
   element=Toggle(
     section=Section(
       dimensions={
-        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttr='screenWidth', percent=17),
-        'width': DV('classPer', app, classAttr='screenWidth', percent=10),
-        'height': DV('classPer', app, classAttr='screenWidth', percent=5)
+        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttribute='screenWidth', percent=17),
+        'width': DV('classPer', app, classAttribute='screenWidth', percent=10),
+        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=6,
@@ -146,10 +146,10 @@ system.addElement(
     orientation='horizontal',
     section=Section(
       dimensions={
-        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttr='screenWidth', percent=28),
-        'width': DV('classPer', app, classAttr='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttr='screenWidth', percent=2)
+        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttribute='screenWidth', percent=28),
+        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': DV('classPer', app, classAttribute='screenWidth', percent=2)
       },
       background=pg.Color(80, 80, 80),
       borderRadius=6,
@@ -160,7 +160,7 @@ system.addElement(
       dimensions={
         'x': DV('number', 0),
         'y': DV('number', 0),
-        'radius': DV('classPer', app, classAttr='screenWidth', percent=2)
+        'radius': DV('classPer', app, classAttribute='screenWidth', percent=2)
       },
       background=pg.Color(220, 110, 220),
       backgroundSizeType='fit',
@@ -184,10 +184,10 @@ system.addElement(
   element=TextBox(
     section=Section(
       dimensions={
-        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttr='screenWidth', percent=35),
-        'width': DV('classPer', app, classAttr='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttr='screenWidth', percent=5)
+        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttribute='screenWidth', percent=35),
+        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=6,
@@ -198,7 +198,8 @@ system.addElement(
     fontPath='Helvetica',
     textColor=pg.Color(255, 255, 255),
     drawSectionDefault=True,
-    centerText=True
+    alignTextHorizontal='center',
+    alignTextVertical='center'
   ),
   elementID='myTextBox'
 )
@@ -208,13 +209,13 @@ system.addElement(
   TextInput(
     section=Section(
       dimensions={
-        'x': DV('classPer', app, classAttr='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttr='screenWidth', percent=42),
-        'width': DV('classPer', app, classAttr='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttr='screenWidth', percent=5)
+        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': DV('classPer', app, classAttribute='screenWidth', percent=42),
+        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
-      borderRadius=6,
+      borderRadius=0,
       backgroundSizeType='fit',
       backgroundSizePercent=100
     ),
@@ -225,9 +226,17 @@ system.addElement(
     border=1,
     borderColor=pg.Color(0, 0, 0),
     focusBorderColor=pg.Color(255, 0, 0),
-    focusBackground=pg.Color(80, 80, 80)
+    focusBackground=pg.Color(80, 80, 80),
+    resizable=True,
+    onChangeInfo={
+      'callable': lambda value: print(f'Text Box value changed to: {value}'),
+      'params': None,
+      'sendValue': True
+    }
   ), 'myTextInput'
 )
+
+system.elements['myTextInput'].textBox.text = 'abc\ndef\nghi\njkl\nmno'
 
 app.addSystem(system, 'mainSystem')
 

@@ -58,8 +58,8 @@ class Window:
       print('the system must have a section with id \"mainSection\"')
       return False
 
-    system.elements['mainSection'].dimensions['width'] = DynamicValue('classNum', self, classAttr='screenWidth')
-    system.elements['mainSection'].dimensions['height'] = DynamicValue('classNum', self, classAttr='screenHeight')
+    system.elements['mainSection'].dimensions['width'] = DynamicValue('classNum', self, classAttribute='screenWidth')
+    system.elements['mainSection'].dimensions['height'] = DynamicValue('classNum', self, classAttribute='screenHeight')
 
     self.systems[systemID] = system
 

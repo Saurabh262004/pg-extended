@@ -1,6 +1,7 @@
 from typing import Optional, Union
 import time
 import pygame as pg
+from .Core import DynamicValue
 from .Section import Section
 from .TextBox import TextBox
 
@@ -10,8 +11,10 @@ IGNORE_KEYS = (9, 13, 27, 127, 1073741912)
 
 LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\f\v'
 
+ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
+
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, resizeable: bool = False, onChange: callable = None):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, resizable: bool = False, onChangeInfo: dict = None):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
@@ -22,8 +25,8 @@ class TextInput:
     self.focusBorderColor = focusBorderColor
     self.background = self.section.background
     self.focusBackground = focusBackground
-    self.resizeable = resizeable
-    self.onChange = onChange
+    self.resizable = resizable
+    self.onChangeInfo = onChangeInfo
 
     self.inFocus = False
     self.typing = False
@@ -35,6 +38,19 @@ class TextInput:
     self.lazyUpdate = True
     self.inputText = ''
     self.lastKey = ''
+    self.valueOnLastCallback = ''
+
+    if self.onChangeInfo is not None:
+      for k in ONCHANGE_KEYS:
+        if not k in self.onChangeInfo:
+          raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
+
+    self.resizableIndicator = (
+      DynamicValue('callable', lambda section: section.x + (section.width / 100 * 95), callableParameters=self.section),
+      DynamicValue('callable', lambda section: section.y + section.height - 3, callableParameters=self.section),
+      DynamicValue('callable', lambda section: section.x + section.width - 3, callableParameters=self.section),
+      DynamicValue('callable', lambda section: section.y + (section.height - (section.width / 100 * 5)), callableParameters=self.section)
+    )
 
     if self.placeholderTextColor is None:
       self.placeholderTextColor = self.textColor
@@ -42,7 +58,7 @@ class TextInput:
     if self.border > 0:
       self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
 
-    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False)
+    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal='left', alignTextVertical='top')
 
     self.update()
 
@@ -60,6 +76,24 @@ class TextInput:
         splitArr[-1] += char
 
     return splitArr
+
+  def callback(self):
+    if not self.active:
+      return None
+
+    if (not self.onChangeInfo is None) and (not self.valueOnLastCallback == self.inputText):
+      self.valueOnLastCallback = self.inputText
+
+      if not self.onChangeInfo['params'] is None:
+        if self.onChangeInfo['sendValue']:
+          self.onChangeInfo['callable'](self.inputText, self.onChangeInfo['params'])
+        else:
+          self.onChangeInfo['callable'](self.onChangeInfo['params'])
+      else:
+        if self.onChangeInfo['sendValue']:
+          self.onChangeInfo['callable'](self.inputText)
+        else:
+          self.onChangeInfo['callable']()
 
   def checkEvent(self, event: pg.event.Event) -> Optional[bool]:
     if not (self.active and self.activeEvents):
@@ -115,8 +149,11 @@ class TextInput:
         self.textBox.update()
 
     elif event.type == pg.KEYUP:
-      self.typing = False
-      self.lazyUpdate = True
+      if self.typing:
+        self.typing = False
+        self.lazyUpdate = True
+
+        self.callback()
 
   def update(self):
     if not (self.active and self.activeUpdate):
@@ -147,6 +184,9 @@ class TextInput:
     except Exception as e:
       print(e)
 
+    for point in self.resizableIndicator:
+      point.resolveValue()
+
     if self.border > 0:
       self.borderRect.update(newX, newY, newWidth, newHeight)
 
@@ -163,3 +203,17 @@ class TextInput:
     self.section.draw(surface)
 
     self.textBox.draw(surface)
+
+    if self.resizable:
+      pg.draw.aaline(
+        surface,
+        self.textColor,
+        (
+          self.resizableIndicator[0].value,
+          self.resizableIndicator[1].value
+        ),
+        (
+          self.resizableIndicator[2].value,
+          self.resizableIndicator[3].value
+        )
+      )

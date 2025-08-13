@@ -2,6 +2,21 @@ from typing import Optional
 import pygame as pg
 from .Section import Section
 
+TEXT_ALIGN_HORIZONTAL = ('left', 'right', 'center')
+TEXT_ALIGN_VERTICAL = ('top', 'bottom', 'center')
+
+ALIGNMENT_MAP = {
+  ('left', 'top'): 'topleft',
+  ('left', 'center'): 'midleft',
+  ('left', 'bottom'): 'bottomleft',
+  ('center', 'top'): 'midtop',
+  ('center', 'center'): 'center',
+  ('center', 'bottom'): 'midbottom',
+  ('right', 'top'): 'topright',
+  ('right', 'center'): 'midright',
+  ('right', 'bottom'): 'bottomright',
+}
+
 '''
 TextBox is a class that represents a text box UI element.
 
@@ -18,13 +33,14 @@ Usable methods:
 - draw:   Draws the text box on the provided surface.
 '''
 class TextBox:
-  def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, drawSectionDefault: Optional[bool] = False, centerText: Optional[bool] = True):
+  def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, drawSectionDefault: Optional[bool] = False, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.text = text
     self.fontPath = fontPath
     self.textColor = textColor
     self.drawSectionDefault = drawSectionDefault
-    self.centerText = centerText
+    self.alignTextHorizontal = alignTextHorizontal
+    self.alignTextVertical = alignTextVertical
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -40,10 +56,10 @@ class TextBox:
     self.font = pg.font.SysFont(self.fontPath, self.fontSize)
 
     self.textSurface = self.font.render(self.text, True, self.textColor)
-    if self.centerText:
-      self.textRect = self.textSurface.get_rect(center=self.section.rect.center)
-    else:
-      self.textRect = self.textSurface.get_rect(midleft=self.section.rect.midleft)
+
+    key = (self.alignTextHorizontal, self.alignTextVertical)
+    pos_attr = ALIGNMENT_MAP[key]
+    self.textRect = self.textSurface.get_rect(**{pos_attr: getattr(self.section.rect, pos_attr)})
 
   def draw(self, surface: pg.Surface, drawSection: Optional[bool] = None):
     if not (self.active and self.activeDraw):

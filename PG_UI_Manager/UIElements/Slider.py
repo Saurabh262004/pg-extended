@@ -8,7 +8,7 @@ from .Circle import Circle
 numType = Union[int, float]
 backgroundType = Union[pg.Color, pg.Surface]
 
-SLIDER_ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
+ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
 '''
 Slider is a class that represents a slider UI element.
@@ -58,9 +58,9 @@ class Slider():
       raise ValueError('Slider orientation must be \'vertical\' or \'horizontal\'')
 
     if not self.onChangeInfo is None:
-      for k in SLIDER_ONCHANGE_KEYS:
+      for k in ONCHANGE_KEYS:
         if not k in self.onChangeInfo:
-          raise ValueError(f'onChangeInfo must have these keys: {SLIDER_ONCHANGE_KEYS}')
+          raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
 
     if isinstance(self.dragElement, Section):
       self.dragElementType = 'section'

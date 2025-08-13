@@ -31,12 +31,12 @@ Useable methods:
 - resolveValue: Calculates the value based on the reference type and updates the `value` attribute.
 '''
 class DynamicValue:
-  def __init__(self, referenceType: str, reference: Union[Callable, numType, Dict[str, numType], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttr: Optional[str] = None, percent: Optional[numType] = None):
+  def __init__(self, referenceType: str, reference: Union[Callable, numType, Dict[str, numType], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttribute: Optional[str] = None, percent: Optional[numType] = None):
     self.referenceType = referenceType
     self.reference = reference
     self.callableParameters = callableParameters
     self.dictKey = dictKey
-    self.classAttr = classAttr
+    self.classAttr = classAttribute
     self.percent = percent
     self.value = None
     self.resolveValue: Callable
