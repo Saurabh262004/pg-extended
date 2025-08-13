@@ -34,6 +34,12 @@ Usable methods:
 '''
 class TextBox:
   def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, drawSectionDefault: Optional[bool] = False, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+    if alignTextHorizontal not in TEXT_ALIGN_HORIZONTAL:
+      raise ValueError(f'alignTexrHorizontal must be one of these values: {TEXT_ALIGN_HORIZONTAL}, received: {alignTextHorizontal}')
+
+    if alignTextVertical not in TEXT_ALIGN_VERTICAL:
+      raise ValueError(f'alignTexrHorizontal must be one of these values: {TEXT_ALIGN_VERTICAL}, received: {alignTextVertical}')
+
     self.section = section
     self.text = text
     self.fontPath = fontPath

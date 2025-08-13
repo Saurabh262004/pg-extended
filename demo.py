@@ -228,6 +228,8 @@ system.addElement(
     focusBorderColor=pg.Color(255, 0, 0),
     focusBackground=pg.Color(80, 80, 80),
     resizable=True,
+    alignTextHorizontal='center',
+    alignTextVertical='center',
     onChangeInfo={
       'callable': lambda value: print(f'Text Box value changed to: {value}'),
       'params': None,
@@ -235,8 +237,6 @@ system.addElement(
     }
   ), 'myTextInput'
 )
-
-system.elements['myTextInput'].textBox.text = 'abc\ndef\nghi\njkl\nmno'
 
 app.addSystem(system, 'mainSystem')
 

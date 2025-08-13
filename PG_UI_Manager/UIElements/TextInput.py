@@ -14,7 +14,7 @@ LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, resizable: bool = False, onChangeInfo: dict = None):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, resizable: bool = False, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
@@ -27,6 +27,8 @@ class TextInput:
     self.focusBackground = focusBackground
     self.resizable = resizable
     self.onChangeInfo = onChangeInfo
+    self.alignTextHorizontal = alignTextHorizontal
+    self.alignTextVertical = alignTextVertical
 
     self.inFocus = False
     self.typing = False
@@ -46,10 +48,10 @@ class TextInput:
           raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
 
     self.resizableIndicator = (
-      DynamicValue('callable', lambda section: section.x + (section.width / 100 * 95), callableParameters=self.section),
+      DynamicValue('callable', lambda section: section.x + (section.width / 100 * 95) - 3, callableParameters=self.section),
       DynamicValue('callable', lambda section: section.y + section.height - 3, callableParameters=self.section),
       DynamicValue('callable', lambda section: section.x + section.width - 3, callableParameters=self.section),
-      DynamicValue('callable', lambda section: section.y + (section.height - (section.width / 100 * 5)), callableParameters=self.section)
+      DynamicValue('callable', lambda section: section.y + (section.height - (section.width / 100 * 5)) - 3, callableParameters=self.section)
     )
 
     if self.placeholderTextColor is None:
@@ -58,7 +60,7 @@ class TextInput:
     if self.border > 0:
       self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
 
-    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal='left', alignTextVertical='top')
+    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal=alignTextHorizontal, alignTextVertical=alignTextHorizontal)
 
     self.update()
 
