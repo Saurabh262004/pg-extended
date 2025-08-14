@@ -1,5 +1,5 @@
 import pygame as pg
-from PG_UI_Manager.UIElements.Core import DynamicValue as DV, AnimatedValue
+from PG_UI_Manager.UIElements.Core import DynamicValue as DV, AnimatedValue as AV
 from PG_UI_Manager.UIElements import *
 from PG_UI_Manager import System, Window
 
@@ -21,7 +21,7 @@ system.addElement(
 )
 
 # animators
-topToBottom = AnimatedValue(
+topToBottom = AV(
   values=(
     DV('classPer', app, classAttribute='screenHeight', percent=1),
     DV('classPer', app, classAttribute='screenHeight', percent=89)
@@ -31,7 +31,7 @@ topToBottom = AnimatedValue(
   interpolation='linear'
 )
 
-leftToRight = AnimatedValue(
+leftToRight = AV(
   values=(
     DV('classPer', app, classAttribute='screenWidth', percent=1),
     DV('classPer', app, classAttribute='screenWidth', percent=89)
@@ -41,7 +41,7 @@ leftToRight = AnimatedValue(
   interpolation='easeIn'
 )
 
-swTolw = AnimatedValue(
+swTolw = AV(
   values=(
     DV('classPer', app, classAttribute='screenWidth', percent=98),
     DV('classPer', app, classAttribute='screenWidth', percent=10)
@@ -51,7 +51,7 @@ swTolw = AnimatedValue(
   interpolation='easeOut'
 )
 
-shTolh = AnimatedValue(
+shTolh = AV(
   values=(
     DV('classPer', app, classAttribute='screenHeight', percent=98),
     DV('classPer', app, classAttribute='screenHeight', percent=10)
