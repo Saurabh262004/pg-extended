@@ -206,7 +206,7 @@ system.addElement(
 
 # TextInput
 system.addElement(
-  TextInput(
+  element=TextInput(
     section=Section(
       dimensions={
         'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
@@ -234,7 +234,8 @@ system.addElement(
       'params': None,
       'sendValue': True
     }
-  ), 'myTextInput'
+  ),
+  elementID='myTextInput'
 )
 
 app.addSystem(system, 'mainSystem')
