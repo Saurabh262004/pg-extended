@@ -1,5 +1,5 @@
 import time
-from typing import Iterable, Optional, Union
+from typing import Iterable, Union
 from .DynamicValue import DynamicValue
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
@@ -7,8 +7,31 @@ DEFAULT_POS_VALS = ['start', 'end']
 
 numType = Union[int, float]
 
+'''
+AnimatedValue is a class that provides a value that can be interpolated between multiple DynamicValues with an interpolation step function.
+
+It can be hooked to other UI elements to create an animated UI element.
+Other than that, it can also be used for any other task that might need a value to go from one number to another with any function you want.
+
+It supports following interpolation types:
+- 'linear', 'easeIn', 'easeOut', 'easeInOut' and 'custom'
+- a custom interpolation function must take three inputs of int or float type and return one int or float.
+
+Parameters:
+- [required] values:              An iterable of DynamicValues (must be more than 1). This is the set of values the class with interpolate over.
+- [required] duration:            Duration of the animation in ms
+- [optional] defaultPos:          The default values the class with have. Either start or end. (default is start)
+- [optional] interpolation:       The type of interpolation to use when animating the value. (default is linear)
+- [optional] callback:            A callable to call when a animation is done. (default is None)
+- [optional] customInterpolation: A custom interpolation function as described above. (default is None)
+
+Useable methods:
+- trigger:          Starts the animation over time.
+- resolveValue:     Resolves the value of the class if in the middle of an animation.
+- updateRestingPos: Snaps the value to it's default position.
+'''
 class AnimatedValue:
-  def __init__(self, values: Iterable[DynamicValue], duration: numType, defaultPos: Optional[str] = 'start', interpolation: Optional[str] = 'linear', callback: Optional[callable] = None, customInterpolation: Optional[callable] = None):
+  def __init__(self, values: Iterable[DynamicValue], duration: numType, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
     if len(values) < 2:
       raise ValueError("Animator requires a minimum of two values to animate between.")
 
@@ -141,7 +164,7 @@ class AnimatedValue:
     else:
       self.value = self.values[-1].value
 
-  def trigger(self, reverse: Optional[bool] = False):
+  def trigger(self, reverse: bool = False):
     self.animStart = time.perf_counter() * 1000
 
     self.reverse = reverse
