@@ -21,7 +21,7 @@ Parameters:
 - [required] textColor:            Color of the typed text (pg.Color).
 - [optional] placeholder:          Placeholder text to display when no input is provided (default is None).
 - [optional] placeholderTextColor: Color of the placeholder text (default is same as textColor).
-- [optional] border:               Thickness of the border around the input box (default is 1).
+- [optional] border:               Thickness of the border around the input box (default is 0).
 - [optional] borderColor:          Color of the border when not focused (default is None).
 - [optional] focusBorderColor:     Color of the border when focused (default is None).
 - [optional] focusBackground:      Background (Color or Surface) when focused (default is None).
@@ -41,7 +41,7 @@ Usable methods:
 - draw:       Renders the text input (border, background, and text) onto the given surface.
 '''
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
