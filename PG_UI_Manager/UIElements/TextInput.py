@@ -14,7 +14,7 @@ LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, resizable: bool = False, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: Optional[str], placeholderTextColor: Optional[pg.Color], border: int = 1, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
@@ -25,7 +25,6 @@ class TextInput:
     self.focusBorderColor = focusBorderColor
     self.background = self.section.background
     self.focusBackground = focusBackground
-    self.resizable = resizable
     self.onChangeInfo = onChangeInfo
     self.alignTextHorizontal = alignTextHorizontal
     self.alignTextVertical = alignTextVertical
@@ -46,13 +45,6 @@ class TextInput:
       for k in ONCHANGE_KEYS:
         if not k in self.onChangeInfo:
           raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
-
-    self.resizableIndicator = (
-      DynamicValue('callable', lambda section: section.x + (section.width / 100 * 95) - 3, callableParameters=self.section),
-      DynamicValue('callable', lambda section: section.y + section.height - 3, callableParameters=self.section),
-      DynamicValue('callable', lambda section: section.x + section.width - 3, callableParameters=self.section),
-      DynamicValue('callable', lambda section: section.y + (section.height - (section.width / 100 * 5)) - 3, callableParameters=self.section)
-    )
 
     if self.placeholderTextColor is None:
       self.placeholderTextColor = self.textColor
@@ -186,9 +178,6 @@ class TextInput:
     except Exception as e:
       print(e)
 
-    for point in self.resizableIndicator:
-      point.resolveValue()
-
     if self.border > 0:
       self.borderRect.update(newX, newY, newWidth, newHeight)
 
@@ -205,17 +194,3 @@ class TextInput:
     self.section.draw(surface)
 
     self.textBox.draw(surface)
-
-    if self.resizable:
-      pg.draw.aaline(
-        surface,
-        self.textColor,
-        (
-          self.resizableIndicator[0].value,
-          self.resizableIndicator[1].value
-        ),
-        (
-          self.resizableIndicator[2].value,
-          self.resizableIndicator[3].value
-        )
-      )

@@ -227,7 +227,6 @@ system.addElement(
     borderColor=pg.Color(0, 0, 0),
     focusBorderColor=pg.Color(255, 0, 0),
     focusBackground=pg.Color(80, 80, 80),
-    resizable=True,
     alignTextHorizontal='center',
     alignTextVertical='center',
     onChangeInfo={
