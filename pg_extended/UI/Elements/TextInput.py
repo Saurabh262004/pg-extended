@@ -1,8 +1,8 @@
 from typing import Optional, Union
 import time
 import pygame as pg
-from .Section import Section
-from .TextBox import TextBox
+from pg_extended.UI.Elements.Section import Section
+from pg_extended.UI.Elements.TextBox import TextBox
 
 backgroundType = Union[pg.Color, pg.Surface]
 

@@ -1,7 +1,7 @@
 from typing import Optional, Union, Dict
 import pygame as pg
-from ..helpers import allIn, squish, fit, fill
-from .Core import DynamicValue
+from pg_extended.UI.helpers import allIn, squish, fit, fill
+from pg_extended.Core import DynamicValue
 
 numType = Union[int, float]
 backgroundType = Union[pg.Color, pg.Surface]

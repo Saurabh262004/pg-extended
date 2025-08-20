@@ -7,8 +7,6 @@ REFERENCE_TYPES = ('number', 'percent', 'dictNum', 'classNum', 'dictPer', 'class
 '''
 DynamicValue is a class that allows you to create dynamic values that can change based on different reference types.
 
-It is mainly used for creating dynamic UI elements in this framework, but it can also be used for other purposes.
-
 It supports the following reference types:
 - 'number':   A static number value.
 - 'percent':  A percentage of a static number value.

@@ -1,6 +1,6 @@
 from typing import Optional, Callable
 import pygame as pg
-from .Section import Section
+from pg_extended.UI.Elements.Section import Section
 
 '''
 Toggle is a class that represents a toggle switch UI element.

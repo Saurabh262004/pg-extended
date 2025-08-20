@@ -1,9 +1,9 @@
 from typing import Optional, Union, Iterable, Dict
 import pygame as pg
-from ..helpers import mapRange
-from .Core import DynamicValue
-from .Section import Section
-from .Circle import Circle
+from pg_extended.UI.helpers import mapRange
+from pg_extended.Core import DynamicValue
+from pg_extended.UI.Elements.Section import Section
+from pg_extended.UI.Elements.Circle import Circle
 
 numType = Union[int, float]
 backgroundType = Union[pg.Color, pg.Surface]

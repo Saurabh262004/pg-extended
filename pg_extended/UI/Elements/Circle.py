@@ -1,8 +1,8 @@
 from typing import Dict, Optional, Union
 from math import sqrt
 import pygame as pg
-from ..helpers import fit, fill, squish, allIn
-from .Core import DynamicValue
+from pg_extended.UI.helpers import fit, fill, squish, allIn
+from pg_extended.Core import DynamicValue
 
 backgroundType = Union[pg.Color, pg.Surface]
 

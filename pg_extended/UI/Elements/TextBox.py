@@ -1,6 +1,6 @@
 from typing import Optional
 import pygame as pg
-from .Section import Section
+from pg_extended.UI.Elements.Section import Section
 
 TEXT_ALIGN_HORIZONTAL = ('left', 'right', 'center')
 TEXT_ALIGN_VERTICAL = ('top', 'bottom', 'center')

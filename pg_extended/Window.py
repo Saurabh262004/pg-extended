@@ -1,7 +1,7 @@
 from typing import Iterable, Optional, Union, Dict, List
 import pygame as pg
-from .UIElements.Core import DynamicValue, AnimatedValue
-from .System import System
+from pg_extended.Core import DynamicValue, AnimatedValue
+from pg_extended.UI.System import System
 
 '''
 Window is a class that represents your main application window.

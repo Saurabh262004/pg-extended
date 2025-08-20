@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Iterable, Union
 import pygame as pg
-from .helpers import allIn
-from .UIElements import *
+from pg_extended.UI.helpers import allIn
+from pg_extended.UI.Elements import *
 
 elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]
 
