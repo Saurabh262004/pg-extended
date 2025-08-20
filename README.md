@@ -1,2 +1,2 @@
-# Pg-UI-Manager
-A Library for creating and managing UI with pygame.
+# pg-extended
+A lightweight game engine that works on top of pygame.
