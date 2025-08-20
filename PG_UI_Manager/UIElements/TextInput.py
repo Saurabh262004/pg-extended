@@ -58,7 +58,6 @@ class TextInput:
 
     self.inFocus = False
     self.typing = False
-    self.typingStart = None
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -67,6 +66,13 @@ class TextInput:
     self.inputText = ''
     self.lastKey = ''
     self.valueOnLastCallback = ''
+    self.typingStart = 0
+    self.lastAutoInputTime = 0
+    self.autoInputDelay = 0.5
+    self.autoInputInterval = 0.06
+    self.autoInputSpeedIncrease = 0.8
+    self.autoInputMinInterval = 0.01
+    self.dynamicAutoInputInterval = self.autoInputInterval
 
     if self.onChangeInfo is not None:
       for k in ONCHANGE_KEYS:
@@ -159,7 +165,7 @@ class TextInput:
           self.typingStart = time.perf_counter()
           self.lastKey = event.unicode
           self.lazyUpdate = False
-        
+
         if self.inputText == '':
           self.textBox.textColor = self.placeholderTextColor
           self.textBox.text = self.placeholder
@@ -173,6 +179,7 @@ class TextInput:
       if self.typing:
         self.typing = False
         self.lazyUpdate = True
+        self.dynamicAutoInputInterval = self.autoInputInterval
 
         self.callback()
 
@@ -184,21 +191,27 @@ class TextInput:
     newWidth, newHeight = self.section.width + (self.border * 2), self.section.height + (self.border * 2)
 
     # auto rapid input on key hold
-    if self.typing and (time.perf_counter() - self.typingStart > 0.5):
-      if self.lastKey == 'ctrlbackspace':
-        splitArr = self.getSplitText(self.inputText)
-        self.inputText = ''.join(splitArr[:-1])
-      elif self.lastKey == 'backspace':
-        self.inputText = self.inputText[:-1]
-      else:
-        self.inputText += self.lastKey
+    if self.typing and (time.perf_counter() - self.typingStart > self.autoInputDelay):
+      if time.perf_counter() - self.lastAutoInputTime > self.dynamicAutoInputInterval:
+        if self.dynamicAutoInputInterval > self.autoInputMinInterval:
+          self.dynamicAutoInputInterval *= self.autoInputSpeedIncrease
 
-      if self.inputText == '':
-        self.textBox.textColor = self.placeholderTextColor
-        self.textBox.text = self.placeholder
-      else:
-        self.textBox.textColor = self.textColor
-        self.textBox.text = self.inputText
+        self.lastAutoInputTime = time.perf_counter()
+
+        if self.lastKey == 'ctrlbackspace':
+          splitArr = self.getSplitText(self.inputText)
+          self.inputText = ''.join(splitArr[:-1])
+        elif self.lastKey == 'backspace':
+          self.inputText = self.inputText[:-1]
+        else:
+          self.inputText += self.lastKey
+
+        if self.inputText == '':
+          self.textBox.textColor = self.placeholderTextColor
+          self.textBox.text = self.placeholder
+        else:
+          self.textBox.textColor = self.textColor
+          self.textBox.text = self.inputText
 
     try:
       self.textBox.update()
