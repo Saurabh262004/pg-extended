@@ -1,7 +1,8 @@
 import pygame as pg
 from pg_extended.Core import DynamicValue as DV, AnimatedValue as AV
 from pg_extended.UI.Elements import *
-from pg_extended.UI import System, Window
+from pg_extended.UI import System
+from pg_extended import Window
 
 app = Window('Main Window', (480, 270))
 
