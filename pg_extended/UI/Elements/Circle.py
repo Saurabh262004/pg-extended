@@ -28,10 +28,13 @@ class Circle:
   def __init__(self, dimensions: Dict[str, DynamicValue], background: backgroundType, backgroundSizeType: Optional[str] = 'fit', backgroundSizePercent: Optional[int] = 100):
     self.dimensions = dimensions
     self.background = background
-    self.drawImage = None
     self.backgroundSizeType = backgroundSizeType
     self.backgroundSizePercent = backgroundSizePercent
+
     self.sqrt2 = sqrt(2)
+    self.drawImage = None
+    self.backgroundWidth = 0
+    self.backgroundHeight = 0
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -94,11 +97,14 @@ class Circle:
       else:
         self.drawImage = squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
 
+      self.backgroundWidth = self.drawImage.get_width()
+      self.backgroundHeight = self.drawImage.get_height()
+
   def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 
     if isinstance(self.background, pg.Surface):
-      surface.blit(self.drawImage, (self.x - (self.drawImage.get_width() / 2), self.y - (self.drawImage.get_height() / 2)))
+      surface.blit(self.drawImage, (self.x - (self.backgroundWidth / 2), self.y - (self.backgroundHeight / 2)))
     elif isinstance(self.background, pg.Color):
       pg.draw.circle(surface, self.background, (self.x, self.y), self.radius)

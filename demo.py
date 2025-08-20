@@ -8,17 +8,17 @@ app = Window('Main Window', (480, 270))
 
 system = System(preLoadState=True)
 
-# the mandatory main section
+# a normal System
 system.addElement(
   element=Section(
     dimensions={
       'x': DV('number', 0),
       'y': DV('number', 0),
-      'width': DV('number', 1),
-      'height': DV('number', 1)
+      'width': DV('classNum', app, classAttribute='screenWidth'),
+      'height': DV('classNum', app, classAttribute='screenHeight')
     },
     background=pg.Color(0, 0, 10)),
-  elementID='mainSection'
+  elementID='background'
 )
 
 # animators

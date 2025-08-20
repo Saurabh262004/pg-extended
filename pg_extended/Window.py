@@ -1,7 +1,8 @@
 from typing import Iterable, Optional, Union, Dict, List
 import pygame as pg
 from pg_extended.Core import DynamicValue, AnimatedValue
-from pg_extended.UI.System import System
+from pg_extended.Game import Scene
+from pg_extended.UI import System
 
 '''
 Window is a class that represents your main application window.
@@ -35,14 +36,31 @@ class Window:
     self.screenWidth: int = max(self.screenRes[0], self.minRes[0])
     self.screenHeight: int = max(self.screenRes[1], self.minRes[1])
     self.fps: int = fps
+
     self.running: bool = False
     self.systems: Dict[str, System] = {}
     self.activeSystems: Dict[str, System] = {}
     self.systemZ: Dict[str, int] = {}
+    self.scenes: Dict[str, Scene] = {}
+    self.activeScene: Scene = None
     self.customDynamicValues: List[DynamicValue] = []
     self.lazyDynamicValues: List[DynamicValue] = []
     self.customAnimatedValues: List[AnimatedValue] = []
     self.customData: dict = {}
+
+  def addScene(self, scene: Scene, sceneID: str) -> bool:
+    if sceneID in self.scenes:
+      print(f'A scene with ID: {sceneID} already exists. please enter a unique ID')
+      return False
+
+    if not scene.locked:
+      print('Provided scene is not locked, switching the scene to locked state and removing its surface.')
+      scene.locked = True
+      scene.surface = None
+
+    self.scenes[sceneID] = scene
+
+    return True
 
   def addSystem(self, system: System, systemID: str) -> bool:
     if systemID in self.systems:
@@ -54,16 +72,27 @@ class Window:
       system.locked = True
       system.surface = None
 
-    if not 'mainSection' in system.elements:
-      print('the system must have a section with id \"mainSection\"')
-      return False
-
-    system.elements['mainSection'].dimensions['width'] = DynamicValue('classNum', self, classAttribute='screenWidth')
-    system.elements['mainSection'].dimensions['height'] = DynamicValue('classNum', self, classAttribute='screenHeight')
-
     self.systems[systemID] = system
 
     return True
+
+  def setActiveScene(self, sceneID: str) -> bool:
+    interrupted = False
+
+    if not self.scenes[sceneID]:
+      print(f'A scene with ID: {sceneID} does not exist. Please provide a valid scene ID')
+      interrupted = True
+    elif self.scenes[sceneID] == self.activeScene:
+      print(f'The scene with ID: {sceneID} is already active.')
+      interrupted = True
+    else:
+      self.activeScene = self.scenes[sceneID]
+
+      if self.running:
+        self.__initiateActiveScene(self.screen)
+        self.__resetUI()
+
+    return not interrupted
 
   def activateSystems(self, systemIDs: Union[Iterable[str], str]) -> bool:
     interrupted = False
@@ -93,6 +122,18 @@ class Window:
       self.__resetUI()
 
     return not interrupted
+
+  def deactivateScene(self) -> bool:
+    if self.activeScene is None:
+      print('No scene is currently active.')
+      return False
+
+    self.activeScene = None
+
+    if self.running:
+      self.__resetUI()
+
+    return True
 
   def deactivateSystems(self, systemIDs: Union[Iterable[str], str]) -> bool:
     interrupted = False
@@ -128,6 +169,10 @@ class Window:
 
     return not interrupted
 
+  def __initiateActiveScene(self, surface: pg.Surface):
+    if self.activeScene is not None and self.activeScene.locked:
+      self.activeScene.initiate(surface)
+
   def __initiateActiveSystems(self, surface: pg.Surface):
     for systemID in self.activeSystems:
       if self.activeSystems[systemID].locked:
@@ -147,73 +192,6 @@ class Window:
     self.title = title
     pg.display.set_caption(self.title)
 
-  def __updateLoop(self):
-    self.__handleEvents()
-
-    if self.secondResize or self.__screenResized():
-      self.secondResize = not self.secondResize
-      self.__resetUI()
-
-    self.currentFPS = self.clock.get_fps()
-
-    self.screen.fill((0, 0, 0))
-
-    [dynamicValue.resolveValue() for dynamicValue in self.customDynamicValues]
-
-    [animatedValue.resolveValue() for animatedValue in self.customAnimatedValues]
-
-    for systemID in self.systemZ:
-      if systemID in self.activeSystems:
-        self.activeSystems[systemID].update()
-
-    if self.customLoopProcess is not None:
-      self.customLoopProcess()
-
-    for systemID in self.systemZ:
-      if systemID in self.activeSystems:
-        self.activeSystems[systemID].draw()
-
-    pg.display.flip()
-    self.clock.tick(self.fps)
-
-
-  def openWindow(self):
-    pg.init()
-
-    self.time = pg.time
-    self.clock = self.time.Clock()
-    self.currentFPS: int = self.clock.get_fps()
-
-    pg.display.set_caption(self.title)
-
-    self.screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.RESIZABLE)
-
-    self.running = True
-    self.secondResize = False
-
-    self.__initiateActiveSystems(self.screen)
-
-    self.__resetUI()
-
-    for systemID in self.systemZ:
-      if systemID in self.activeSystems:
-        self.activeSystems[systemID].draw()
-
-    while self.running:
-      self.__updateLoop()
-
-    self.closeWindow()
-
-  def closeWindow(self):
-    self.running = False
-    self.deactivateSystems('all')
-
-    del self.screen
-    del self.time
-    del self.clock
-
-    pg.quit()
-
   def __handleEvents(self):
     if not self.running:
       return None
@@ -229,6 +207,9 @@ class Window:
         new_height = max(self.minRes[1], event.h)
         self.screen = pg.display.set_mode((new_width, new_height), pg.RESIZABLE)
       else:
+        if self.activeScene is not None:
+          cursorChange = self.activeScene.handleEvents(event)
+
         for systemID in self.systemZ:
           if systemID in self.activeSystems:
             cursorChange = self.activeSystems[systemID].handleEvents(event)
@@ -239,6 +220,77 @@ class Window:
           pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         elif cursorChange == 'ibeam':
           pg.mouse.set_cursor(pg.SYSTEM_CURSOR_IBEAM)
+
+  def __updateLoop(self):
+    self.__handleEvents()
+
+    if self.secondResize or self.__screenResized():
+      self.secondResize = not self.secondResize
+      self.__resetUI()
+
+    self.currentFPS = self.clock.get_fps()
+
+    self.screen.fill((0, 0, 0))
+
+    [dynamicValue.resolveValue() for dynamicValue in self.customDynamicValues]
+
+    [animatedValue.resolveValue() for animatedValue in self.customAnimatedValues]
+
+    if self.activeScene is not None:
+      self.activeScene.update()
+
+    for systemID in self.systemZ:
+      if systemID in self.activeSystems:
+        self.activeSystems[systemID].update()
+
+    if self.customLoopProcess is not None:
+      self.customLoopProcess()
+
+    if self.activeScene is not None:
+      self.activeScene.draw()
+
+    for systemID in self.systemZ:
+      if systemID in self.activeSystems:
+        self.activeSystems[systemID].draw()
+
+    pg.display.flip()
+    self.clock.tick(self.fps)
+
+  def openWindow(self):
+    pg.init()
+
+    self.time = pg.time
+    self.clock = self.time.Clock()
+    self.currentFPS: int = self.clock.get_fps()
+
+    pg.display.set_caption(self.title)
+
+    self.screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.RESIZABLE)
+
+    self.running = True
+    self.secondResize = False
+
+    self.__initiateActiveScene(self.screen)
+
+    self.__initiateActiveSystems(self.screen)
+
+    self.__resetUI()
+
+    while self.running:
+      self.__updateLoop()
+
+    self.closeWindow()
+
+  def closeWindow(self):
+    self.running = False
+    self.deactivateSystems('all')
+    self.deactivateScene()
+
+    del self.screen
+    del self.time
+    del self.clock
+
+    pg.quit()
 
   def __screenResized(self) -> bool:
     if not self.running:
@@ -263,6 +315,9 @@ class Window:
 
     if self.customUpdateProcess is not None:
       self.customUpdateProcess()
+
+    if self.activeScene is not None:
+      self.activeScene.lazyUpdate()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:

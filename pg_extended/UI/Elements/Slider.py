@@ -199,7 +199,7 @@ class Slider():
         else:
           self.onChangeInfo['callable']()
 
-  def checkEvent(self, event: pg.event.Event) -> bool:
+  def checkEvent(self, event: pg.Event) -> bool:
     if not (self.active and self.activeEvents):
       return None
 

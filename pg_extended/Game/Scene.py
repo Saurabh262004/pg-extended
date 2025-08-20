@@ -1,0 +1,29 @@
+import pygame as pg
+
+class Scene:
+  def __init__(self, surface: pg.Surface = None, preLoadState: bool = False):
+    self.locked = preLoadState
+
+    if not self.locked:
+      if not surface:
+        self.locked = True
+        print('No surface provided, the scene is locked by default.\nIt can be initiated manually by providing a surface')
+      else:
+        self.surface = surface
+
+  def lazyUpdate(self):
+    pass
+
+  def update(self):
+    pass
+
+  def handleEvents(self, event: pg.Event) -> str:
+    pass
+
+  def draw(self, surface: pg.Surface):
+    pass
+
+  def initiate(self, surface: pg.Surface):
+    self.surface = surface
+
+    self.locked = False

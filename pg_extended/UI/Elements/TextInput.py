@@ -122,7 +122,7 @@ class TextInput:
         else:
           self.onChangeInfo['callable']()
 
-  def checkEvent(self, event: pg.event.Event) -> Optional[bool]:
+  def checkEvent(self, event: pg.Event) -> Optional[bool]:
     if not (self.active and self.activeEvents):
       return None
 

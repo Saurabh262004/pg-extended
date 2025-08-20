@@ -59,7 +59,7 @@ class Button:
 
     self.update()
 
-  def checkEvent(self, event: pg.event.Event) -> Optional[bool]:
+  def checkEvent(self, event: pg.Event) -> Optional[bool]:
     if not (self.active and self.activeEvents):
       return None
 

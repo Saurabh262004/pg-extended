@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Iterable, Union
+from typing import Dict, Iterable, Union
 import pygame as pg
 from pg_extended.UI.helpers import allIn
 from pg_extended.UI.Elements import *
@@ -22,7 +22,7 @@ Usable methods:
 - initiate:      Initiates the system with a surface, unlocking it for drawing and updating.
 '''
 class System:
-  def __init__(self, surface: Optional[pg.Surface] = None, preLoadState: Optional[bool] = False):
+  def __init__(self, surface: pg.Surface = None, preLoadState: bool = False):
     self.locked = preLoadState
 
     if not self.locked:
@@ -91,7 +91,7 @@ class System:
 
     return True
 
-  def __validateIDs(self, elementIDs: Optional[Iterable] = None) -> Union[Iterable, None, dict]:
+  def __validateIDs(self, elementIDs: Iterable = None) -> Union[Iterable, None, dict]:
     if elementIDs == None:
       return self.elements
 
@@ -101,7 +101,7 @@ class System:
 
     return elementIDs
 
-  def draw(self, elementIDs: Optional[Iterable] = None):
+  def draw(self, elementIDs: Iterable = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -115,7 +115,7 @@ class System:
 
     self.firstDraw = False
 
-  def update(self, elementIDs: Optional[Iterable[str]] = None):
+  def update(self, elementIDs: Iterable[str] = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -129,7 +129,7 @@ class System:
         if not element.lazyUpdate and element.active:
           element.update()
 
-  def lazyUpdate(self, elementIDs: Optional[Iterable[str]] = None):
+  def lazyUpdate(self, elementIDs: Iterable[str] = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -141,7 +141,7 @@ class System:
         if self.elements[elementID].active:
           self.elements[elementID].update()
 
-  def handleEvents(self, event: pg.event.Event) -> Union[str, None]:
+  def handleEvents(self, event: pg.Event) -> Union[str, None]:
     if self.locked:
       print('System is currently locked')
       return None
