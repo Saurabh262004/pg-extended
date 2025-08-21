@@ -1,61 +1,58 @@
 import pygame as pg
-from pg_extended.Core import DynamicValue as DV, AnimatedValue as AV
-from pg_extended.UI.Elements import *
-from pg_extended.UI import System
-from pg_extended import Window
+import pg_extended as pgx
 
-app = Window('Main Window', (480, 270))
+app = pgx.Window('Main Window', (480, 270))
 
-system = System(preLoadState=True)
+system = pgx.UI.System(preLoadState=True)
 
 # a normal System
 system.addElement(
-  element=Section(
+  element=pgx.UI.Elements.Section(
     dimensions={
-      'x': DV('number', 0),
-      'y': DV('number', 0),
-      'width': DV('classNum', app, classAttribute='screenWidth'),
-      'height': DV('classNum', app, classAttribute='screenHeight')
+      'x': pgx.Core.DynamicValue('number', 0),
+      'y': pgx.Core.DynamicValue('number', 0),
+      'width': pgx.Core.DynamicValue('classNum', app, classAttribute='screenWidth'),
+      'height': pgx.Core.DynamicValue('classNum', app, classAttribute='screenHeight')
     },
     background=pg.Color(0, 0, 10)),
   elementID='background'
 )
 
 # animators
-topToBottom = AV(
+topToBottom = pgx.Core.AnimatedValue(
   values=(
-    DV('classPer', app, classAttribute='screenHeight', percent=1),
-    DV('classPer', app, classAttribute='screenHeight', percent=89)
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenHeight', percent=1),
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenHeight', percent=89)
   ),
   duration=400,
   defaultPos='end',
   interpolation='linear'
 )
 
-leftToRight = AV(
+leftToRight = pgx.Core.AnimatedValue(
   values=(
-    DV('classPer', app, classAttribute='screenWidth', percent=1),
-    DV('classPer', app, classAttribute='screenWidth', percent=89)
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=1),
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=89)
   ),
   duration=300,
   defaultPos='end',
   interpolation='easeIn'
 )
 
-swTolw = AV(
+swTolw = pgx.Core.AnimatedValue(
   values=(
-    DV('classPer', app, classAttribute='screenWidth', percent=98),
-    DV('classPer', app, classAttribute='screenWidth', percent=10)
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=98),
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=10)
   ),
   duration=200,
   defaultPos='end',
   interpolation='easeOut'
 )
 
-shTolh = AV(
+shTolh = pgx.Core.AnimatedValue(
   values=(
-    DV('classPer', app, classAttribute='screenHeight', percent=98),
-    DV('classPer', app, classAttribute='screenHeight', percent=10)
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenHeight', percent=98),
+    pgx.Core.DynamicValue('classPer', app, classAttribute='screenHeight', percent=10)
   ),
   duration=100,
   defaultPos='end',
@@ -66,12 +63,12 @@ app.customAnimatedValues.extend((topToBottom, leftToRight, swTolw, shTolh))
 
 # animated section
 system.addElement(
-  element=Section(
+  element=pgx.UI.Elements.Section(
     dimensions={
-     'x': DV('classNum', leftToRight, classAttribute='value'),
-     'y': DV('classNum', topToBottom, classAttribute='value'),
-     'width': DV('classNum', swTolw, classAttribute='value'),
-     'height': DV('classNum', shTolh, classAttribute='value')
+     'x': pgx.Core.DynamicValue('classNum', leftToRight, classAttribute='value'),
+     'y': pgx.Core.DynamicValue('classNum', topToBottom, classAttribute='value'),
+     'width': pgx.Core.DynamicValue('classNum', swTolw, classAttribute='value'),
+     'height': pgx.Core.DynamicValue('classNum', shTolh, classAttribute='value')
     },
     background=pg.Color(0, 200, 200)
   ),
@@ -90,13 +87,13 @@ def triggerAnimations():
 
 # Button
 system.addElement(
-  element=Button(
-    section=Section(
+  element=pgx.UI.Elements.Button(
+    section=pgx.UI.Elements.Section(
       dimensions={
-        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'width': DV('classPer', app, classAttribute='screenWidth', percent=10),
-        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
+        'x': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'width': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=10),
+        'height': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=5,
@@ -118,13 +115,13 @@ system.addElement(
 
 # Toggle
 system.addElement(
-  element=Toggle(
-    section=Section(
+  element=pgx.UI.Elements.Toggle(
+    section=pgx.UI.Elements.Section(
       dimensions={
-        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttribute='screenWidth', percent=17),
-        'width': DV('classPer', app, classAttribute='screenWidth', percent=10),
-        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
+        'x': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=17),
+        'width': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=10),
+        'height': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=6,
@@ -143,25 +140,25 @@ system.addElement(
 
 # Slider
 system.addElement(
-  element=Slider(
+  element=pgx.UI.Elements.Slider(
     orientation='horizontal',
-    section=Section(
+    section=pgx.UI.Elements.Section(
       dimensions={
-        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttribute='screenWidth', percent=28),
-        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttribute='screenWidth', percent=2)
+        'x': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=28),
+        'width': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=2)
       },
       background=pg.Color(80, 80, 80),
       borderRadius=6,
       backgroundSizeType='fit',
       backgroundSizePercent=100
     ),
-    dragElement=Circle(
+    dragElement=pgx.UI.Elements.Circle(
       dimensions={
-        'x': DV('number', 0),
-        'y': DV('number', 0),
-        'radius': DV('classPer', app, classAttribute='screenWidth', percent=2)
+        'x': pgx.Core.DynamicValue('number', 0),
+        'y': pgx.Core.DynamicValue('number', 0),
+        'radius': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=2)
       },
       background=pg.Color(220, 110, 220),
       backgroundSizeType='fit',
@@ -182,13 +179,13 @@ system.addElement(
 
 # TextBox
 system.addElement(
-  element=TextBox(
-    section=Section(
+  element=pgx.UI.Elements.TextBox(
+    section=pgx.UI.Elements.Section(
       dimensions={
-        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttribute='screenWidth', percent=35),
-        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
+        'x': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=35),
+        'width': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=6,
@@ -207,13 +204,13 @@ system.addElement(
 
 # TextInput
 system.addElement(
-  element=TextInput(
-    section=Section(
+  element=pgx.UI.Elements.TextInput(
+    section=pgx.UI.Elements.Section(
       dimensions={
-        'x': DV('classPer', app, classAttribute='screenWidth', percent=5),
-        'y': DV('classPer', app, classAttribute='screenWidth', percent=42),
-        'width': DV('classPer', app, classAttribute='screenWidth', percent=25),
-        'height': DV('classPer', app, classAttribute='screenWidth', percent=5)
+        'x': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5),
+        'y': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=42),
+        'width': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=25),
+        'height': pgx.Core.DynamicValue('classPer', app, classAttribute='screenWidth', percent=5)
       },
       background=pg.Color(100, 100, 100),
       borderRadius=0,
