@@ -10,9 +10,9 @@ system.addElement(
   element=pgx.Section(
     dimensions={
       'x': pgx.DynamicValue('number', 0),
-      'y': pgx.Core.DynamicValue('number', 0),
-      'width': pgx.Core.DynamicValue('classNum', app, classAttribute='screenWidth'),
-      'height': pgx.Core.DynamicValue('classNum', app, classAttribute='screenHeight')
+      'y': pgx.DynamicValue('number', 0),
+      'width': pgx.DynamicValue('classNum', app, classAttribute='screenWidth'),
+      'height': pgx.DynamicValue('classNum', app, classAttribute='screenHeight')
     },
     background=pg.Color(0, 0, 10)),
   elementID='background'

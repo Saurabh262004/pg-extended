@@ -47,6 +47,7 @@ class Window:
     self.lazyDynamicValues: List[DynamicValue] = []
     self.customAnimatedValues: List[AnimatedValue] = []
     self.customData: dict = {}
+    self.firstUpdate = True
 
   def addScene(self, scene: Scene, sceneID: str) -> bool:
     if sceneID in self.scenes:
@@ -232,9 +233,11 @@ class Window:
 
     self.screen.fill((0, 0, 0))
 
-    [dynamicValue.resolveValue() for dynamicValue in self.customDynamicValues]
+    for dynamicValue in self.customDynamicValues:
+      dynamicValue.resolveValue()
 
-    [animatedValue.resolveValue() for animatedValue in self.customAnimatedValues]
+    for animatedValue in self.customAnimatedValues:
+      animatedValue.resolveValue()
 
     if self.activeScene is not None:
       self.activeScene.update()
@@ -309,9 +312,11 @@ class Window:
     if not self.running:
       return None
 
-    [dynamicValue.resolveValue() for dynamicValue in self.lazyDynamicValues]
+    for dynamicValue in self.lazyDynamicValues:
+      dynamicValue.resolveValue()
 
-    [animatedValue.updateRestingPos() for animatedValue in self.customAnimatedValues]
+    for animatedValue in self.customAnimatedValues:
+      animatedValue.updateRestingPos()
 
     if self.customUpdateProcess is not None:
       self.customUpdateProcess()
