@@ -44,9 +44,10 @@ class TextureAtlas:
   def setNamedTiles(self):
     if self.names is None: return None
 
-    x, y = -1
+    y = -1
     for row in self.names:
       y += 1
+      x = -1
       for name in row:
         x += 1
         self.namedTiles[name] = self.tiles[x][y]
