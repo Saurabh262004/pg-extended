@@ -64,8 +64,10 @@ class DynamicValue:
       self.resolveValue = self.__getByNumber
     elif self.referenceType == 'percent':
       self.resolveValue = self.__getByPercent
+    elif self.referenceType == 'callable' and self.callableParameters is None:
+      self.resolveValue = self.__getByCallableWithParams
     elif self.referenceType == 'callable':
-      self.resolveValue = self.__getByCallable
+      self.resolveValue = self.__getByCallableWithoutParams
     elif self.referenceType == 'dictNum':
       self.resolveValue = self.__getByDictNum
     elif self.referenceType == 'dictPer':
@@ -83,11 +85,11 @@ class DynamicValue:
   def __getByPercent(self):
     self.value = self.reference * (self.percent / 100)
 
-  def __getByCallable(self):
-    if not self.callableParameters is None:
-      self.value = self.reference(self.callableParameters)
-    else:
-      self.value = self.reference()
+  def __getByCallableWithParams(self):
+    self.value = self.reference(self.callableParameters)
+
+  def __getByCallableWithoutParams(self):
+    self.value = self.reference()
 
   def __getByDictNum(self):
     self.value = self.reference[self.dictKey]
