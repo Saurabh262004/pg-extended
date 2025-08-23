@@ -37,7 +37,7 @@ class DynamicValue:
     self.classAttr = classAttribute
     self.percent = percent
     self.value = None
-    self.resolveValue: Callable
+    self.resolveValue: Callable = None
 
     if not self.referenceType in REFERENCE_TYPES:
       raise ValueError(f'Invalid dimType value received, value must be one of the following: {REFERENCE_TYPES}')
@@ -60,27 +60,9 @@ class DynamicValue:
     if (self.referenceType == 'percent' or self.referenceType == 'dictPer' or self.referenceType == 'classPer') and (self.percent is None):
       raise ValueError('If referenceType is percent, dictPer or classPer percent must be defined')
 
-    if self.referenceType == 'number':
-      self.resolveValue = self.__getByNumber
-    elif self.referenceType == 'percent':
-      self.resolveValue = self.__getByPercent
-    elif self.referenceType == 'callable' and self.callableParameters is None:
-      self.resolveValue = self.__getByCallableWithParams
-    elif self.referenceType == 'callable':
-      self.resolveValue = self.__getByCallableWithoutParams
-    elif self.referenceType == 'dictNum':
-      self.resolveValue = self.__getByDictNum
-    elif self.referenceType == 'dictPer':
-      self.resolveValue = self.__getByDictPer
-    elif self.referenceType == 'classNum':
-      self.resolveValue = self.__getByClassNum
-    elif self.referenceType == 'classPer':
-      self.resolveValue = self.__getByClassPer
+    self.assignResolveMethod()
 
     self.resolveValue()
-
-  def __getByNumber(self):
-    self.value = self.reference
 
   def __getByPercent(self):
     self.value = self.reference * (self.percent / 100)
@@ -102,3 +84,21 @@ class DynamicValue:
 
   def __getByClassPer(self):
     self.value = getattr(self.reference, self.classAttr, 0) * (self.percent / 100)
+
+  def assignResolveMethod(self):
+    if self.referenceType == 'number':
+      self.resolveValue = lambda: self.reference
+    elif self.referenceType == 'percent':
+      self.resolveValue = self.__getByPercent
+    elif self.referenceType == 'callable' and self.callableParameters is None:
+      self.resolveValue = self.__getByCallableWithParams
+    elif self.referenceType == 'callable':
+      self.resolveValue = self.__getByCallableWithoutParams
+    elif self.referenceType == 'dictNum':
+      self.resolveValue = self.__getByDictNum
+    elif self.referenceType == 'dictPer':
+      self.resolveValue = self.__getByDictPer
+    elif self.referenceType == 'classNum':
+      self.resolveValue = self.__getByClassNum
+    elif self.referenceType == 'classPer':
+      self.resolveValue = self.__getByClassPer
