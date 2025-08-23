@@ -43,7 +43,7 @@ class System:
 
     self.firstDraw = True
 
-  def addElement(self, element: elementType, elementID: str) -> bool:
+  def addElement(self, element: elementType, elementID: str):
     if elementID in self.elements:
       raise ValueError(f'An element with id: {elementID} already exists, please enter a unique id.')
 
@@ -63,8 +63,6 @@ class System:
       self.sliders[elementID] = element
     elif isinstance(element, TextInput):
       self.textInputs[elementID] = element
-
-    return True
 
   def removeElement(self, elementID: str) -> bool:
     if not elementID in self.elements:

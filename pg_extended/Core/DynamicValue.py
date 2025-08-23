@@ -64,6 +64,9 @@ class DynamicValue:
 
     self.resolveValue()
 
+  def __getByNumber(self):
+    self.value = self.reference
+
   def __getByPercent(self):
     self.value = self.reference * (self.percent / 100)
 
@@ -87,13 +90,13 @@ class DynamicValue:
 
   def assignResolveMethod(self):
     if self.referenceType == 'number':
-      self.resolveValue = lambda: self.reference
+      self.resolveValue = self.__getByNumber
     elif self.referenceType == 'percent':
       self.resolveValue = self.__getByPercent
     elif self.referenceType == 'callable' and self.callableParameters is None:
-      self.resolveValue = self.__getByCallableWithParams
-    elif self.referenceType == 'callable':
       self.resolveValue = self.__getByCallableWithoutParams
+    elif self.referenceType == 'callable':
+      self.resolveValue = self.__getByCallableWithParams
     elif self.referenceType == 'dictNum':
       self.resolveValue = self.__getByDictNum
     elif self.referenceType == 'dictPer':
