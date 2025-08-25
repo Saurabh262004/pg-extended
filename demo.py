@@ -5,19 +5,6 @@ app = pgx.Window('Main Window', (480, 270))
 
 system = pgx.System(preLoadState=True)
 
-# a normal System
-system.addElement(
-  element=pgx.Section(
-    dimensions={
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classNum', app, classAttribute='screenWidth'),
-      'height': pgx.DynamicValue('classNum', app, classAttribute='screenHeight')
-    },
-    background=pg.Color(0, 0, 10)),
-  elementID='background'
-)
-
 # animators
 topToBottom = pgx.AnimatedValue(
   values=(
@@ -236,10 +223,56 @@ system.addElement(
   elementID='myTextInput'
 )
 
+scene = pgx.Scene()
+
+scene.addElement(
+  element=pgx.TextureAtlas(
+    tilesetURL='tests/assets/decorative_cracks_walls.png',
+    tileWidth=16,
+    tileHeight=16,
+    names=[
+      ['Mid1', 'Mid2', 'Mid3', 'Mid4', 'MidFloor1', 'MidFloor2', 'MidFloor3', 'MidFloor4'],
+      ['TopLeft1', 'TopLeft2', 'TopLeft3', 'TopLeft4', 'TopRight1', 'TopRight2', 'TopRight3', 'TopRight4'],
+      ['Left1', 'Left2', 'Left3', 'Left4', 'Right1', 'Right2', 'Right3', 'Right4'],
+      ['BotLeft1', 'BotLeft2', 'BotLeft3', 'BotLeft4', 'BotRight1', 'BotRight2', 'BotRight3', 'BotRight4'],
+      ['MidLeft1', 'MidLeft2', 'MidLeft3', 'MidLeft4', 'MidRight1', 'MidRight2', 'MidRight3', 'MidRight4'],
+      ['LeftFloor1', 'LeftFloor2', 'LeftFloor3', 'LeftFloor4', 'RightFloor1', 'RightFloor2', 'RightFloor3', 'RightFloor4'],
+      ['TopMid1', 'TopMid2', 'TopMid3', 'TopMid4', 'BotMid1', 'BotMid2', 'BotMid3', 'BotMid4']
+    ]
+  ),
+  elementID='atlas1'
+)
+
+scene.addElement(
+  element=pgx.Level(
+    numTilesX=5,
+    numTilesY=5,
+    atlas=scene.elements['atlas1'],
+    tilesMatrix=[
+      ['TopLeft1', 'TopMid1', 'TopMid1', 'TopMid1', 'TopRight1'],
+      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
+      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
+      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
+      ['LeftFloor1', 'MidFloor1', 'MidFloor1', 'MidFloor1', 'RightFloor1']
+    ]
+  ),
+  elementID='level1'
+)
+
+scene.activateLevel('level1')
+
+viewPort = pgx.ViewPort(0, 0, 1)
+
 app.addSystem(system, 'mainSystem')
+
+app.addScene(scene, 'mainScene')
+
+app.setViewPort(viewPort)
 
 app.setSystemZ('mainSystem', 0)
 
 app.activateSystems('mainSystem')
+
+app.setActiveScene('mainScene')
 
 app.openWindow()

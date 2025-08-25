@@ -5,7 +5,6 @@ from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
 
-numType = Union[int, float]
 backgroundType = Union[pg.Color, pg.Surface]
 
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
@@ -37,7 +36,7 @@ Usable methods:
 - callback:    Calls the onChangeInfo callable with the current slider value and parameters.
 '''
 class Slider():
-  def __init__(self, orientation: str, section: Section, dragElement: Union[Section, Circle], valueRange: Iterable[numType], scrollSpeed: numType, filledSliderBackground: backgroundType, onChangeInfo: Optional[Dict] = None, hoverToScroll: Optional[bool] = True):
+  def __init__(self, orientation: str, section: Section, dragElement: Union[Section, Circle], valueRange: Iterable[float], scrollSpeed: float, filledSliderBackground: backgroundType, onChangeInfo: Optional[Dict] = None, hoverToScroll: Optional[bool] = True):
     self.orientation = orientation
     self.section = section
     self.valueRange = valueRange

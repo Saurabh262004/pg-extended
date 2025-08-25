@@ -1,7 +1,5 @@
 from typing import Union, Optional, Callable, Dict, Any
 
-numType = Union[int, float]
-
 REFERENCE_TYPES = ('number', 'percent', 'dictNum', 'classNum', 'dictPer', 'classPer', 'callable')
 
 '''
@@ -29,7 +27,7 @@ Useable methods:
 - resolveValue: Calculates the value based on the reference type and updates the `value` attribute.
 '''
 class DynamicValue:
-  def __init__(self, referenceType: str, reference: Union[Callable, numType, Dict[str, numType], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttribute: Optional[str] = None, percent: Optional[numType] = None):
+  def __init__(self, referenceType: str, reference: Union[Callable, float, Dict[str, float], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttribute: Optional[str] = None, percent: Optional[float] = None):
     self.referenceType = referenceType
     self.reference = reference
     self.callableParameters = callableParameters

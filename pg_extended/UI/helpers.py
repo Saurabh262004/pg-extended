@@ -1,11 +1,9 @@
-from typing import Union, Iterable, Optional
+from typing import Iterable, Optional
 from pygame import Surface as pgSurface, transform as pgTransform
 from math import sqrt
 
-numType = Union[int, float]
-
 # maps a number from one range to another
-def mapRange(num: numType, start1: numType, start2: numType, end1: numType, end2: numType) -> numType:
+def mapRange(num: float, start1: float, start2: float, end1: float, end2: float) -> float:
   # return the mid-point of the end range if the start1 and start2 are the same
   if start1 == start2:
     return (end1 + end2) / 2

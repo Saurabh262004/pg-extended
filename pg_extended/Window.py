@@ -1,7 +1,7 @@
 from typing import Iterable, Optional, Union, Dict, List
 import pygame as pg
 from pg_extended.Core import DynamicValue, AnimatedValue
-from pg_extended.Game import Scene
+from pg_extended.Game import Scene, ViewPort
 from pg_extended.UI import System
 
 '''
@@ -43,6 +43,7 @@ class Window:
     self.systemZ: Dict[str, int] = {}
     self.scenes: Dict[str, Scene] = {}
     self.activeScene: Scene = None
+    self.viewPort: ViewPort = None
     self.customDynamicValues: List[DynamicValue] = []
     self.lazyDynamicValues: List[DynamicValue] = []
     self.customAnimatedValues: List[AnimatedValue] = []
@@ -135,6 +136,12 @@ class Window:
       self.__resetUI()
 
     return True
+
+  def setViewPort(self, viewPort: ViewPort):
+    self.viewPort = viewPort
+
+    if self.running:
+      self.viewPort.initiate(self.screen, self.activeScene)
 
   def deactivateSystems(self, systemIDs: Union[Iterable[str], str]) -> bool:
     interrupted = False
@@ -249,13 +256,14 @@ class Window:
     if self.customLoopProcess is not None:
       self.customLoopProcess()
 
-    if self.activeScene is not None:
-      self.activeScene.draw()
+    if self.viewPort is not None:
+      self.viewPort.draw()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:
         self.activeSystems[systemID].draw()
 
+    self.firstUpdate = False
     pg.display.flip()
     self.clock.tick(self.fps)
 
@@ -276,6 +284,8 @@ class Window:
     self.__initiateActiveScene(self.screen)
 
     self.__initiateActiveSystems(self.screen)
+
+    self.viewPort.initiate(self.screen, self.activeScene)
 
     self.__resetUI()
 
@@ -323,6 +333,9 @@ class Window:
 
     if self.activeScene is not None:
       self.activeScene.lazyUpdate()
+
+    if self.viewPort is not None:
+      self.viewPort.update()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:

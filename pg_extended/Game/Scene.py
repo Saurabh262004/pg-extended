@@ -1,21 +1,18 @@
-from typing import Union, Dict, Optional, Iterable
+from typing import Union, Dict
 import pygame as pg
 from pg_extended.Game.Elements import *
 
-elementType = Union[Level, Entity, Player]
+elementType = Union[TextureAtlas, Level, Entity, Player]
 
 class Scene:
-  def __init__(self, cameraX: Union[int, float], cameraY: Union[int, float]):
-    self.cameraX = cameraX
-    self.cameraY = cameraY
-
+  def __init__(self):
     self.locked = True
     self.surface: pg.Surface = None
 
     self.elements: Dict[str, elementType] = {}
     self.textureAtlases: Dict[str, TextureAtlas] = {}
     self.levels: Dict[str, Level] = {}
-    self.activeLevels: Dict[str, Level] = {}
+    self.activeLevel: Level = None
     self.entities: Dict[str, Entity] = {}
     self.players: Dict[str, Player] = {}
 
@@ -38,26 +35,23 @@ class Scene:
     pass
 
   def update(self):
+    if self.locked:
+      print('Scene is currently locked')
+      return None
     pass
 
   def handleEvents(self, event: pg.Event):
     pass
 
-  def draw(self):
-    if self.locked: return None
+  def activateLevel(self, levelID: str):
+    if not levelID in self.levels:
+      print(f'Level with ID {levelID} does not exist, plase enter an existing level ID')
+      return None
 
-    for level in self.activeLevels.values():
-      level.draw(self.surface, (self.cameraX, self.cameraY))
+    self.activeLevel = self.levels[levelID]
 
-  def activateLevels(self, levelNames: Iterable[str]):
-    for levelName in levelNames:
-      if levelName in self.levels:
-        self.activeLevels[levelName] = self.levels[levelName]
-
-  def deactivateLevels(self, levelNames: Iterable[str]):
-    for levelName in levelNames:
-      if levelName in self.activeLevels:
-        del self.activeLevels[levelName]
+  def deactivateLevel(self):
+    self.activeLevel = None
 
   def initiate(self, surface: pg.Surface):
     self.surface = surface

@@ -1,5 +1,7 @@
-from typing import Iterable, Dict
+from typing import Union, Iterable, Dict, Optional
 import pygame as pg
+
+tileIdentifierType = Union[tuple[int, int], str, pg.Color]
 
 class TextureAtlas:
   def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, names: Iterable[Iterable[str]] = None, sequences: Dict[str, Iterable[str]] = None):
@@ -60,3 +62,15 @@ class TextureAtlas:
       self.sequencedTiles[sequence] = []
       for tileName in self.sequences[sequence]:
         self.sequencedTiles[sequence].append(self.namedTiles[tileName])
+
+  def getTile(self, identifier: tileIdentifierType) -> Optional[pg.Surface]:
+    if isinstance(identifier, str):
+      return self.namedTiles.get(identifier)
+    elif isinstance(identifier, tuple):
+      return self.tiles[identifier[0]][identifier[1]]
+    elif isinstance(identifier, pg.Color):
+      surface = pg.Surface((self.tileWidth, self.tileHeight))
+      surface.fill(identifier)
+      return surface
+
+    return None

@@ -1,11 +1,9 @@
 import time
-from typing import Iterable, Union
+from typing import Iterable
 from pg_extended.Core.DynamicValue import DynamicValue
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
 DEFAULT_POS_VALS = ['start', 'end']
-
-numType = Union[int, float]
 
 '''
 AnimatedValue is a class that provides a value that can be interpolated between multiple DynamicValues with an interpolation step function.
@@ -15,7 +13,7 @@ Other than that, it can also be used for any other task that might need a value 
 
 It supports following interpolation types:
 - 'linear', 'easeIn', 'easeOut', 'easeInOut' and 'custom'
-- a custom interpolation function must take three inputs of int or float type and return one int or float.
+- a custom interpolation function must take three inputs of float type and return one float.
 
 Parameters:
 - [required] values:              An iterable of DynamicValues (must be more than 1). This is the set of values the class with interpolate over.
@@ -31,7 +29,7 @@ Useable methods:
 - updateRestingPos: Snaps the value to it's default position.
 '''
 class AnimatedValue:
-  def __init__(self, values: Iterable[DynamicValue], duration: numType, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
+  def __init__(self, values: Iterable[DynamicValue], duration: float, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
     if len(values) < 2:
       raise ValueError("Animator requires a minimum of two values to animate between.")
 
@@ -70,7 +68,7 @@ class AnimatedValue:
       self.interpolationStep = customInterpolation
 
   @staticmethod
-  def linear(start: numType, end: numType, t: numType) -> numType:
+  def linear(start: float, end: float, t: float) -> float:
     if t <= 0:
       return start
     elif t >= 1:
@@ -79,7 +77,7 @@ class AnimatedValue:
     return start + (end - start) * t
 
   @staticmethod
-  def easeIn(start: numType, end: numType, t: numType) -> numType:
+  def easeIn(start: float, end: float, t: float) -> float:
     if t <= 0:
       return start
     elif t >= 1:
@@ -90,7 +88,7 @@ class AnimatedValue:
     return start + (end - start) * t
 
   @staticmethod
-  def easeOut(start: numType, end: numType, t: numType) -> numType:
+  def easeOut(start: float, end: float, t: float) -> float:
     if t <= 0:
       return start
     elif t >= 1:
@@ -101,7 +99,7 @@ class AnimatedValue:
     return start + (end - start) * t
 
   @staticmethod
-  def easeInOut(start: numType, end: numType, t: numType) -> numType:
+  def easeInOut(start: float, end: float, t: float) -> float:
     if t <= 0:
       return start
     elif t >= 1:
@@ -111,7 +109,7 @@ class AnimatedValue:
 
     return start + (end - start) * t
 
-  def interpolate(self, t: numType):
+  def interpolate(self, t: float):
     if t <= 0:
       return self.values[0].value
     elif t >= 1:

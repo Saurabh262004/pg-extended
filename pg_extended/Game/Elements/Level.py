@@ -1,15 +1,12 @@
 from typing import Iterable, Union
 import traceback
 import pygame as pg
-from pg_extended.Core import DynamicValue
 from pg_extended.Game.Elements import TextureAtlas
 
-numType = Union[int, float]
+tileIdentifierType = Union[tuple[int, int], str, pg.Color]
 
 class Level:
-  def __init__(self, tileWidth: DynamicValue, tileHeight: DynamicValue, numTilesX: int, numTilesY: int, atlas: TextureAtlas, tilesMatrix: Iterable[Iterable[Union[tuple[int, int], str]]]):
-    self.tileWidth = tileWidth
-    self.tileHeight = tileHeight
+  def __init__(self, numTilesX: int, numTilesY: int, atlas: TextureAtlas, tilesMatrix: Iterable[Iterable[tileIdentifierType]]):
     self.numTilesX = numTilesX
     self.numTilesY = numTilesY
     self.atlas = atlas
@@ -17,47 +14,19 @@ class Level:
 
     self.locked = True
     self.activeDraw = True
-    self.baseSurface: pg.Surface = None
     self.surface: pg.Surface = None
 
-    self.width = tileWidth.value * numTilesX
-    self.height = tileHeight.value * numTilesY
-
-    self.unchangedWidth = atlas.tileWidth * numTilesX
-    self.unchangedHeight = atlas.tileHeight * numTilesY
-
-  def update(self):
-    pass
-
-  def handleEvent(self, event: pg.Event):
-    pass
-
-  def draw(self, surface: pg.Surface, pos: tuple[numType, numType]):
-    surface.blit(self.surface, pos)
+    self.width = atlas.tileWidth * numTilesX
+    self.height = atlas.tileHeight * numTilesY
 
   def recalcDim(self):
-    self.tileWidth.resolveValue()
-    self.tileHeight.resolveValue()
+    self.width = self.atlas.tileWidth * self.numTilesX
+    self.height = self.atlas.tileHeight * self.numTilesY
 
-    self.width = self.tileWidth.value * self.numTilesX
-    self.height = self.tileHeight.value * self.numTilesY
-
-    self.unchangedWidth = self.atlas.tileWidth * self.numTilesX
-    self.unchangedHeight = self.atlas.tileHeight * self.numTilesY
-
-  def rescaleSurface(self, smoothscale: bool = False):
-    if self.unchangedWidth == self.width:
-      self.surface = self.baseSurface
-    else:
-      if smoothscale:
-        self.surface = pg.transform.smoothscale(self.baseSurface, (self.width, self.height))
-      else:
-        self.surface = pg.transform.scale(self.baseSurface, (self.width, self.height))
-
-  def renderLevelSurface(self, smoothscale: bool = False):
+  def renderLevelSurface(self, smoothscale: bool = None):
     self.recalcDim()
 
-    self.baseSurface = pg.Surface((self.unchangedWidth, self.unchangedHeight), pg.SRCALPHA)
+    self.surface = pg.Surface((self.width, self.height), pg.SRCALPHA)
 
     y = -1
     for row in self.tilesMatrix:
@@ -65,17 +34,27 @@ class Level:
       x = -1
       for tileIdentifier in row:
         x += 1
-        if isinstance(tileIdentifier, str):
-          currentTile = self.atlas.namedTiles[tileIdentifier]
-        elif isinstance(tileIdentifier, tuple):
-          currentTile = self.atlas.tiles[tileIdentifier[0]][tileIdentifier[1]]
-        else: continue
+
+        currentTile = self.atlas.getTile(tileIdentifier)
+
+        if currentTile is None: continue
 
         tilePos = (self.atlas.tileWidth * x, self.atlas.tileHeight * y)
 
-        self.baseSurface.blit(currentTile, tilePos)
+        self.surface.blit(currentTile, tilePos)
 
-    self.rescaleSurface(smoothscale)
+  def updateTile(self, poses: Iterable[tuple[int, int]], tileIdentifiers: Iterable[tileIdentifierType]):
+    for i in range(len(poses)):
+      x, y = poses[i]
+      tileIdentifier = tileIdentifiers[i]
+
+      tile = self.atlas.getTile(tileIdentifier)
+
+      if tile is None: continue
+
+      tilePos = (self.atlas.tileWidth * x, self.atlas.tileHeight * y)
+
+      self.surface.blit(tile, tilePos)
 
   def initiate(self) -> bool:
     try:
