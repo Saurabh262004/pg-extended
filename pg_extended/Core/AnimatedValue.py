@@ -55,6 +55,8 @@ class AnimatedValue:
 
     self.animStart = None
     self.reverse = False
+    self.repeats = 0
+    self.alternate = False
 
     if self.interpolation == 'linear':
       self.interpolationStep = self.linear
@@ -144,6 +146,11 @@ class AnimatedValue:
 
       if self.callback is not None:
         self.callback()
+
+      if self.repeats > 0:
+        self.repeats -= 1
+        self.trigger(self.reverse, self.repeats, self.alternate)
+
     else:
       [value.resolveValue() for value in self.values]
 
@@ -162,7 +169,13 @@ class AnimatedValue:
     else:
       self.value = self.values[-1].value
 
-  def trigger(self, reverse: bool = False):
+  def trigger(self, reverse: bool = False, repeats: int = 0, alternate: bool = False):
     self.animStart = time.perf_counter() * 1000
 
-    self.reverse = reverse
+    self.repeats = repeats
+    self.alternate = alternate
+
+    if self.alternate and self.repeats >= 0:
+      self.reverse = not self.reverse
+    else:
+      self.reverse = reverse

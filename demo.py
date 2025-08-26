@@ -11,7 +11,7 @@ topToBottom = pgx.AnimatedValue(
     pgx.DynamicValue('classPer', app, classAttribute='screenHeight', percent=1),
     pgx.DynamicValue('classPer', app, classAttribute='screenHeight', percent=89)
   ),
-  duration=400,
+  duration=300,
   defaultPos='end',
   interpolation='linear'
 )
@@ -31,7 +31,7 @@ swTolw = pgx.AnimatedValue(
     pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=98),
     pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=10)
   ),
-  duration=200,
+  duration=300,
   defaultPos='end',
   interpolation='easeOut'
 )
@@ -41,7 +41,7 @@ shTolh = pgx.AnimatedValue(
     pgx.DynamicValue('classPer', app, classAttribute='screenHeight', percent=98),
     pgx.DynamicValue('classPer', app, classAttribute='screenHeight', percent=10)
   ),
-  duration=100,
+  duration=300,
   defaultPos='end',
   interpolation='easeInOut'
 )
@@ -67,10 +67,10 @@ system.elements['animSection'].lazyUpdate = False
 def triggerAnimations():
   rev = not topToBottom.reverse
 
-  topToBottom.trigger(rev)
-  leftToRight.trigger(rev)
-  swTolw.trigger(rev)
-  shTolh.trigger(rev)
+  topToBottom.trigger(rev, 1, True)
+  leftToRight.trigger(rev, 1, True)
+  swTolw.trigger(rev, 1, True)
+  shTolh.trigger(rev, 1, True)
 
 # Button
 system.addElement(
