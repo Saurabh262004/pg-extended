@@ -2,10 +2,10 @@ from typing import Union, Iterable, Dict, Optional
 from json import load
 import pygame as pg
 
-tileIdentifierType = Union[tuple[int, int], str, pg.Color]
+tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], pg.Color]
 
 class TextureAtlas:
-  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[str]] = None):
+  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[tileIdentifierType]] = None):
     self.tileWidth = tileWidth
     self.tileHeight = tileHeight
     self.paddingX = paddingX
@@ -14,7 +14,7 @@ class TextureAtlas:
     self.marginTop = marginTop
     self.namesJsonURL = namesJsonURL
 
-    if namesJsonURL:
+    if namesJsonURL is not None:
       try:
         with open(namesJsonURL, 'r') as f:
           self.names = load(f)['names']
@@ -66,13 +66,24 @@ class TextureAtlas:
         self.namedTiles[name] = self.tiles[x][y]
 
   def setSequencedTiles(self):
-    if (self.names is None) or (self.sequences is None):
-      return None
+    if self.sequences is None: return None
 
     for sequence in self.sequences:
       self.sequencedTiles[sequence] = []
-      for tileName in self.sequences[sequence]:
-        self.sequencedTiles[sequence].append(self.namedTiles[tileName])
+      for tileIdentifier in self.sequences[sequence]:
+        if isinstance(tileIdentifier, str):
+          self.sequencedTiles[sequence].append(self.namedTiles[tileIdentifier])
+        elif isinstance(tileIdentifier, tuple):
+          if len(tileIdentifier) == 2:
+            self.sequencedTiles[sequence].append(self.tiles[tileIdentifier[0]][tileIdentifier[1]])
+          elif len(tileIdentifier) == 3:
+            surface = pg.Surface((self.tileWidth, self.tileHeight))
+            surface.fill(tileIdentifier)
+            self.sequencedTiles[sequence].append(surface)
+        elif isinstance(tileIdentifier, pg.Color):
+          surface = pg.Surface((self.tileWidth, self.tileHeight))
+          surface.fill(tileIdentifier)
+          self.sequencedTiles[sequence].append(surface)
 
   def getTile(self, identifier: tileIdentifierType) -> Optional[pg.Surface]:
     if isinstance(identifier, str):
