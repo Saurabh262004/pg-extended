@@ -2,7 +2,7 @@ from typing import Union, Iterable, Dict, Optional
 from json import load
 import pygame as pg
 
-tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], pg.Color]
+tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
 
 class TextureAtlas:
   def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[tileIdentifierType]] = None):
@@ -76,12 +76,12 @@ class TextureAtlas:
         elif isinstance(tileIdentifier, tuple):
           if len(tileIdentifier) == 2:
             self.sequencedTiles[sequence].append(self.tiles[tileIdentifier[0]][tileIdentifier[1]])
-          elif len(tileIdentifier) == 3:
-            surface = pg.Surface((self.tileWidth, self.tileHeight))
+          elif len(tileIdentifier) == 3 or len(tileIdentifier) == 4:
+            surface = pg.Surface((self.tileWidth, self.tileHeight), pg.SRCALPHA)
             surface.fill(tileIdentifier)
             self.sequencedTiles[sequence].append(surface)
         elif isinstance(tileIdentifier, pg.Color):
-          surface = pg.Surface((self.tileWidth, self.tileHeight))
+          surface = pg.Surface((self.tileWidth, self.tileHeight), pg.SRCALPHA)
           surface.fill(tileIdentifier)
           self.sequencedTiles[sequence].append(surface)
 
@@ -91,12 +91,12 @@ class TextureAtlas:
     elif isinstance(identifier, tuple):
       if len(identifier) == 2:
         return self.tiles[identifier[0]][identifier[1]]
-      elif len(identifier) == 3:
-        surface = pg.Surface((self.tileWidth, self.tileHeight))
+      elif len(identifier) == 3 or len(identifier) == 4:
+        surface = pg.Surface((self.tileWidth, self.tileHeight), pg.SRCALPHA)
         surface.fill(identifier)
         return surface
     elif isinstance(identifier, pg.Color):
-      surface = pg.Surface((self.tileWidth, self.tileHeight))
+      surface = pg.Surface((self.tileWidth, self.tileHeight), pg.SRCALPHA)
       surface.fill(identifier)
       return surface
 

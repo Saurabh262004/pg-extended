@@ -4,7 +4,7 @@ import traceback
 import pygame as pg
 from pg_extended.Game.Elements import TextureAtlas
 
-tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], pg.Color]
+tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
 
 class Level:
   def __init__(self, numTilesX: int, numTilesY: int, atlas: TextureAtlas, tilesMatrixJsonURL: str):
