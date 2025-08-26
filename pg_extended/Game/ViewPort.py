@@ -1,8 +1,9 @@
 import pygame as pg
+from pg_extended.Core import DynamicValue
 from pg_extended.Game.Scene import Scene
 
 class ViewPort:
-  def __init__(self, x: int, y: int, scale: float):
+  def __init__(self, x: DynamicValue, y: DynamicValue, scale: float):
     self.x = x
     self.y = y
     self.scale = scale
@@ -17,20 +18,28 @@ class ViewPort:
     self.scenePosition: tuple[float, float] = (0.0, 0.0)
     self.locked: bool = True
 
-  def draw(self):
-    if self.locked: return None
+  def initiate(self, surface: pg.Surface, scene: Scene):
+    self.parentSurface = surface
+    self.scene = scene
 
-    self.parentSurface.blit(self.preRenderedView, self.scenePosition)
+    self.locked = False
+    self.update()
 
   def update(self):
-    if self.locked: return None
-
     self.scalingFactor = self.parentSurface.get_height() / (self.scale * self.scalingMultiplier * self.scene.activeLevel.atlas.tileHeight)
 
     self.scaledTileWidth = self.scene.activeLevel.atlas.tileWidth * self.scalingFactor
     self.scaledTileHeight = self.scene.activeLevel.atlas.tileHeight * self.scalingFactor
 
-    self.scenePosition = (-self.scaledTileWidth * self.x, -self.scaledTileHeight * self.y)
+    self.x.resolveValue()
+    self.y.resolveValue()
+
+    self.scenePosition = (-self.scaledTileWidth * self.x.value, -self.scaledTileHeight * self.y.value)
+
+  def renderScene(self):
+    if self.locked: return None
+
+    self.update()
 
     self.scaledLevelSurface = pg.transform.scale_by(self.scene.activeLevel.surface, self.scalingFactor)
 
@@ -38,9 +47,7 @@ class ViewPort:
 
     self.preRenderedView.blit(self.scaledLevelSurface)
 
-  def initiate(self, surface: pg.Surface, scene: Scene):
-    self.parentSurface = surface
-    self.scene = scene
+  def draw(self):
+    if self.locked: return None
 
-    self.locked = False
-    self.update()
+    self.parentSurface.blit(self.preRenderedView, self.scenePosition)

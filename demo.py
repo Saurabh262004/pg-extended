@@ -230,38 +230,34 @@ scene.addElement(
     tilesetURL='tests/assets/decorative_cracks_walls.png',
     tileWidth=16,
     tileHeight=16,
-    names=[
-      ['Mid1', 'Mid2', 'Mid3', 'Mid4', 'MidFloor1', 'MidFloor2', 'MidFloor3', 'MidFloor4'],
-      ['TopLeft1', 'TopLeft2', 'TopLeft3', 'TopLeft4', 'TopRight1', 'TopRight2', 'TopRight3', 'TopRight4'],
-      ['Left1', 'Left2', 'Left3', 'Left4', 'Right1', 'Right2', 'Right3', 'Right4'],
-      ['BotLeft1', 'BotLeft2', 'BotLeft3', 'BotLeft4', 'BotRight1', 'BotRight2', 'BotRight3', 'BotRight4'],
-      ['MidLeft1', 'MidLeft2', 'MidLeft3', 'MidLeft4', 'MidRight1', 'MidRight2', 'MidRight3', 'MidRight4'],
-      ['LeftFloor1', 'LeftFloor2', 'LeftFloor3', 'LeftFloor4', 'RightFloor1', 'RightFloor2', 'RightFloor3', 'RightFloor4'],
-      ['TopMid1', 'TopMid2', 'TopMid3', 'TopMid4', 'BotMid1', 'BotMid2', 'BotMid3', 'BotMid4']
-    ]
+    namesJsonURL='tests/names.json'
   ),
   elementID='atlas1'
 )
 
 scene.addElement(
   element=pgx.Level(
-    numTilesX=5,
-    numTilesY=5,
+    numTilesX=50,
+    numTilesY=50,
     atlas=scene.elements['atlas1'],
-    tilesMatrix=[
-      ['TopLeft1', 'TopMid1', 'TopMid1', 'TopMid1', 'TopRight1'],
-      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
-      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
-      ['Left1', 'Mid1', 'Mid1', 'Mid1', 'Right1'],
-      ['LeftFloor1', 'MidFloor1', 'MidFloor1', 'MidFloor1', 'RightFloor1']
-    ]
+    tilesMatrixJsonURL='tests/level1.json'
   ),
   elementID='level1'
 )
 
 scene.activateLevel('level1')
 
-viewPort = pgx.ViewPort(0, 0, 1)
+def cc():
+  try:
+    return -pg.mouse.get_pos()[0] / 100
+  except:
+    return 0
+
+viewPort = pgx.ViewPort(
+  pgx.DynamicValue('callable', cc),
+  pgx.DynamicValue('callable', cc),
+  5
+)
 
 app.addSystem(system, 'mainSystem')
 

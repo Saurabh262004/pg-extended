@@ -257,6 +257,7 @@ class Window:
       self.customLoopProcess()
 
     if self.viewPort is not None:
+      self.viewPort.update()
       self.viewPort.draw()
 
     for systemID in self.systemZ:
@@ -335,7 +336,7 @@ class Window:
       self.activeScene.lazyUpdate()
 
     if self.viewPort is not None:
-      self.viewPort.update()
+      self.viewPort.renderScene()
 
     for systemID in self.systemZ:
       if systemID in self.activeSystems:

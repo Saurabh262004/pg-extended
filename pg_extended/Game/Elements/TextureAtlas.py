@@ -1,17 +1,28 @@
 from typing import Union, Iterable, Dict, Optional
+from json import load
 import pygame as pg
 
 tileIdentifierType = Union[tuple[int, int], str, pg.Color]
 
 class TextureAtlas:
-  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, names: Iterable[Iterable[str]] = None, sequences: Dict[str, Iterable[str]] = None):
+  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[str]] = None):
     self.tileWidth = tileWidth
     self.tileHeight = tileHeight
     self.paddingX = paddingX
     self.paddingY = paddingY
     self.marginLeft = marginLeft
     self.marginTop = marginTop
-    self.names = names
+    self.namesJsonURL = namesJsonURL
+
+    if namesJsonURL:
+      try:
+        with open(namesJsonURL, 'r') as f:
+          self.names = load(f)['names']
+      except:
+        self.names = None
+    else:
+      self.names = None
+
     self.sequences = sequences
 
     self.tileset = pg.image.load(tilesetURL)
@@ -67,7 +78,12 @@ class TextureAtlas:
     if isinstance(identifier, str):
       return self.namedTiles.get(identifier)
     elif isinstance(identifier, tuple):
-      return self.tiles[identifier[0]][identifier[1]]
+      if len(identifier) == 2:
+        return self.tiles[identifier[0]][identifier[1]]
+      elif len(identifier) == 3:
+        surface = pg.Surface((self.tileWidth, self.tileHeight))
+        surface.fill(identifier)
+        return surface
     elif isinstance(identifier, pg.Color):
       surface = pg.Surface((self.tileWidth, self.tileHeight))
       surface.fill(identifier)

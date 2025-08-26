@@ -1,4 +1,5 @@
 from typing import Iterable, Union
+from json import load
 import traceback
 import pygame as pg
 from pg_extended.Game.Elements import TextureAtlas
@@ -6,11 +7,14 @@ from pg_extended.Game.Elements import TextureAtlas
 tileIdentifierType = Union[tuple[int, int], str, pg.Color]
 
 class Level:
-  def __init__(self, numTilesX: int, numTilesY: int, atlas: TextureAtlas, tilesMatrix: Iterable[Iterable[tileIdentifierType]]):
+  def __init__(self, numTilesX: int, numTilesY: int, atlas: TextureAtlas, tilesMatrixJsonURL: str):
     self.numTilesX = numTilesX
     self.numTilesY = numTilesY
     self.atlas = atlas
-    self.tilesMatrix = tilesMatrix
+    self.tilesMatrixJsonURL = tilesMatrixJsonURL
+    self.tilesMatrix = []
+
+    self.generateTilesMatrix()
 
     self.locked = True
     self.activeDraw = True
@@ -19,11 +23,20 @@ class Level:
     self.width = atlas.tileWidth * numTilesX
     self.height = atlas.tileHeight * numTilesY
 
+  def generateTilesMatrix(self):
+    try:
+      with open(self.tilesMatrixJsonURL, 'r') as f:
+        self.tilesMatrix = load(f)['tiles']
+
+    except Exception as e:
+      print(e)
+      traceback.print_exc()
+
   def recalcDim(self):
     self.width = self.atlas.tileWidth * self.numTilesX
     self.height = self.atlas.tileHeight * self.numTilesY
 
-  def renderLevelSurface(self, smoothscale: bool = None):
+  def renderLevelSurface(self):
     self.recalcDim()
 
     self.surface = pg.Surface((self.width, self.height), pg.SRCALPHA)
