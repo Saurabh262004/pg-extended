@@ -59,7 +59,7 @@ class Scene:
     for atlas in self.textureAtlases.values():
       atlas.generateTiles()
 
-    levelInitializationSuccess = [level.initiate() for level in self.levels.values()]
+    levelInitializationSuccess = [level.initiate(self) for level in self.levels.values()]
 
     if all(levelInitializationSuccess):
       self.locked = False

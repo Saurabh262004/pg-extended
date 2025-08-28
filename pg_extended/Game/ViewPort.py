@@ -26,10 +26,10 @@ class ViewPort:
     self.update()
 
   def update(self):
-    self.scalingFactor = self.parentSurface.get_height() / (self.scale * self.scalingMultiplier * self.scene.activeLevel.atlas.tileHeight)
+    self.scalingFactor = self.parentSurface.get_height() / (self.scale * self.scalingMultiplier * self.scene.activeLevel.tileHeight)
 
-    self.scaledTileWidth = self.scene.activeLevel.atlas.tileWidth * self.scalingFactor
-    self.scaledTileHeight = self.scene.activeLevel.atlas.tileHeight * self.scalingFactor
+    self.scaledTileWidth = self.scene.activeLevel.tileWidth * self.scalingFactor
+    self.scaledTileHeight = self.scene.activeLevel.tileHeight * self.scalingFactor
 
     self.x.resolveValue()
     self.y.resolveValue()

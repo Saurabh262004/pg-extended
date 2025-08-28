@@ -236,10 +236,20 @@ scene.addElement(
 )
 
 scene.addElement(
+  element=pgx.TextureAtlas(
+    tilesetURL='tests/assets/fire_animation.png',
+    tileWidth=44,
+    tileHeight=48
+  ),
+  elementID='atlas2'
+)
+
+scene.addElement(
   element=pgx.Level(
-    numTilesX=50,
-    numTilesY=50,
-    atlas=scene.elements['atlas1'],
+    numTilesX=5,
+    numTilesY=5,
+    tileWidth=64,
+    tileHeight=64,
     tilesMatrixJsonURL='tests/level1.json'
   ),
   elementID='level1'
@@ -256,7 +266,7 @@ def cc():
 viewPort = pgx.ViewPort(
   pgx.DynamicValue('callable', cc),
   pgx.DynamicValue('callable', cc),
-  5
+  1
 )
 
 app.addSystem(system, 'mainSystem')
