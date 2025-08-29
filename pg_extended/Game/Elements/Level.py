@@ -14,7 +14,7 @@ class Level:
     self.tileHeight = tileHeight
     self.tilesMatrixJsonURL = tilesMatrixJsonURL
 
-    self.tilesMatrix = []
+    self.tileLayers = []
     self.generateTilesMatrix()
 
     self.locked = True
@@ -29,15 +29,19 @@ class Level:
     try:
       with open(self.tilesMatrixJsonURL, 'r') as f:
         rawJson = load(f)
-        tilesMatrixRaw = rawJson['tiles']
+        layersRaw = rawJson['layers']
 
-        for row in tilesMatrixRaw:
-          self.tilesMatrix.append([])
-          for tile in row:
-            if isinstance(tile[1], str):
-              self.tilesMatrix[-1].append((rawJson['atlases'][tile[0]], tile[1]))
-            else:
-              self.tilesMatrix[-1].append((rawJson['atlases'][tile[0]], (*tile[1],)))
+        for layer in layersRaw:
+          self.tileLayers.append([])
+          for row in layer:
+            self.tileLayers[-1].append([])
+            for tile in row:
+              if tile is None:
+                self.tileLayers[-1][-1].append(None)
+              elif isinstance(tile[1], str):
+                self.tileLayers[-1][-1].append((rawJson['atlases'][tile[0]], tile[1]))
+              else:
+                self.tileLayers[-1][-1].append((rawJson['atlases'][tile[0]], (*tile[1],)))
 
     except Exception as e:
       print(e)
@@ -52,22 +56,25 @@ class Level:
 
     self.surface = pg.Surface((self.width, self.height), pg.SRCALPHA)
 
-    y = -1
-    for row in self.tilesMatrix:
-      y += 1
-      x = -1
-      for tile in row:
-        atlasID, tileID = tile[0], tile[1]
+    for layer in self.tileLayers:
+      y = -1
+      for row in layer:
+        y += 1
+        x = -1
+        for tile in row:
+          x += 1
 
-        x += 1
+          if tile is None: continue
 
-        currentTile = pg.transform.scale(self.scene.elements[atlasID].getTile(tileID), (self.tileWidth, self.tileHeight))
+          atlasID, tileID = tile[0], tile[1]
 
-        if currentTile is None: continue
+          currentTile = pg.transform.scale(self.scene.elements[atlasID].getTile(tileID), (self.tileWidth, self.tileHeight))
 
-        tilePos = (self.tileWidth * x, self.tileHeight * y)
+          if currentTile is None: continue
 
-        self.surface.blit(currentTile, tilePos)
+          tilePos = (self.tileWidth * x, self.tileHeight * y)
+
+          self.surface.blit(currentTile, tilePos)
 
   def updateTile(self, poses: Iterable[tuple[int, int]], tiles: tuple[tuple[int, tileIdentifierType]]):
     for i in range(len(poses)):
