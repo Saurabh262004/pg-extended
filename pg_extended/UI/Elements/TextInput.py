@@ -1,10 +1,9 @@
-from typing import Optional, Union
+from typing import Optional
 import time
 import pygame as pg
+from pg_extended.Misc.Types import BackgroundType
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
-
-backgroundType = Union[pg.Color, pg.Surface]
 
 IGNORE_KEYS = (9, 13, 27, 127, 1073741912)
 
@@ -41,7 +40,7 @@ Usable methods:
 - draw:       Renders the text input (border, background, and text) onto the given surface.
 '''
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: BackgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor

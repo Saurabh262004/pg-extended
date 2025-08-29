@@ -1,9 +1,8 @@
-from typing import Optional, Callable, Union
+from typing import Optional, Callable
 import pygame as pg
+from pg_extended.Misc.Types import BackgroundType
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
-
-backgroundType = Union[pg.Color, pg.Surface]
 
 '''
 Button is a class that represents a button UI element.
@@ -27,7 +26,7 @@ Usable methods:
 - draw:       Draws the button on the provided surface.
 '''
 class Button:
-  def __init__(self, section: Section, pressedBackground: Optional[backgroundType] = None, borderColor: Optional[pg.Color] = None, borderColorPressed: Optional[pg.Color] = None, text: Optional[str] = None, fontPath: Optional[str] = None, textColor: Optional[pg.Color] = None, onClick: Optional[Callable] = None, onClickParams = None, border: Optional[int] = 0, onClickActuation: Optional[str] = 'buttonDown'):
+  def __init__(self, section: Section, pressedBackground: Optional[BackgroundType] = None, borderColor: Optional[pg.Color] = None, borderColorPressed: Optional[pg.Color] = None, text: Optional[str] = None, fontPath: Optional[str] = None, textColor: Optional[pg.Color] = None, onClick: Optional[Callable] = None, onClickParams = None, border: Optional[int] = 0, onClickActuation: Optional[str] = 'buttonDown'):
     self.section = section
     self.onClick = onClick
     self.onClickParams = onClickParams
