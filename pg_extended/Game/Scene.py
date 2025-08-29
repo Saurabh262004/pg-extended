@@ -1,21 +1,22 @@
-from typing import Dict
+from typing import Union, Dict
 import pygame as pg
-from pg_extended.Misc.Types import GameElementType
 from pg_extended.Game.Elements import *
+
+elementType = Union[TextureAtlas, Level, Entity, Player]
 
 class Scene:
   def __init__(self):
     self.locked = True
     self.surface: pg.Surface = None
 
-    self.elements: Dict[str, GameElementType] = {}
+    self.elements: Dict[str, elementType] = {}
     self.textureAtlases: Dict[str, TextureAtlas] = {}
     self.levels: Dict[str, Level] = {}
     self.activeLevel: Level = None
     self.entities: Dict[str, Entity] = {}
     self.players: Dict[str, Player] = {}
 
-  def addElement(self, element: GameElementType, elementID: str):
+  def addElement(self, element: elementType, elementID: str):
     if elementID in self.elements:
       raise ValueError(f'An element with ID: {elementID} already exists, please enter a unique ID.')
 

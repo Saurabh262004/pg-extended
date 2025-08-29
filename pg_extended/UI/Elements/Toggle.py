@@ -20,6 +20,7 @@ Usable methods:
 - update:     Updates the toggle's dimensions and background based on the provided Section object.
 - draw:       Draws the toggle on the provided surface.
 '''
+
 class Toggle:
   def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, onClick: Optional[Callable] = None, onClickParams = None, sendStateInfoOnClick: Optional[bool] = False, border: int = 0):
     self.section = section

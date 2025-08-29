@@ -1,8 +1,9 @@
 from typing import Dict, Iterable, Union
 import pygame as pg
-from pg_extended.Misc.Types import UIElementType
-from pg_extended.Misc.Helpers import allIn
+from pg_extended.UI.helpers import allIn
 from pg_extended.UI.Elements import *
+
+elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]
 
 '''
 System is a class that represents a collection of UI elements and manages their processes, such as drawing, updating and event handling.
@@ -31,7 +32,7 @@ class System:
       else:
         self.surface = surface
 
-    self.elements: Dict[str, UIElementType] = {}
+    self.elements: Dict[str, elementType] = {}
     self.sections: Dict[str, Section] = {}
     self.circles: Dict[str, Circle] = {}
     self.textBoxes: Dict[str, TextBox] = {}
@@ -42,7 +43,7 @@ class System:
 
     self.firstDraw = True
 
-  def addElement(self, element: UIElementType, elementID: str):
+  def addElement(self, element: elementType, elementID: str):
     if elementID in self.elements:
       raise ValueError(f'An element with id: {elementID} already exists, please enter a unique id.')
 
