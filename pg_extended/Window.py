@@ -258,6 +258,10 @@ class Window:
 
     if self.viewPort is not None:
       self.viewPort.update()
+
+      if not self.viewPort.lazyRender:
+        self.viewPort.renderScene()
+
       self.viewPort.draw()
 
     for systemID in self.systemZ:
@@ -336,6 +340,7 @@ class Window:
       self.activeScene.lazyUpdate()
 
     if self.viewPort is not None:
+      self.viewPort.update()
       self.viewPort.renderScene()
 
     for systemID in self.systemZ:
