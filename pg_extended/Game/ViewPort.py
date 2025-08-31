@@ -17,6 +17,7 @@ class ViewPort:
     self.scaledTileHeight: float = 0.0
     self.scenePosition: tuple[float, float] = (0.0, 0.0)
     self.locked: bool = True
+    self.lazyRender: bool = False
 
   def initiate(self, surface: pg.Surface, scene: Scene):
     self.parentSurface = surface
@@ -39,13 +40,20 @@ class ViewPort:
   def renderScene(self):
     if self.locked: return None
 
-    self.update()
-
     self.scaledLevelSurface = pg.transform.scale_by(self.scene.activeLevel.surface, self.scalingFactor)
 
     self.preRenderedView = pg.Surface(self.parentSurface.get_size(), pg.SRCALPHA)
 
     self.preRenderedView.blit(self.scaledLevelSurface)
+
+    for entity in self.scene.activeLevel.entities:
+      if entity.sprite is None: continue
+
+      entitySprite = pg.transform.scale(entity.sprite, (int(entity.widthPX * self.scalingFactor), int(entity.heightPX * self.scalingFactor)))
+
+      entityPos = (self.scaledTileWidth * entity.x, self.scaledTileHeight * entity.y)
+
+      self.preRenderedView.blit(entitySprite, entityPos)
 
   def draw(self):
     if self.locked: return None

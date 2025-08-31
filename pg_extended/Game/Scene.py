@@ -2,7 +2,7 @@ from typing import Union, Dict
 import pygame as pg
 from pg_extended.Game.Elements import *
 
-elementType = Union[TextureAtlas, Level, Entity, Player]
+elementType = Union[TextureAtlas, SpriteAnimation, Level, Player]
 
 class Scene:
   def __init__(self):
@@ -11,9 +11,9 @@ class Scene:
 
     self.elements: Dict[str, elementType] = {}
     self.textureAtlases: Dict[str, TextureAtlas] = {}
+    self.spriteAnimations: Dict[str, SpriteAnimation] = {}
     self.levels: Dict[str, Level] = {}
     self.activeLevel: Level = None
-    self.entities: Dict[str, Entity] = {}
     self.players: Dict[str, Player] = {}
 
   def addElement(self, element: elementType, elementID: str):
@@ -24,10 +24,10 @@ class Scene:
 
     if isinstance(element, TextureAtlas):
       self.textureAtlases[elementID] = element
+    elif isinstance(element, SpriteAnimation):
+      self.spriteAnimations[elementID] = element
     elif isinstance(element, Level):
       self.levels[elementID] = element
-    elif isinstance(element, Entity):
-      self.entities[elementID] = element
     elif isinstance(element, Player):
       self.players[elementID] = element
 
@@ -38,7 +38,11 @@ class Scene:
     if self.locked:
       print('Scene is currently locked')
       return None
-    pass
+
+    for level in self.levels.values():
+      for entity in level.entities:
+        if entity.animating:
+          entity.update()
 
   def handleEvents(self, event: pg.Event):
     pass
@@ -58,6 +62,9 @@ class Scene:
 
     for atlas in self.textureAtlases.values():
       atlas.generateTiles()
+
+    for spriteAnimation in self.spriteAnimations.values():
+      spriteAnimation.initiate(self)
 
     levelInitializationSuccess = [level.initiate(self) for level in self.levels.values()]
 

@@ -2,7 +2,7 @@ from typing import Iterable, Union
 from json import load
 import traceback
 import pygame as pg
-
+from pg_extended.Game.Elements import Entity
 
 tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
 
@@ -21,6 +21,7 @@ class Level:
     self.activeDraw = True
     self.surface: pg.Surface = None
     self.scene: 'Scene' = None # type: ignore
+    self.entities: Iterable[Entity] = []
 
     self.width = tileWidth * numTilesX
     self.height = tileHeight * numTilesY
@@ -68,7 +69,7 @@ class Level:
 
           atlasID, tileID = tile[0], tile[1]
 
-          currentTile = pg.transform.scale(self.scene.elements[atlasID].getTile(tileID), (self.tileWidth, self.tileHeight))
+          currentTile = pg.transform.scale(self.scene.textureAtlases[atlasID].getTile(tileID), (self.tileWidth, self.tileHeight))
 
           if currentTile is None: continue
 
@@ -76,13 +77,13 @@ class Level:
 
           self.surface.blit(currentTile, tilePos)
 
-  def updateTile(self, poses: Iterable[tuple[int, int]], tiles: tuple[tuple[int, tileIdentifierType]]):
+  def updateTile(self, poses: Iterable[tuple[int, int]], tiles: Iterable[tuple[int, tileIdentifierType]]):
     for i in range(len(poses)):
       x, y = poses[i]
       atlasID = tiles[i][0]
       tileID = tiles[i][1]
 
-      tile = self.scene.elements[atlasID].getTile(tileID)
+      tile = self.scene.textureAtlases[atlasID].getTile(tileID)
 
       if tile is None: continue
 
@@ -92,10 +93,17 @@ class Level:
 
       self.surface.blit(tile, tilePos)
 
+  def addEntity(self, entity: Entity):
+    self.entities.append(entity)
+
   def initiate(self, scene: 'Scene') -> bool: # type: ignore
     try:
       self.scene = scene
       self.renderLevelSurface()
+
+      for entity in self.entities:
+        entity.initiate(self, scene)
+
       self.locked = False
       return True
     except Exception as e:
