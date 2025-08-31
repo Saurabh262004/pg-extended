@@ -136,6 +136,8 @@ class AnimatedValue:
 
     elapsedTime = (time.perf_counter() * 1000) - self.animStart
 
+    [value.resolveValue() for value in self.values]
+
     if elapsedTime >= self.duration:
       if self.reverse:
         self.value = self.values[0].value
@@ -144,16 +146,18 @@ class AnimatedValue:
 
       self.animStart = None
 
-      if self.callback is not None:
-        self.callback()
-
       if self.repeats > 0:
         self.repeats -= 1
         self.trigger(self.reverse, self.repeats, self.alternate)
+        return
+      elif self.repeats == -1:
+        self.trigger(self.reverse, self.repeats, self.alternate)
+        return
+
+      if self.callback is not None:
+        self.callback()
 
     else:
-      [value.resolveValue() for value in self.values]
-
       if self.reverse:
         t = 1 - (elapsedTime / self.duration)
       else:
@@ -175,7 +179,16 @@ class AnimatedValue:
     self.repeats = repeats
     self.alternate = alternate
 
-    if self.alternate and self.repeats >= 0:
+    if self.alternate:
       self.reverse = not self.reverse
     else:
       self.reverse = reverse
+
+  def terminate(self):
+    self.animStart = None
+    self.repeats = 0
+
+    if self.reverse:
+      self.value = self.values[0].value
+    else:
+      self.value = self.values[-1].value
