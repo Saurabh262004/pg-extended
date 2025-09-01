@@ -23,7 +23,6 @@ class Entity:
     self.yPX: float = 0.0
     self.widthPX: float = 0.0
     self.heightPX: float = 0.0
-    self.animationStart: float = 0.0
     self.animationFrames: int = 1
     self.animations: Iterable[dict[str, tuple[float, SpriteAnimation]]] = []
     self.currentAnimation: SpriteAnimation = None

@@ -215,6 +215,8 @@ class Window:
         new_height = max(self.minRes[1], event.h)
         self.screen = pg.display.set_mode((new_width, new_height), pg.RESIZABLE)
       else:
+        cursorChange = 'arrow'
+
         if self.activeScene is not None:
           cursorChange = self.activeScene.handleEvents(event)
 
@@ -290,7 +292,8 @@ class Window:
 
     self.__initiateActiveSystems(self.screen)
 
-    self.viewPort.initiate(self.screen, self.activeScene)
+    if self.viewPort is not None:
+      self.viewPort.initiate(self.screen, self.activeScene)
 
     self.__resetUI()
 
