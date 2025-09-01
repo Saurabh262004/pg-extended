@@ -57,6 +57,7 @@ class AnimatedValue:
     self.reverse = False
     self.repeats = 0
     self.alternate = False
+    self.hasPlayedOnce = False
 
     if self.interpolation == 'linear':
       self.interpolationStep = self.linear
@@ -136,7 +137,8 @@ class AnimatedValue:
 
     elapsedTime = (time.perf_counter() * 1000) - self.animStart
 
-    [value.resolveValue() for value in self.values]
+    for value in self.values:
+      value.resolveValue()
 
     if elapsedTime >= self.duration:
       if self.reverse:
@@ -145,6 +147,8 @@ class AnimatedValue:
         self.value = self.values[-1].value
 
       self.animStart = None
+
+      self.hasPlayedOnce = True
 
       if self.repeats > 0:
         self.repeats -= 1
@@ -166,12 +170,15 @@ class AnimatedValue:
       self.interpolate(t)
 
   def updateRestingPos(self):
-    [value.resolveValue() for value in self.values]
+    for value in self.values:
+      value.resolveValue()
 
-    if self.reverse:
-      self.value = self.values[0].value
+    if not self.hasPlayedOnce:
+      pickStart = (self.defaultPos == 'start')
     else:
-      self.value = self.values[-1].value
+      pickStart = (self.reverse == (self.defaultPos == 'end'))
+
+    self.value = self.values[0].value if pickStart else self.values[-1].value
 
   def trigger(self, reverse: bool = False, repeats: int = 0, alternate: bool = False):
     self.animStart = time.perf_counter() * 1000
@@ -179,8 +186,11 @@ class AnimatedValue:
     self.repeats = repeats
     self.alternate = alternate
 
-    if self.alternate:
-      self.reverse = not self.reverse
+    if self.hasPlayedOnce:
+      if self.alternate:
+        self.reverse = not self.reverse
+      else:
+        self.reverse = reverse
     else:
       self.reverse = reverse
 
