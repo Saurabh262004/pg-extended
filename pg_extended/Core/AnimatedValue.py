@@ -113,6 +113,10 @@ class AnimatedValue:
 
     return start + (end - start) * t
 
+  def updateValues(self):
+    for value in self.values:
+      value.resolveValue()
+
   def interpolate(self, t: float):
     if t <= 0:
       return self.values[0].value
@@ -134,12 +138,12 @@ class AnimatedValue:
 
   def resolveValue(self):
     if self.animStart is None:
+      self.updateRestingPos()
       return
 
     elapsedTime = ((time.perf_counter() * 1000) - self.animStart) - self.delay
 
-    for value in self.values:
-      value.resolveValue()
+    self.updateValues()
 
     if elapsedTime >= self.duration:
       if self.reverse:
@@ -171,13 +175,43 @@ class AnimatedValue:
       self.interpolate(t)
 
   def updateRestingPos(self):
-    for value in self.values:
-      value.resolveValue()
+    self.updateValues()
 
-    if not self.hasPlayedOnce:
-      pickStart = (self.defaultPos == 'start')
+    A = self.hasPlayedOnce
+    B = self.defaultPos == 'start'
+    C = self.reverse
+
+    '''
+    this let's the system decide the resting position with only the default position when it hasn't ran yet
+    once it has ran, the reverse value also has an effect on the resting value
+
+    if self.hasPlayedOnce:
+      if self.defaultPos == 'start':
+        if self.reverse:
+          self.value = self.values[0].value
+        else:
+          self.value = self.values[-1].value
+      else:
+        if self.reverse:
+          self.value = self.values[-1].value
+        else:
+          self.value = self.values[0].value
     else:
-      pickStart = (self.reverse == (self.defaultPos == 'end'))
+      if self.defaultPos == 'start':
+        self.value = self.values[0].value
+      else:
+        self.value = self.values[-1].value
+
+    condition for choosing first value:
+    (A and B and C) or (A and not B and not C) or (not A and B)
+    condition for choosing last value:
+    (A and B and not C) or (A and not B and C) or (not A and not B)
+
+    compacted:
+    (A and (B == C)) or (not A and B)
+    '''
+
+    pickStart = (A and (B == C)) or (not A and B)
 
     self.value = self.values[0].value if pickStart else self.values[-1].value
 

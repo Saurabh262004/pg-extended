@@ -1,5 +1,6 @@
 from typing import Optional, Callable
 import pygame as pg
+from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section
 
 '''
@@ -39,29 +40,47 @@ class Toggle:
     self.activeUpdate = True
     self.activeEvents = True
     self.lazyUpdate = True
+    self.lazyUpdateDefault = True
 
     self.innerBoxPadding = .1
     self.innerBox = pg.Rect(0, 0, 0, 0)
+
+    self.innerBoxAnim = AnimatedValue(
+      [
+        DynamicValue('callable', lambda v: v.section.x + (v.section.width * v.innerBoxPadding), self),
+        DynamicValue('callable', lambda v: v.section.x + (v.section.width / 2), self)
+      ], 70, 'start', 'easeInOut', self.animationCallback
+    )
+
+    self.update()
+
+  def animationCallback(self):
+    self.lazyUpdate = self.lazyUpdateDefault
     self.update()
 
   def updateInnerBox(self):
-    newX = self.section.x + (self.section.width * self.innerBoxPadding)
+    self.innerBoxAnim.resolveValue()
+
+    newX = self.innerBoxAnim.value
     newY = self.section.y  + (self.section.height * self.innerBoxPadding)
     newW = (self.section.width / 2) * (1 - (self.innerBoxPadding * 2))
     newH = self.section.height * (1 - (self.innerBoxPadding * 2))
 
-    if self.toggled:
-      newX = self.section.x + (self.section.width / 2)
-
     self.innerBox.update(newX, newY, newW, newH)
 
   def checkEvent(self, event: pg.Event) -> Optional[bool]:
-    if not (self.active and self.activeEvents):
+    if not (self.active and self.activeEvents) or (self.innerBoxAnim.animStart is not None):
       return None
 
     if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.section.rect.collidepoint(event.pos):
-      self.toggled = not self.toggled
+      self.innerBoxAnim.trigger(self.toggled)
 
+      self.lazyUpdateDefault = self.lazyUpdate
+
+      self.lazyUpdate = False
+
+      self.toggled = not self.toggled
+  
       if self.toggled:
         self.section.background = self.toggledBackground
       else:
