@@ -53,11 +53,12 @@ class AnimatedValue:
     else:
       self.value = values[-1].value
 
-    self.animStart = None
-    self.reverse = False
-    self.repeats = 0
-    self.alternate = False
-    self.hasPlayedOnce = False
+    self.animStart: float = None
+    self.reverse: bool = False
+    self.repeats: int = 0
+    self.alternate: bool = False
+    self.hasPlayedOnce: bool = False
+    self.delay: int = 0
 
     if self.interpolation == 'linear':
       self.interpolationStep = self.linear
@@ -135,7 +136,7 @@ class AnimatedValue:
     if self.animStart is None:
       return
 
-    elapsedTime = (time.perf_counter() * 1000) - self.animStart
+    elapsedTime = ((time.perf_counter() * 1000) - self.animStart) - self.delay
 
     for value in self.values:
       value.resolveValue()
@@ -180,11 +181,12 @@ class AnimatedValue:
 
     self.value = self.values[0].value if pickStart else self.values[-1].value
 
-  def trigger(self, reverse: bool = False, repeats: int = 0, alternate: bool = False):
+  def trigger(self, reverse: bool = False, repeats: int = 0, alternate: bool = False, delay: int = 0):
     self.animStart = time.perf_counter() * 1000
 
     self.repeats = repeats
     self.alternate = alternate
+    self.delay = delay
 
     if self.hasPlayedOnce:
       if self.alternate:
