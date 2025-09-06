@@ -94,7 +94,7 @@ class TextInput:
     if self.border > 0:
       self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
 
-    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal=alignTextHorizontal, alignTextVertical=alignTextHorizontal)
+    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal=alignTextHorizontal, alignTextVertical=alignTextVertical)
 
     self.update()
 
@@ -157,8 +157,8 @@ class TextInput:
 
     elif self.inFocus and event.type == pg.KEYDOWN:
       if not event.key in IGNORE_KEYS:
-        if event.key == 8: # Backspace
-          if event.mod == 4160: # CTRL + Backspace
+        if event.key == pg.K_BACKSPACE: # Backspace
+          if event.mod & pg.KMOD_CTRL: # CTRL + Backspace
             splitArr = self.getSplitText(self.inputText)
 
             self.inputText = ''.join(splitArr[:-1])
