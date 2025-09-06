@@ -1,6 +1,7 @@
 from typing import Optional, Union
 import time
 import pygame as pg
+from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
@@ -41,10 +42,11 @@ Usable methods:
 - draw:       Renders the text input (border, background, and text) onto the given surface.
 '''
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
+    self.max = max
     self.placeholder = placeholder
     self.placeholderTextColor = placeholderTextColor
     self.border = border
@@ -71,9 +73,15 @@ class TextInput:
     self.lastAutoInputTime = 0
     self.autoInputDelay = 0.5
     self.autoInputInterval = 0.06
+    self.dynamicAutoInputInterval = self.autoInputInterval
     self.autoInputSpeedIncrease = 0.8
     self.autoInputMinInterval = 0.01
-    self.dynamicAutoInputInterval = self.autoInputInterval
+    self.cursor: pg.Surface = None
+
+    self.cursorAlpha: AnimatedValue = AnimatedValue(
+      [DynamicValue('number', 255), DynamicValue('number', 0)],
+      500, 'start', 'easeIn'
+    )
 
     if self.onChangeInfo is not None:
       for k in ONCHANGE_KEYS:
@@ -131,12 +139,18 @@ class TextInput:
       if event.button == 1 and self.section.rect.collidepoint(event.pos):
         if not self.inFocus:
           self.inFocus = True
+          self.lazyUpdateOverride = True
+
+          self.cursorAlpha.trigger(False, -1, True)
 
           if self.focusBackground:
             self.section.background = self.focusBackground
             self.section.update()
       else:
         self.inFocus = False
+        self.lazyUpdateOverride = False
+
+        self.cursorAlpha.terminate()
 
         self.section.background = self.background
         self.section.update()
@@ -151,21 +165,18 @@ class TextInput:
             self.typing = True
             self.typingStart = time.perf_counter()
             self.lastKey = 'ctrlbackspace'
-            self.lazyUpdateOverride = True
           else:
             self.inputText = self.inputText[:-1]
 
             self.typing = True
             self.typingStart = time.perf_counter()
             self.lastKey = 'backspace'
-            self.lazyUpdateOverride = True
-        else:
+        elif len(self.inputText) < self.max or self.max < 0:
           self.inputText += event.unicode
 
           self.typing = True
           self.typingStart = time.perf_counter()
           self.lastKey = event.unicode
-          self.lazyUpdateOverride = True
 
         if self.inputText == '':
           self.textBox.textColor = self.placeholderTextColor
@@ -179,7 +190,6 @@ class TextInput:
     elif event.type == pg.KEYUP:
       if self.typing:
         self.typing = False
-        self.lazyUpdateOverride = False
         self.dynamicAutoInputInterval = self.autoInputInterval
 
         self.callback()
@@ -190,6 +200,13 @@ class TextInput:
 
     newX, newY = self.section.x - self.border, self.section.y - self.border
     newWidth, newHeight = self.section.width + (self.border * 2), self.section.height + (self.border * 2)
+
+    if self.inFocus:
+      self.cursorAlpha.resolveValue()
+
+      self.cursor = pg.Surface((2, self.textBox.textRect.height), pg.SRCALPHA)
+
+      self.cursor.fill((self.textColor.r, self.textColor.g, self.textColor.b, self.cursorAlpha.value))
 
     # auto rapid input on key hold
     if self.typing and (time.perf_counter() - self.typingStart > self.autoInputDelay):
@@ -204,7 +221,7 @@ class TextInput:
           self.inputText = ''.join(splitArr[:-1])
         elif self.lastKey == 'backspace':
           self.inputText = self.inputText[:-1]
-        else:
+        elif len(self.inputText) < self.max or self.max < 0:
           self.inputText += self.lastKey
 
         if self.inputText == '':
@@ -235,3 +252,9 @@ class TextInput:
     self.section.draw(surface)
 
     self.textBox.draw(surface)
+
+    if self.inFocus:
+      if self.inputText == '':
+        surface.blit(self.cursor, (self.section.x + (self.section.width / 2), self.textBox.textRect.y))
+      else:
+        surface.blit(self.cursor, (self.textBox.textRect.x + self.textBox.textRect.width, self.textBox.textRect.y))

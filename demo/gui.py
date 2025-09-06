@@ -1,4 +1,3 @@
-import pygame as pg
 from demo import colors
 import pg_extended as pgx
 
@@ -57,9 +56,9 @@ def addOverlaySystem(window: pgx.Window):
     pgx.Section(
       {
         'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 6, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 25, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=4)
+        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 21.5, menuSection),
+        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=6),
+        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=3)
       }, colors.back1, 4
     ), colors.text, colors.primary, colors.primary
   )
@@ -114,7 +113,7 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=30),
         'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=4)
       }, colors.primary, 2
-    ), 'Helvetica', colors.text, 'Type here...', colors.back1
+    ), 'Helvetica', colors.text, 12, 'Type here...', colors.back1
   )
 
   window.customAnimatedValues.append(menuAnim)

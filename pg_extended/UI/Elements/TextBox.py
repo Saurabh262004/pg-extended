@@ -47,11 +47,13 @@ class TextBox:
     self.drawSectionDefault = drawSectionDefault
     self.alignTextHorizontal = alignTextHorizontal
     self.alignTextVertical = alignTextVertical
+
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
     self.lazyUpdate = True
     self.lazyUpdateOverride = False
+    self.textRect: pg.Rect = None
 
   def update(self):
     if not (self.active and self.activeUpdate):
@@ -59,13 +61,14 @@ class TextBox:
 
     self.section.update()
 
-    self.fontSize = max(10, int(self.section.height * .6))
+    self.fontSize = int(self.section.height * .6)
     self.font = pg.font.SysFont(self.fontPath, self.fontSize)
 
     self.textSurface = self.font.render(self.text, True, self.textColor)
 
     key = (self.alignTextHorizontal, self.alignTextVertical)
     pos_attr = ALIGNMENT_MAP[key]
+
     self.textRect = self.textSurface.get_rect(**{pos_attr: getattr(self.section.rect, pos_attr)})
 
   def draw(self, surface: pg.Surface, drawSection: Optional[bool] = None):
