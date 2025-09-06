@@ -63,6 +63,7 @@ class TextInput:
     self.activeUpdate = True
     self.activeEvents = True
     self.lazyUpdate = True
+    self.lazyUpdateOverride = False
     self.inputText = ''
     self.lastKey = ''
     self.valueOnLastCallback = ''
@@ -150,21 +151,21 @@ class TextInput:
             self.typing = True
             self.typingStart = time.perf_counter()
             self.lastKey = 'ctrlbackspace'
-            self.lazyUpdate = False
+            self.lazyUpdateOverride = True
           else:
             self.inputText = self.inputText[:-1]
 
             self.typing = True
             self.typingStart = time.perf_counter()
             self.lastKey = 'backspace'
-            self.lazyUpdate = False
+            self.lazyUpdateOverride = True
         else:
           self.inputText += event.unicode
 
           self.typing = True
           self.typingStart = time.perf_counter()
           self.lastKey = event.unicode
-          self.lazyUpdate = False
+          self.lazyUpdateOverride = True
 
         if self.inputText == '':
           self.textBox.textColor = self.placeholderTextColor
@@ -178,7 +179,7 @@ class TextInput:
     elif event.type == pg.KEYUP:
       if self.typing:
         self.typing = False
-        self.lazyUpdate = True
+        self.lazyUpdateOverride = False
         self.dynamicAutoInputInterval = self.autoInputInterval
 
         self.callback()

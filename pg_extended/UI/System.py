@@ -124,7 +124,7 @@ class System:
       for elementID in idList:
         element = self.elements[elementID]
 
-        if not element.lazyUpdate and element.active:
+        if element.lazyUpdateOverride or (not element.lazyUpdate and element.active):
           element.update()
 
   def lazyUpdate(self, elementIDs: Iterable[str] = None):

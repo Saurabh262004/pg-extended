@@ -40,7 +40,7 @@ class Toggle:
     self.activeUpdate = True
     self.activeEvents = True
     self.lazyUpdate = True
-    self.lazyUpdateDefault = True
+    self.lazyUpdateOverride = False
 
     self.innerBoxPadding = .1
     self.innerBox = pg.Rect(0, 0, 0, 0)
@@ -49,13 +49,13 @@ class Toggle:
       [
         DynamicValue('callable', lambda v: v.section.x + (v.section.width * v.innerBoxPadding), self),
         DynamicValue('callable', lambda v: v.section.x + (v.section.width / 2), self)
-      ], 70, 'start', 'easeInOut', self.animationCallback
+      ], 70, 'start', 'linear', self.animationCallback
     )
 
     self.update()
 
   def animationCallback(self):
-    self.lazyUpdate = self.lazyUpdateDefault
+    self.lazyUpdateOverride = False
     self.update()
 
   def updateInnerBox(self):
@@ -75,9 +75,7 @@ class Toggle:
     if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.section.rect.collidepoint(event.pos):
       self.innerBoxAnim.trigger(self.toggled)
 
-      self.lazyUpdateDefault = self.lazyUpdate
-
-      self.lazyUpdate = False
+      self.lazyUpdateOverride = True
 
       self.toggled = not self.toggled
   

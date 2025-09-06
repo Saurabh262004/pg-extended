@@ -36,6 +36,7 @@ class Section:
     self.activeDraw = True
     self.activeUpdate = True
     self.lazyUpdate = True
+    self.lazyUpdateOverride = False
 
     if len(self.dimensions) != 4:
       raise ValueError(f'dimensions must contain 4 Dimension objects, received: {len(self.dimensions)}')

@@ -51,6 +51,7 @@ class TextBox:
     self.activeDraw = True
     self.activeUpdate = True
     self.lazyUpdate = True
+    self.lazyUpdateOverride = False
 
   def update(self):
     if not (self.active and self.activeUpdate):

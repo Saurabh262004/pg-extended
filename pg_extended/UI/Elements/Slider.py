@@ -52,6 +52,7 @@ class Slider():
     self.activeUpdate = True
     self.activeEvents = True
     self.lazyUpdate = True
+    self.lazyUpdateOverride = False
 
     if not self.orientation in ('vertical', 'horizontal'):
       raise ValueError('Slider orientation must be \'vertical\' or \'horizontal\'')

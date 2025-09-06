@@ -44,6 +44,7 @@ class Button:
     self.activeUpdate = True
     self.activeEvents = True
     self.lazyUpdate = True
+    self.lazyUpdateOverride = False
 
     if self.border > 0:
       self.borderRect = pg.Rect(section.x - border, section.y - border, section.width + (border * 2), section.height + (border * 2))
