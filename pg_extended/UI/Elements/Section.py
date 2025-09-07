@@ -107,6 +107,9 @@ class Section:
 
       self.imageX = self.x + ((self.width - self.drawImage.get_width()) / 2)
       self.imageY = self.y + ((self.height - self.drawImage.get_height()) / 2)
+    elif isinstance(self.background, pg.Color) and self.background.a < 255:
+      self.drawImage = pg.Surface(self.rect.size, pg.SRCALPHA)
+      pg.draw.rect(self.drawImage, self.background, (0, 0, self.width, self.height), border_radius=self.borderRadius)
 
   def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
@@ -115,4 +118,7 @@ class Section:
     if isinstance(self.background, pg.Surface):
       surface.blit(self.drawImage, (self.imageX, self.imageY))
     elif isinstance(self.background, pg.Color):
-      pg.draw.rect(surface, self.background, self.rect, border_radius = self.borderRadius)
+      if self.background.a < 255:
+        surface.blit(self.drawImage, (self.x, self.y))
+      else:
+        pg.draw.rect(surface, self.background, self.rect, border_radius=self.borderRadius)

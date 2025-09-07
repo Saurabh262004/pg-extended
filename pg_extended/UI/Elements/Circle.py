@@ -100,6 +100,10 @@ class Circle:
 
       self.backgroundWidth = self.drawImage.get_width()
       self.backgroundHeight = self.drawImage.get_height()
+    elif isinstance(self.background, pg.Color) and self.background.a < 255:
+      self.drawImage = pg.Surface((self.radius * 2, self.radius * 2), pg.SRCALPHA)
+
+      pg.draw.aacircle(self.drawImage, self.background, (self.radius, self.radius), self.radius)
 
   def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
@@ -108,4 +112,7 @@ class Circle:
     if isinstance(self.background, pg.Surface):
       surface.blit(self.drawImage, (self.x - (self.backgroundWidth / 2), self.y - (self.backgroundHeight / 2)))
     elif isinstance(self.background, pg.Color):
-      pg.draw.circle(surface, self.background, (self.x, self.y), self.radius)
+      if self.background.a < 255:
+        surface.blit(self.drawImage, (self.x - self.radius, self.y - self.radius))
+      else:
+        pg.draw.aacircle(surface, self.background, (self.x, self.y), self.radius)
