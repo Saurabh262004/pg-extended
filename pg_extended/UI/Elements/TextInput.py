@@ -7,8 +7,6 @@ from pg_extended.UI.Elements.TextBox import TextBox
 
 backgroundType = Union[pg.Color, pg.Surface]
 
-IGNORE_KEYS = (9, 13, 27, 127, 1073741912)
-
 LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\f\v'
 
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
@@ -77,6 +75,7 @@ class TextInput:
     self.autoInputSpeedIncrease = 0.8
     self.autoInputMinInterval = 0.01
     self.cursor: pg.Surface = None
+    self.cursorX: float = 0
 
     self.cursorAlpha: AnimatedValue = AnimatedValue(
       [DynamicValue('number', 255), DynamicValue('number', 0)],
@@ -95,6 +94,9 @@ class TextInput:
       self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
 
     self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal=alignTextHorizontal, alignTextVertical=alignTextVertical)
+
+    self.textBox.paddingLeft = 2
+    self.textBox.paddingRight = 2
 
     self.update()
 
@@ -156,36 +158,36 @@ class TextInput:
         self.section.update()
 
     elif self.inFocus and event.type == pg.KEYDOWN:
-      if not event.key in IGNORE_KEYS:
+      if event.mod & pg.KMOD_CTRL: # CTRL
+        if event.key == pg.K_BACKSPACE: # CTRL + Backspace
+          splitArr = self.getSplitText(self.inputText)
+
+          self.inputText = ''.join(splitArr[:-1])
+          self.typing = True
+          self.typingStart = time.perf_counter()
+          self.lastKey = 'ctrlbackspace'
+      else:
         if event.key == pg.K_BACKSPACE: # Backspace
-          if event.mod & pg.KMOD_CTRL: # CTRL + Backspace
-            splitArr = self.getSplitText(self.inputText)
+          self.inputText = self.inputText[:-1]
 
-            self.inputText = ''.join(splitArr[:-1])
-            self.typing = True
-            self.typingStart = time.perf_counter()
-            self.lastKey = 'ctrlbackspace'
-          else:
-            self.inputText = self.inputText[:-1]
-
-            self.typing = True
-            self.typingStart = time.perf_counter()
-            self.lastKey = 'backspace'
-        elif len(self.inputText) < self.max or self.max < 0:
+          self.typing = True
+          self.typingStart = time.perf_counter()
+          self.lastKey = 'backspace'
+        else:
           self.inputText += event.unicode
 
           self.typing = True
           self.typingStart = time.perf_counter()
           self.lastKey = event.unicode
 
-        if self.inputText == '':
-          self.textBox.textColor = self.placeholderTextColor
-          self.textBox.text = self.placeholder
-        else:
-          self.textBox.textColor = self.textColor
-          self.textBox.text = self.inputText
+      if self.inputText == '':
+        self.textBox.textColor = self.placeholderTextColor
+        self.textBox.text = self.placeholder
+      else:
+        self.textBox.textColor = self.textColor
+        self.textBox.text = self.inputText
 
-        self.textBox.update()
+      self.textBox.update()
 
     elif event.type == pg.KEYUP:
       if self.typing:
@@ -207,6 +209,18 @@ class TextInput:
       self.cursor = pg.Surface((2, self.textBox.textRect.height), pg.SRCALPHA)
 
       self.cursor.fill((self.textColor.r, self.textColor.g, self.textColor.b, self.cursorAlpha.value))
+
+      spaceWidth, _ = self.textBox.font.size(' ')
+      leftPaddingWidth = spaceWidth * self.textBox.paddingLeft
+      rightPaddingWidth = spaceWidth * self.textBox.paddingRight
+      textWidth, _ = self.textBox.font.size(self.inputText)
+
+      if self.textBox.alignTextHorizontal == 'left':
+        self.cursorX = self.section.x + leftPaddingWidth + textWidth
+      elif self.textBox.alignTextHorizontal == 'center':
+        self.cursorX = self.section.x + (self.section.width / 2) + ((textWidth + (leftPaddingWidth - rightPaddingWidth)) / 2)
+      elif self.textBox.alignTextHorizontal == 'right':
+        self.cursorX = self.section.x + (self.section.width - rightPaddingWidth)
 
     # auto rapid input on key hold
     if self.typing and (time.perf_counter() - self.typingStart > self.autoInputDelay):
@@ -254,7 +268,4 @@ class TextInput:
     self.textBox.draw(surface)
 
     if self.inFocus:
-      if self.inputText == '':
-        surface.blit(self.cursor, (self.section.x + (self.section.width / 2), self.textBox.textRect.y))
-      else:
-        surface.blit(self.cursor, (self.textBox.textRect.x + self.textBox.textRect.width, self.textBox.textRect.y))
+      surface.blit(self.cursor, (self.cursorX, self.textBox.textRect.y))
