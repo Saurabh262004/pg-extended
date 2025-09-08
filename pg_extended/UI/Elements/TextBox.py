@@ -48,6 +48,10 @@ class TextBox:
     self.alignTextHorizontal = alignTextHorizontal
     self.alignTextVertical = alignTextVertical
 
+    self.paddingLeft = 0
+    self.paddingRight = 0
+    self.paddingLeftStr = None
+    self.paddingRightStr = None
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -64,7 +68,9 @@ class TextBox:
     self.fontSize = int(self.section.height * .6)
     self.font = pg.font.SysFont(self.fontPath, self.fontSize)
 
-    self.textSurface = self.font.render(self.text, True, self.textColor)
+    self.paddingLeftStr = ' ' * self.paddingLeft
+    self.paddingRightStr = ' ' * self.paddingRight
+    self.textSurface = self.font.render(f'{self.paddingLeftStr}{self.text}{self.paddingRightStr}', True, self.textColor)
 
     key = (self.alignTextHorizontal, self.alignTextVertical)
     pos_attr = ALIGNMENT_MAP[key]
