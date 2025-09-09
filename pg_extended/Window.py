@@ -275,8 +275,6 @@ class Window:
     self.clock.tick(self.fps)
 
   def openWindow(self):
-    pg.init()
-
     self.time = pg.time
     self.clock = self.time.Clock()
     self.currentFPS: int = self.clock.get_fps()

@@ -57,7 +57,10 @@ class TextBox:
     self.activeUpdate = True
     self.lazyUpdate = True
     self.lazyUpdateOverride = False
+    self.textSurface: pg.Surface = None
     self.textRect: pg.Rect = None
+
+    self.update()
 
   def update(self):
     if not (self.active and self.activeUpdate):

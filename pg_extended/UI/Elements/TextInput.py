@@ -281,10 +281,7 @@ class TextInput:
 
         self.setTextBoxValue()
 
-    try:
-      self.textBox.update()
-    except Exception as e:
-      print(e)
+    self.textBox.update()
 
     if self.border > 0:
       self.borderRect.update(newX, newY, newWidth, newHeight)

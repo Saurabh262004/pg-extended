@@ -97,11 +97,8 @@ class Button:
     if not (self.active and self.activeUpdate):
       return None
 
-    if self.hasText and self.activeDraw:
-      try:
-        self.textBox.update()
-      except Exception as e:
-        print(e)
+    if self.hasText:
+      self.textBox.update()
     else:
       self.section.update()
 

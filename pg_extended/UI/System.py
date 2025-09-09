@@ -95,7 +95,7 @@ class System:
 
     if not allIn(elementIDs, self.elements):
       print('The given iterable contains id(s) that do not exist in this system, please enter a valid iterable')
-      return None
+      return []
 
     return elementIDs
 
@@ -106,10 +106,9 @@ class System:
 
     idList = self.__validateIDs(elementIDs)
 
-    if not idList == None:
-      for elementID in idList:
-        if self.elements[elementID].active and self.elements[elementID].activeDraw:
-          self.elements[elementID].draw(self.surface)
+    for elementID in idList:
+      if self.elements[elementID].active and self.elements[elementID].activeDraw:
+        self.elements[elementID].draw(self.surface)
 
     self.firstDraw = False
 
@@ -120,12 +119,11 @@ class System:
 
     idList = self.__validateIDs(elementIDs)
 
-    if not idList == None:
-      for elementID in idList:
-        element = self.elements[elementID]
+    for elementID in idList:
+      element = self.elements[elementID]
 
-        if element.lazyUpdateOverride or (not element.lazyUpdate and element.active):
-          element.update()
+      if element.lazyUpdateOverride or ((not element.lazyUpdate) and element.active):
+        element.update()
 
   def lazyUpdate(self, elementIDs: Iterable[str] = None):
     if self.locked:
@@ -134,10 +132,9 @@ class System:
 
     idList = self.__validateIDs(elementIDs)
 
-    if not idList == None:
-      for elementID in idList:
-        if self.elements[elementID].active:
-          self.elements[elementID].update()
+    for elementID in idList:
+      if self.elements[elementID].active:
+        self.elements[elementID].update()
 
   def handleEvents(self, event: pg.Event) -> Union[str, None]:
     if self.locked:
