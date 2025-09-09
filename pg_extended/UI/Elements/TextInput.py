@@ -1,5 +1,6 @@
 from typing import Optional, Union
 import time
+import pyperclip
 import pygame as pg
 from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section
@@ -65,7 +66,9 @@ class TextInput:
     self.lazyUpdate = True
     self.lazyUpdateOverride = False
     self.inputText = ''
+    self.lastEvent = ''
     self.lastKey = ''
+    self.events = {}
     self.valueOnLastCallback = ''
     self.typingStart = 0
     self.lastAutoInputTime = 0
@@ -98,6 +101,8 @@ class TextInput:
     self.textBox.paddingLeft = 2
     self.textBox.paddingRight = 2
 
+    self.__setupEvents()
+
     self.update()
 
   @staticmethod
@@ -105,15 +110,58 @@ class TextInput:
     splitArr = ['']
 
     for char in text:
-      if char in LINE_SPLIT_UNICODES:
-        if splitArr[-1] == '' or splitArr[-1][-1] == char:
+      if char.isspace():
+        if splitArr[-1].isspace():
           splitArr[-1] += char
         else:
           splitArr.append(char)
+      elif char in LINE_SPLIT_UNICODES:
+        splitArr.append(char)
       else:
-        splitArr[-1] += char
+        if splitArr[-1] and not splitArr[-1].isspace() and splitArr[-1] not in LINE_SPLIT_UNICODES:
+          splitArr[-1] += char
+        else:
+          splitArr.append(char)
+
+    if splitArr[0] == '':
+      splitArr = splitArr[1:]
 
     return splitArr
+
+  def __setupEvents(self):
+    def unicode():
+      self.inputText += self.lastKey
+
+    def backspace():
+      self.inputText = self.inputText[:-1]
+
+    def ctrlBackspace():
+      splitArr = self.getSplitText(self.inputText)
+
+      self.inputText = ''.join(splitArr[:-1])
+
+    def copy():
+      pyperclip.copy(self.inputText)
+
+    def paste():
+      self.inputText += pyperclip.paste()
+
+    self.events = {
+      'unicode': unicode,
+      'backspace': backspace,
+      'ctrlBackspace': ctrlBackspace,
+      'copy': copy,
+      'paste': paste,
+      'pass': lambda: None
+    }
+
+  def setTextBoxValue(self):
+    if self.inputText == '':
+      self.textBox.textColor = self.placeholderTextColor
+      self.textBox.text = self.placeholder
+    else:
+      self.textBox.textColor = self.textColor
+      self.textBox.text = self.inputText
 
   def callback(self):
     if not self.active:
@@ -158,36 +206,35 @@ class TextInput:
         self.section.update()
 
     elif self.inFocus and event.type == pg.KEYDOWN:
-      if event.mod & pg.KMOD_CTRL: # CTRL
-        if event.key == pg.K_BACKSPACE: # CTRL + Backspace
-          splitArr = self.getSplitText(self.inputText)
+      self.typing = True
+      self.typingStart = time.perf_counter()
 
-          self.inputText = ''.join(splitArr[:-1])
-          self.typing = True
-          self.typingStart = time.perf_counter()
-          self.lastKey = 'ctrlbackspace'
-      else:
-        if event.key == pg.K_BACKSPACE: # Backspace
-          self.inputText = self.inputText[:-1]
+      eventTriggered = False
 
-          self.typing = True
-          self.typingStart = time.perf_counter()
-          self.lastKey = 'backspace'
+      if event.mod & pg.KMOD_CTRL:
+        if event.key == pg.K_BACKSPACE:
+          eventTriggered = True
+          self.lastEvent = 'ctrlBackspace'
+        elif event.key == pg.K_c:
+          eventTriggered = True
+          self.lastEvent = 'copy'
+        elif event.key == pg.K_v:
+          eventTriggered = True
+          self.lastEvent = 'paste'
         else:
-          self.inputText += event.unicode
-
-          self.typing = True
-          self.typingStart = time.perf_counter()
-          self.lastKey = event.unicode
-
-      if self.inputText == '':
-        self.textBox.textColor = self.placeholderTextColor
-        self.textBox.text = self.placeholder
+          self.lastEvent = 'pass'
       else:
-        self.textBox.textColor = self.textColor
-        self.textBox.text = self.inputText
+        eventTriggered = True
+        if event.key == pg.K_BACKSPACE:
+          self.lastEvent = 'backspace'
+        else:
+          self.lastKey = event.unicode
+          self.lastEvent = 'unicode'
 
-      self.textBox.update()
+      if eventTriggered:
+        self.events[self.lastEvent]()
+        self.setTextBoxValue()
+        self.textBox.update()
 
     elif event.type == pg.KEYUP:
       if self.typing:
@@ -230,20 +277,9 @@ class TextInput:
 
         self.lastAutoInputTime = time.perf_counter()
 
-        if self.lastKey == 'ctrlbackspace':
-          splitArr = self.getSplitText(self.inputText)
-          self.inputText = ''.join(splitArr[:-1])
-        elif self.lastKey == 'backspace':
-          self.inputText = self.inputText[:-1]
-        elif len(self.inputText) < self.max or self.max < 0:
-          self.inputText += self.lastKey
+        self.events[self.lastEvent]()
 
-        if self.inputText == '':
-          self.textBox.textColor = self.placeholderTextColor
-          self.textBox.text = self.placeholder
-        else:
-          self.textBox.textColor = self.textColor
-          self.textBox.text = self.inputText
+        self.setTextBoxValue()
 
     try:
       self.textBox.update()
