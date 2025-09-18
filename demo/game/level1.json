@@ -1,0 +1,17 @@
+{
+  "atlases": ["atlas1", "atlas2"],
+  "layers": [
+    [
+      [[0, "TopLeft1"], [0, "TopMid1"], [0, "TopMid1"], [0, "TopMid1"], [0, "TopRight1"]],
+      [[0, "Left1"], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, "Right1"]],
+      [[0, "Left1"], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, "Right1"]],
+      [[0, "Left1"], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, [29, 28, 43]], [0, "Right1"]],
+      [[0, "LeftFloor1"], [0, "MidFloor1"], [0, "MidFloor1"], [0, "MidFloor1"], [0, "RightFloor1"]]
+    ],
+    [
+      [null, null, null],
+      [null, null, null],
+      [null, null, [1, [2, 0]]]
+    ]
+  ]
+}

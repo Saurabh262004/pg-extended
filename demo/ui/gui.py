@@ -113,7 +113,7 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=30),
         'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=4)
       }, colors.primary, 2
-    ), 'Helvetica', colors.text, 12, 'Type here...', colors.back1
+    ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1
   )
 
   window.customAnimatedValues.append(menuAnim)
@@ -125,6 +125,8 @@ def addOverlaySystem(window: pgx.Window):
   slider.lazyUpdate = False
   textInputText.lazyUpdate = False
   textInput.lazyUpdate = False
+
+  textInput.textBox.alignTextHorizontal = 'center'
 
   overlaySystem.addElement(menuSection, 'menuSection')
   overlaySystem.addElement(menuButton, 'menuButton')

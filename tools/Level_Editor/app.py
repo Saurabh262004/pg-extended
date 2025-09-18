@@ -1,9 +1,6 @@
-import pygame as pg
 import pg_extended as pgx
 from tools.Level_Editor import sharedAssets
 from tools.Level_Editor.ui import console, grid
-
-pg.init()
 
 app = sharedAssets.app = pgx.Window('Level Editor', (1280, 720), (746, 420))
 

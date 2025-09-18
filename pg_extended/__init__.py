@@ -6,3 +6,6 @@ from pg_extended.Window import Window
 from pg_extended.Core import *
 from pg_extended.UI import *
 from pg_extended.Game import *
+
+import pygame
+pygame.init()
