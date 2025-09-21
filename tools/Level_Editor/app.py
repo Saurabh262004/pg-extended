@@ -2,7 +2,7 @@ import pg_extended as pgx
 from tools.Level_Editor import sharedAssets
 from tools.Level_Editor.ui import console, grid
 
-app = sharedAssets.app = pgx.Window('Level Editor', (1280, 720), (746, 420))
+app = sharedAssets.app = pgx.Window('Level Editor', (1280, 720))
 
 grid.add(app)
 

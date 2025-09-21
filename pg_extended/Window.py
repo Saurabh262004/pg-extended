@@ -11,7 +11,6 @@ It is used to create and manage the main window of your application, handle even
 Parameters:
 - [required] title:               The title of the window.
 - [required] screenRes:           The resolution of the window (width, height).
-- [Optional] minRes:              The minimum resolution of the window (default is (480, 270)).
 - [Optional] customLoopProcess:   A custom function to be called in the main loop (default is None).
 - [Optional] customUpdateProcess: A custom function to be called in the update process (default is None).
 - [Optional] customEventHandler:  A custom function to handle events (default is None).
@@ -26,15 +25,14 @@ Usable methods:
 - closeWindow:       Closes the main window and cleans up resources.
 '''
 class Window:
-  def __init__(self, title: str, screenRes: Iterable[int], minRes: Optional[Iterable[int]] = (480, 270), customLoopProcess: Optional[callable] = None, customUpdateProcess: Optional[callable] = None, customEventHandler: Optional[callable] = None, fps : Optional[int] = 60):
+  def __init__(self, title: str, screenRes: Iterable[int], customLoopProcess: Optional[callable] = None, customUpdateProcess: Optional[callable] = None, customEventHandler: Optional[callable] = None, fps : Optional[int] = 60):
     self.title: str = title
     self.screenRes: Iterable[int] = screenRes
     self.customLoopProcess: Union[callable, None] = customLoopProcess
     self.customEventHandler: Union[callable, None] = customEventHandler
     self.customUpdateProcess: Union[callable, None] = customUpdateProcess
-    self.minRes: Iterable[int] = minRes
-    self.screenWidth: int = max(self.screenRes[0], self.minRes[0])
-    self.screenHeight: int = max(self.screenRes[1], self.minRes[1])
+    self.screenWidth: int = self.screenRes[0]
+    self.screenHeight: int = self.screenRes[1]
     self.fps: int = fps
 
     self.running: bool = False
@@ -210,10 +208,6 @@ class Window:
 
       if event.type == pg.QUIT:
         self.running = False
-      elif event.type == pg.VIDEORESIZE:
-        new_width = max(self.minRes[0], event.w)
-        new_height = max(self.minRes[1], event.h)
-        self.screen = pg.display.set_mode((new_width, new_height), pg.RESIZABLE)
       else:
         cursorChange = 'arrow'
 
@@ -282,6 +276,11 @@ class Window:
     pg.display.set_caption(self.title)
 
     self.screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.RESIZABLE)
+
+    receivedWidth, receivedHeight = self.screen.get_size()
+
+    if ((not receivedWidth == self.screenWidth) or (not receivedHeight == self.screneHeight)):
+      self.screenWidth, self.screenHeight = receivedWidth, receivedHeight
 
     self.running = True
     self.secondResize = False
