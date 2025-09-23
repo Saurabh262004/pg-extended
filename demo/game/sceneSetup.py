@@ -7,7 +7,11 @@ def addScene(window: pgx.Window):
 
   atlas2 = pgx.TextureAtlas('demo/game/assets/2.png', 44, 48)
 
-  level1 = pgx.Level(5, 5, 16, 16, 'demo/game/level1.json')
+  level1 = pgx.Level(5, 5, 32, 32, 'demo/game/level1.json')
+
+  entity1 = pgx.Entity('entity1', 1, 1, 1, 1, ('atlas2', (1, 1)))
+
+  level1.addEntity(entity1)
 
   scene1.addElement(atlas1, 'atlas1')
 
