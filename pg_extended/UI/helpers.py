@@ -17,43 +17,38 @@ def allIn(values: Iterable, itr: Iterable) -> bool:
       return False
   return True
 
-# deforms the image to fit in the container
+# deforms the image to perfectly fit in the container
 def squish(image: pgSurface, containerSize: Iterable, scalePercent: Optional[int] = 100) -> pgSurface:
-  return pgTransform.smoothscale(image, (containerSize[0] * (scalePercent / 100), containerSize[1] * (scalePercent / 100)))
+  return pgTransform.smoothscale(
+    image,
+    (
+      containerSize[0] * (scalePercent / 100),
+      containerSize[1] * (scalePercent / 100)
+    )
+  )
 
 # resizes the image to the smallest possible fit while preserving the original aspect ratio
 def fit(image: pgSurface, containerSize: Iterable, scalePercent: Optional[int] = 100) -> pgSurface:
   containerWidth, containerHeight = containerSize
-  containerWidth *= (scalePercent / 100)
-  containerHeight *= (scalePercent / 100)
 
   imageWidth, imageHeight = image.get_width(), image.get_height()
 
-  imageResRatio = imageWidth / imageHeight
+  scale = min(containerWidth / imageWidth, containerHeight / imageHeight) * (scalePercent / 100)
 
-  if containerWidth < containerHeight:
-    newWidth = containerWidth
-    newHeight = imageResRatio * newWidth
-    return pgTransform.smoothscale(image, (newWidth, newHeight))
+  newWidth = int(imageWidth * scale)
+  newHeight = int(imageHeight * scale)
 
-  newHeight = containerHeight
-  newWidth = imageResRatio * newHeight
   return pgTransform.smoothscale(image, (newWidth, newHeight))
 
 # resizes the image to the largest possible fit while preserving the original aspect ratio
 def fill(image: pgSurface, containerSize: Iterable, scalePercent: Optional[int] = 100) -> pgSurface:
   containerWidth, containerHeight = containerSize
-  containerWidth *= (scalePercent / 100)
-  containerHeight *= (scalePercent / 100)
+
   imageWidth, imageHeight = image.get_width(), image.get_height()
 
-  imageResRatio = imageWidth / imageHeight
+  scale = max(containerWidth / imageWidth, containerHeight / imageHeight) * (scalePercent / 100)
 
-  if containerWidth > containerHeight:
-    newWidth = containerWidth
-    newHeight = imageResRatio * newWidth
-    return pgTransform.smoothscale(image, (newWidth, newHeight))
+  newWidth = int(imageWidth * scale)
+  newHeight = int(imageHeight * scale)
 
-  newHeight = containerHeight
-  newWidth = imageResRatio * newHeight
   return pgTransform.smoothscale(image, (newWidth, newHeight))
