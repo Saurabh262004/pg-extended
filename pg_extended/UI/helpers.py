@@ -1,6 +1,5 @@
 from typing import Iterable, Optional
 from pygame import Surface as pgSurface, transform as pgTransform
-from math import sqrt
 
 # maps a number from one range to another
 def mapRange(num: float, start1: float, start2: float, end1: float, end2: float) -> float:

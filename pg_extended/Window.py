@@ -308,8 +308,6 @@ class Window:
     del self.time
     del self.clock
 
-    pg.quit()
-
   def __screenResized(self) -> bool:
     if not self.running:
       return None
