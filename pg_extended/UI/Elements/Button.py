@@ -82,7 +82,7 @@ class Button:
       self.pressed = False
       self.section.background = self.defaultBackground
 
-      if self.onClick and self.onClickActuation == 'buttonUp':
+      if self.onClickActuation == 'buttonUp' and self.onClick and self.section.rect.collidepoint(event.pos):
         if self.onClickParams is None:
           self.onClick()
         else:
