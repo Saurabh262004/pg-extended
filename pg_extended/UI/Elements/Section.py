@@ -24,7 +24,7 @@ Usable methods:
 - draw:   Draws the section on the provided surface.
 '''
 class Section:
-  def __init__(self, dimensions: Dict['str', DynamicValue], background: backgroundType, borderRadius: Optional[float] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundSizePercent: Optional[int] = 100):
+  def __init__(self, dimensions: Dict['str', DynamicValue], background: backgroundType, borderRadius: Optional[float] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundPosition: Optional[str] = 'center', backgroundSizePercent: Optional[int] = 100):
     self.dimensions = dimensions
     self.background = background
     self.drawImage = None
@@ -32,6 +32,9 @@ class Section:
     self.borderRadius = borderRadius
     self.backgroundSizeType = backgroundSizeType
     self.backgroundSizePercent = backgroundSizePercent
+    self.backgroundPosition = backgroundPosition
+    self.backgroundOffset = [0, 0]
+    self.backgroundSmoothScale = True
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -94,19 +97,37 @@ class Section:
     self.rect.update(self.x, self.y, self.width, self.height)
 
     if isinstance(self.background, pg.Surface):
+      # resize the background image
       if self.backgroundSizeType == 'fit':
-        self.drawImage = fit(self.background, (self.width, self.height), self.backgroundSizePercent)
+        self.drawImage = fit(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
-        self.drawImage = fill(self.background, (self.width, self.height), self.backgroundSizePercent)
+        self.drawImage = fill(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'squish':
-        self.drawImage = squish(self.background, (self.width, self.height), self.backgroundSizePercent)
+        self.drawImage = squish(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif not self.backgroundSizePercent == 100:
-        self.drawImage = fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSizePercent)
+        self.drawImage = fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
       else:
         self.drawImage = self.background
 
-      self.imageX = self.x + ((self.width - self.drawImage.get_width()) / 2)
-      self.imageY = self.y + ((self.height - self.drawImage.get_height()) / 2)
+      # set x position
+      if self.backgroundPosition.endswith('left'):
+        self.imageX = self.x
+      elif self.backgroundPosition.endswith('center'):
+        self.imageX = self.x + ((self.width - self.drawImage.get_width()) / 2)
+      elif self.backgroundPosition.endswith('right'):
+        self.imageX = self.x + (self.width - self.drawImage.get_width())
+
+      # set y position
+      if self.backgroundPosition.startswith('top'):
+        self.imageY = self.y
+      elif self.backgroundPosition.startswith('center'):
+        self.imageY = self.y + ((self.height - self.drawImage.get_height()) / 2)
+      elif self.backgroundPosition.startswith('bottom'):
+        self.imageY = self.y + (self.height - self.drawImage.get_height())
+
+      # apply offset
+      self.imageX += self.backgroundOffset[0]
+      self.imageY += self.backgroundOffset[1]
     elif isinstance(self.background, pg.Color) and self.background.a < 255:
       self.drawImage = pg.Surface(self.rect.size, pg.SRCALPHA)
       pg.draw.rect(self.drawImage, self.background, (0, 0, self.width, self.height), border_radius=self.borderRadius)
