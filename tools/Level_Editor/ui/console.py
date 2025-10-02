@@ -1,8 +1,31 @@
+from traceback import print_exc
+from easygui import fileopenbox
 import pygame as pg
 import pg_extended as pgx
+from tools.Level_Editor import sharedAssets
 from tools.Level_Editor.ui import colors
+from tools.Level_Editor.AtlasImporter import importAtlas
+
+def setAtlas():
+  try:
+    atlasURL = fileopenbox(title='Select Texture Atlas Image', filetypes=['*.png', '*.jpg', '*.jpeg', '*.bmp', '*.tga'])
+
+    if atlasURL is None:
+      print('No file selected')
+      return
+
+    atlas = importAtlas(atlasURL)
+
+    if isinstance(atlas, pgx.TextureAtlas):
+      sharedAssets.atlases.append(atlas)
+  except Exception as e:
+    print('Error importing atlas:', e)
+    print_exc()
+    sharedAssets.atlas = None
 
 def add(app: pgx.Window):
+  global setAtlas
+
   console = pgx.System(preLoadState=True)
 
   consoleFrame = pgx.Section(
@@ -14,7 +37,7 @@ def add(app: pgx.Window):
     }, colors.backdrop1
   )
 
-  importAtlas = pgx.Button(
+  importAtlasButton = pgx.Button(
     pgx.Section(
       {
         'x': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=5),
@@ -22,7 +45,13 @@ def add(app: pgx.Window):
         'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=90),
         'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=10.5)
       }, colors.primary, 7
-    ), colors.secondary, text='Import  Atlas', fontPath='Arial', textColor=colors.text
+    ),
+    colors.secondary,
+    text='Import  Atlas',
+    fontPath='Arial',
+    textColor=colors.text,
+    onClick=setAtlas,
+    onClickActuation='buttonUp'
   )
 
   atlasIndex = pgx.Section(
@@ -157,7 +186,7 @@ def add(app: pgx.Window):
   export.activeDraw = False
 
   console.addElement(consoleFrame, 'consoleFrame')
-  console.addElement(importAtlas, 'importAtlas')
+  console.addElement(importAtlasButton, 'importAtlas')
   console.addElement(atlasIndex, 'switchAtlas')
   console.addElement(fileBack, 'fileBack')
   console.addElement(fileOptions, 'fileOptions')
