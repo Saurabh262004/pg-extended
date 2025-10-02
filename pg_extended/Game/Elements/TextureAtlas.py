@@ -5,13 +5,13 @@ import pygame as pg
 tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
 
 class TextureAtlas:
-  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, marginLeft: int = 0, marginTop: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[tileIdentifierType]] = None):
+  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, tilestOffsetX: int = 0, tilestOffsetY: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[tileIdentifierType]] = None):
     self.tileWidth = tileWidth
     self.tileHeight = tileHeight
     self.paddingX = paddingX
     self.paddingY = paddingY
-    self.marginLeft = marginLeft
-    self.marginTop = marginTop
+    self.tilestOffsetX = tilestOffsetX
+    self.tilestOffsetY = tilestOffsetY
     self.namesJsonURL = namesJsonURL
 
     if namesJsonURL is not None:
@@ -27,8 +27,8 @@ class TextureAtlas:
 
     self.tileset = pg.image.load(tilesetURL)
 
-    self.tilesX = (self.tileset.get_width() - marginLeft) // (tileWidth + paddingX)
-    self.tilesY = (self.tileset.get_height() - marginTop) // (tileHeight + paddingY)
+    self.tilesX = (self.tileset.get_width() - tilestOffsetX) // (tileWidth + paddingX)
+    self.tilesY = (self.tileset.get_height() - tilestOffsetY) // (tileHeight + paddingY)
 
     self.tiles = []
     self.namedTiles = {}
@@ -40,8 +40,8 @@ class TextureAtlas:
     for x in range(self.tilesX):
       self.tiles.append([])
       for y in range(self.tilesY):
-        tileX = self.marginLeft + (x * (self.tileWidth + self.paddingX))
-        tileY = self.marginTop + (y * (self.tileHeight + self.paddingY))
+        tileX = self.tilestOffsetX + (x * (self.tileWidth + self.paddingX))
+        tileY = self.tilestOffsetY + (y * (self.tileHeight + self.paddingY))
 
         tileRect = pg.Rect(tileX, tileY, self.tileWidth, self.tileHeight)
 
