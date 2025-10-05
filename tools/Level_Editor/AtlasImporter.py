@@ -130,7 +130,7 @@ def inputOnChange(inputValue: str, inputType: str):
 
   try:
     value = int(inputValue)
-    if value <= 0:
+    if value < 1:
       value = defaultValue
   except:
     value = defaultValue
