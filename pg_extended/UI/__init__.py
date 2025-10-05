@@ -1,7 +1,12 @@
 from pg_extended.UI import Elements
-from pg_extended.UI.System import System
+from pg_extended.UI import Compounds
+from pg_extended.UI import Util
 
 from pg_extended.UI.Elements import *
+from pg_extended.UI.Compounds import *
+from pg_extended.UI.Util import *
+
+from pg_extended.UI.System import System
 
 __all__ = [
   'Section',
@@ -11,5 +16,7 @@ __all__ = [
   'Button',
   'Toggle',
   'Slider',
-  'System'
+  'System',
+  'List',
+  'CopyElement',
 ]

@@ -31,7 +31,7 @@ class Toggle:
     self.border = border
     self.toggled = False
     self.defaultBackground = section.background
-    self.toggledBackground = indicatorColor
+    self.indicatorColor = indicatorColor
     self.borderColor = borderColor
     self.borderColorToggled = borderColorToggled
     self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
@@ -80,7 +80,7 @@ class Toggle:
       self.toggled = not self.toggled
   
       if self.toggled:
-        self.section.background = self.toggledBackground
+        self.section.background = self.indicatorColor
       else:
         self.section.background = self.defaultBackground
 
@@ -108,7 +108,7 @@ class Toggle:
     self.section.update()
 
     if self.toggled:
-      self.section.background = self.toggledBackground
+      self.section.background = self.indicatorColor
     else:
       self.section.background = self.defaultBackground
 
@@ -134,4 +134,4 @@ class Toggle:
     if self.toggled:
       pg.draw.rect(surface, self.defaultBackground, self.innerBox, border_radius = self.section.borderRadius)
     else:
-      pg.draw.rect(surface, self.toggledBackground, self.innerBox, border_radius = self.section.borderRadius)
+      pg.draw.rect(surface, self.indicatorColor, self.innerBox, border_radius = self.section.borderRadius)

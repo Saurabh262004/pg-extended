@@ -37,8 +37,8 @@ class Button:
     self.pressedBackground = pressedBackground
     self.borderColor = borderColor
     self.borderColorPressed = borderColorPressed
-    self.pressed = False
 
+    self.pressed = False
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
