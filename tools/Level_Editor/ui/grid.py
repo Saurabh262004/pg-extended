@@ -1,5 +1,6 @@
 import pg_extended as pgx
 from tools.Level_Editor.ui import colors
+from tools.Level_Editor import sharedAssets
 
 def add(app: pgx.Window):
   grid = pgx.System(preLoadState=True)
@@ -10,7 +11,7 @@ def add(app: pgx.Window):
       'y': pgx.DynamicValue('number', 0),
       'width': pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=70),
       'height': pgx.DynamicValue('classNum', app, classAttribute='screenHeight')
-    }, colors.grid
+    }, colors.themes[sharedAssets.theme]['grid']
   )
 
   grid.addElement(gridFrame, 'gridFrame')
