@@ -283,7 +283,7 @@ class Window:
 
     receivedWidth, receivedHeight = self.screen.get_size()
 
-    if ((not receivedWidth == self.screenWidth) or (not receivedHeight == self.screneHeight)):
+    if ((not receivedWidth == self.screenWidth) or (not receivedHeight == self.screenHeight)):
       self.screenWidth, self.screenHeight = receivedWidth, receivedHeight
 
     self.running = True
