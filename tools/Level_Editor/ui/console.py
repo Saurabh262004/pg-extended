@@ -21,7 +21,6 @@ def setAtlas():
   except Exception as e:
     print('Error importing atlas:', e)
     print_exc()
-    sharedAssets.atlas = None
 
 def add(app: pgx.Window):
   global setAtlas
@@ -40,10 +39,10 @@ def add(app: pgx.Window):
   importAtlasButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=5),
+        'x': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=2.5),
         'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=5),
         'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=10)
+        'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=5)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ),
     colors.themes[sharedAssets.theme]['secondary'],
@@ -57,9 +56,9 @@ def add(app: pgx.Window):
   atlasIndex = pgx.Section(
     {
       'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=20),
+      'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=10),
       'width': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-      'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=29)
+      'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=39)
     }, pg.Color(217, 217, 217)
   )
 
