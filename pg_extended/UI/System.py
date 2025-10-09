@@ -64,6 +64,10 @@ class System:
     elif isinstance(element, TextInput):
       self.textInputs[elementID] = element
 
+  def addElements(self, elements: Dict[str, elementType]):
+    for elementID in elements:
+      self.addElement(elements[elementID], elementID)
+
   def removeElement(self, elementID: str) -> bool:
     if not elementID in self.elements:
       raise ValueError(f'An element with id: {elementID} does not exist, please enter a valid id.')
