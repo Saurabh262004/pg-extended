@@ -1,8 +1,6 @@
 from typing import Iterable, Optional, Union, Dict, List
 import pygame as pg
-from pg_extended.Core import DynamicValue, AnimatedValue
-from pg_extended.Game import Scene, ViewPort
-from pg_extended.UI import System
+from pg_extended import Core as pgxCore, UI as pgxUI, Game as pgxGame
 
 '''
 Window is a class that represents your main application window.
@@ -37,19 +35,19 @@ class Window:
     self.fps: int = fps
 
     self.running: bool = False
-    self.systems: Dict[str, System] = {}
-    self.activeSystems: Dict[str, System] = {}
+    self.systems: Dict[str, pgxUI.System] = {}
+    self.activeSystems: Dict[str, pgxGame.System] = {}
     self.systemZ: Dict[str, int] = {}
-    self.scenes: Dict[str, Scene] = {}
-    self.activeScene: Scene = None
-    self.viewPort: ViewPort = None
-    self.customDynamicValues: List[DynamicValue] = []
-    self.lazyDynamicValues: List[DynamicValue] = []
-    self.customAnimatedValues: List[AnimatedValue] = []
+    self.scenes: Dict[str, pgxGame.Scene] = {}
+    self.activeScene: pgxGame.Scene = None
+    self.viewPort: pgxGame.ViewPort = None
+    self.customDynamicValues: List[pgxCore.DynamicValue] = []
+    self.lazyDynamicValues: List[pgxCore.DynamicValue] = []
+    self.customAnimatedValues: List[pgxCore.AnimatedValue] = []
     self.customData: dict = {}
     self.firstUpdate = True
 
-  def addScene(self, scene: Scene, sceneID: str) -> bool:
+  def addScene(self, scene: pgxGame.Scene, sceneID: str) -> bool:
     if sceneID in self.scenes:
       print(f'A scene with ID: {sceneID} already exists. please enter a unique ID')
       return False
@@ -63,7 +61,7 @@ class Window:
 
     return True
 
-  def addSystem(self, system: System, systemID: str) -> bool:
+  def addSystem(self, system: pgxUI.System, systemID: str) -> bool:
     if systemID in self.systems:
       print(f'A system with ID: {systemID} already exists. please enter a unique ID')
       return False
@@ -136,7 +134,7 @@ class Window:
 
     return True
 
-  def setViewPort(self, viewPort: ViewPort):
+  def setViewPort(self, viewPort: pgxGame.ViewPort):
     self.viewPort = viewPort
 
     if self.running:

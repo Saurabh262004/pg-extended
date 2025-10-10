@@ -19,4 +19,6 @@ __all__ = [
   'System',
   'List',
   'CopyElement',
+  'UIElementType',
+  'UICompoundType'
 ]

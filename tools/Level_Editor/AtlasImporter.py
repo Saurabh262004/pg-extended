@@ -316,15 +316,19 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
     }
   )
 
-  system.addElement(textureSection, 'textureSection')
-  system.addElement(controlPanel, 'controlPanel')
-  system.addElement(doneButton, 'doneButton')
-  system.addElement(tileWidthInput, 'tileWidthInput')
-  system.addElement(tileHeightInput, 'tileHeightInput')
-  system.addElement(paddingXInput, 'paddingXInput')
-  system.addElement(paddingYInput, 'paddingYInput')
-  system.addElement(tilestOffsetXInput, 'tilestOffsetXInput')
-  system.addElement(tilestOffsetYInput, 'tilestOffsetYInput')
+  system.addElements(
+    {
+      'textureSection': textureSection,
+      'controlPanel': controlPanel,
+      'doneButton': doneButton,
+      'tileWidthInput': tileWidthInput,
+      'tileHeightInput': tileHeightInput,
+      'paddingXInput': paddingXInput,
+      'paddingYInput': paddingYInput,
+      'tilestOffsetXInput': tilestOffsetXInput,
+      'tilestOffsetYInput': tilestOffsetYInput
+    }
+  )
 
   window.addSystem(system, 'system')
 
