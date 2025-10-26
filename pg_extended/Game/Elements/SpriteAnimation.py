@@ -1,10 +1,9 @@
-from typing import Union, Iterable
+from typing import Iterable
 import pygame as pg
-
-tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
+from pg_extended.Types import TileIdentifier
 
 class SpriteAnimation:
-  def __init__(self, animation: Iterable[tuple[str, tileIdentifierType]]):
+  def __init__(self, animation: Iterable[tuple[str, TileIdentifier]]):
     self.animationRaw = animation
 
     self.scene: 'Scene' = None # type: ignore

@@ -8,4 +8,4 @@ from pg_extended.UI.Elements.TextInput import TextInput
 
 from typing import Union
 
-UIElementType = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]
+type UIElement = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]

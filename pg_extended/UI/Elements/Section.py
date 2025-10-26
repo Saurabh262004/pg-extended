@@ -1,9 +1,8 @@
 from typing import Optional, Union, Dict
 import pygame as pg
+from pg_extended.Types import Background
 from pg_extended.UI.helpers import allIn, squish, fit, fill
 from pg_extended.Core import DynamicValue
-
-backgroundType = Union[pg.Color, pg.Surface]
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
@@ -24,7 +23,7 @@ Usable methods:
 - draw:   Draws the section on the provided surface.
 '''
 class Section:
-  def __init__(self, dimensions: Dict['str', DynamicValue], background: backgroundType, borderRadius: Optional[float] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundPosition: Optional[str] = 'center', backgroundSizePercent: Optional[int] = 100):
+  def __init__(self, dimensions: Dict['str', DynamicValue], background: Background, borderRadius: Optional[float] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundPosition: Optional[str] = 'center', backgroundSizePercent: Optional[int] = 100):
     self.dimensions = dimensions
     self.background = background
     self.drawImage = None

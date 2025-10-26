@@ -3,8 +3,6 @@ import pygame as pg
 from pg_extended.UI.helpers import allIn
 from pg_extended.UI.Elements import *
 
-elementType = Union[Section, Circle, TextBox, Button, Toggle, Slider, TextInput]
-
 '''
 System is a class that represents a collection of UI elements and manages their processes, such as drawing, updating and event handling.
 
@@ -32,7 +30,7 @@ class System:
       else:
         self.surface = surface
 
-    self.elements: Dict[str, elementType] = {}
+    self.elements: Dict[str, UIElement] = {}
     self.sections: Dict[str, Section] = {}
     self.circles: Dict[str, Circle] = {}
     self.textBoxes: Dict[str, TextBox] = {}
@@ -43,7 +41,7 @@ class System:
 
     self.firstDraw = True
 
-  def addElement(self, element: elementType, elementID: str):
+  def addElement(self, element: UIElement, elementID: str):
     if elementID in self.elements:
       raise ValueError(f'An element with id: {elementID} already exists, please enter a unique id.')
 
@@ -64,7 +62,7 @@ class System:
     elif isinstance(element, TextInput):
       self.textInputs[elementID] = element
 
-  def addElements(self, elements: Dict[str, elementType]):
+  def addElements(self, elements: Dict[str, UIElement]):
     for elementID in elements:
       self.addElement(elements[elementID], elementID)
 

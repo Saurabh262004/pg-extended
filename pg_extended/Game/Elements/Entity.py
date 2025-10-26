@@ -1,14 +1,13 @@
-from typing import Iterable, Union
+from typing import Iterable
 from math import floor
 import pygame as pg
+from pg_extended.Types import TileIdentifier
 from pg_extended.Core.AnimatedValue import DynamicValue, AnimatedValue
 from pg_extended.Game.Elements.SpriteAnimation import SpriteAnimation
 from pg_extended.Game.Elements import Level
 
-tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
-
 class Entity:
-  def __init__(self, name: str, x: float, y: float, width: float, height: float, defaultSpriteDetails: tuple[str, tileIdentifierType]):
+  def __init__(self, name: str, x: float, y: float, width: float, height: float, defaultSpriteDetails: tuple[str, TileIdentifier]):
     self.name = name
     self.x = x
     self.y = y

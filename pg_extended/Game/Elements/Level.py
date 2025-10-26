@@ -1,10 +1,9 @@
-from typing import Iterable, Union
+from typing import Iterable
 from json import load
 import traceback
 import pygame as pg
+from pg_extended.Types import TileIdentifier
 from pg_extended.Game.Elements import Entity
-
-tileIdentifierType = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
 
 class Level:
   def __init__(self, numTilesX: int, numTilesY: int, tileWidth: float, tileHeight: float, tilesMatrixJsonURL: str):
@@ -77,7 +76,7 @@ class Level:
 
           self.surface.blit(currentTile, tilePos)
 
-  def updateTile(self, poses: Iterable[tuple[int, int]], tiles: Iterable[tuple[int, tileIdentifierType]]):
+  def updateTile(self, poses: Iterable[tuple[int, int]], tiles: Iterable[tuple[int, TileIdentifier]]):
     for i in range(len(poses)):
       x, y = poses[i]
       atlasID = tiles[i][0]

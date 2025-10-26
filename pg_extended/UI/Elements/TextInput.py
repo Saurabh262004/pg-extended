@@ -2,11 +2,10 @@ from typing import Optional, Union
 import time
 import pyperclip
 import pygame as pg
+from pg_extended.Types import Background
 from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
-
-backgroundType = Union[pg.Color, pg.Surface]
 
 LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\f\v'
 
@@ -41,7 +40,7 @@ Usable methods:
 - draw:       Renders the text input (border, background, and text) onto the given surface.
 '''
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: backgroundType = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: Background = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor

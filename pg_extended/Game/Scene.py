@@ -2,21 +2,19 @@ from typing import Union, Dict
 import pygame as pg
 from pg_extended.Game.Elements import *
 
-elementType = Union[TextureAtlas, SpriteAnimation, Level, Player]
-
 class Scene:
   def __init__(self):
     self.locked = True
     self.surface: pg.Surface = None
 
-    self.elements: Dict[str, elementType] = {}
+    self.elements: Dict[str, GameElement] = {}
     self.textureAtlases: Dict[str, TextureAtlas] = {}
     self.spriteAnimations: Dict[str, SpriteAnimation] = {}
     self.levels: Dict[str, Level] = {}
     self.activeLevel: Level = None
     self.players: Dict[str, Player] = {}
 
-  def addElement(self, element: elementType, elementID: str):
+  def addElement(self, element: GameElement, elementID: str):
     if elementID in self.elements:
       raise ValueError(f'An element with ID: {elementID} already exists, please enter a unique ID.')
 
