@@ -44,15 +44,26 @@ class CopyElement:
 
   @staticmethod
   def copyTextBox(textBox: TextBox) -> TextBox:
-    return TextBox(
+    element = TextBox(
       CopyElement.copySection(textBox.section),
       textBox.text,
       textBox.fontPath,
       textBox.textColor,
-      textBox.drawSectionDefault,
-      textBox.alignTextHorizontal,
-      textBox.alignTextVertical
+      textBox.fontSize
     )
+
+    element.drawSectionDefault = textBox.drawSectionDefault
+    element.alignTextHorizontal = textBox.alignTextHorizontal
+    element.alignTextVertical = textBox.alignTextVertical
+    element.paddingLeft = textBox.paddingLeft
+    element.paddingRight = textBox.paddingRight
+    element.active = textBox.active
+    element.activeDraw = textBox.activeDraw
+    element.activeUpdate = textBox.activeUpdate
+    element.lazyUpdate = textBox.lazyUpdate
+    element.lazyUpdateOverride = textBox.lazyUpdateOverride
+
+    return element
 
   @staticmethod
   def copyButton(button: Button) -> Button:

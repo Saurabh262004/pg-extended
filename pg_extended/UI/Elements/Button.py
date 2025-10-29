@@ -49,7 +49,7 @@ class Button:
       self.borderRect = pg.Rect(section.x - border, section.y - border, section.width + (border * 2), section.height + (border * 2))
 
     if text:
-      self.textBox = TextBox(section, text, fontPath, textColor, False)
+      self.textBox = TextBox(section, text, fontPath, textColor)
       self.hasText = True
     else:
       self.hasText = False

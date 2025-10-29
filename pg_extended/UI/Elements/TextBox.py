@@ -1,5 +1,5 @@
-from typing import Optional
 import pygame as pg
+from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 
 TEXT_ALIGN_HORIZONTAL = ('left', 'right', 'center')
@@ -25,29 +25,23 @@ Parameters:
 - [required] text:               The text to display in the text box.
 - [required] fontPath:           The file path to the font to use for the text.
 - [required] textColor:          The color of the text.
-- [Optional] drawSectionDefault: Whether to draw the section background by default (default is False).
-- [Optional] centerText:         Whether to center the text within the text box (default is True).
+- [required] fontSize:           Size of the font in DynamicValue
 
 Usable methods:
 - update: Updates the text box's dimensions and text based on the provided Section object.
 - draw:   Draws the text box on the provided surface.
 '''
 class TextBox:
-  def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, drawSectionDefault: Optional[bool] = False, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
-    if alignTextHorizontal not in TEXT_ALIGN_HORIZONTAL:
-      raise ValueError(f'alignTexrHorizontal must be one of these values: {TEXT_ALIGN_HORIZONTAL}, received: {alignTextHorizontal}')
-
-    if alignTextVertical not in TEXT_ALIGN_VERTICAL:
-      raise ValueError(f'alignTexrHorizontal must be one of these values: {TEXT_ALIGN_VERTICAL}, received: {alignTextVertical}')
-
+  def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, fontSize: DynamicValue = None):
     self.section = section
     self.text = text
     self.fontPath = fontPath
+    self.fontSize = fontSize
     self.textColor = textColor
-    self.drawSectionDefault = drawSectionDefault
-    self.alignTextHorizontal = alignTextHorizontal
-    self.alignTextVertical = alignTextVertical
 
+    self.alignTextHorizontal = 'center'
+    self.alignTextVertical = 'center'
+    self.drawSectionDefault = False
     self.paddingLeft = 0
     self.paddingRight = 0
     self.paddingLeftStr = None
@@ -68,8 +62,13 @@ class TextBox:
 
     self.section.update()
 
-    self.fontSize = int(self.section.height * .6)
-    self.font = pg.font.SysFont(self.fontPath, self.fontSize)
+    if self.fontSize:
+      self.fontSize.resolveValue()
+      fontSize = self.fontSize.value
+    else:
+      fontSize = int(0.6 * self.section.height)
+
+    self.font = pg.font.SysFont(self.fontPath, fontSize)
 
     self.paddingLeftStr = ' ' * self.paddingLeft
     self.paddingRightStr = ' ' * self.paddingRight
@@ -80,7 +79,7 @@ class TextBox:
 
     self.textRect = self.textSurface.get_rect(**{pos_attr: getattr(self.section.rect, pos_attr)})
 
-  def draw(self, surface: pg.Surface, drawSection: Optional[bool] = None):
+  def draw(self, surface: pg.Surface, drawSection: bool = None):
     if not (self.active and self.activeDraw):
       return None
 

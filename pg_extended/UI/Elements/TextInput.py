@@ -95,7 +95,10 @@ class TextInput:
     if self.border > 0:
       self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
 
-    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False, alignTextHorizontal=alignTextHorizontal, alignTextVertical=alignTextVertical)
+    self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False)
+
+    self.textBox.alignTextHorizontal = alignTextHorizontal
+    self.textBox.alignTextVertical = alignTextVertical
 
     self.textBox.paddingLeft = 2
     self.textBox.paddingRight = 2
