@@ -2,9 +2,6 @@ import pygame as pg
 from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 
-TEXT_ALIGN_HORIZONTAL = ('left', 'right', 'center')
-TEXT_ALIGN_VERTICAL = ('top', 'bottom', 'center')
-
 ALIGNMENT_MAP = {
   ('left', 'top'): 'topleft',
   ('left', 'center'): 'midleft',
@@ -66,9 +63,9 @@ class TextBox:
       self.fontSize.resolveValue()
       fontSize = self.fontSize.value
     else:
-      fontSize = int(0.6 * self.section.height)
+      fontSize = .6 * self.section.height
 
-    self.font = pg.font.SysFont(self.fontPath, fontSize)
+    self.font = pg.font.SysFont(self.fontPath, int(fontSize))
 
     self.paddingLeftStr = ' ' * self.paddingLeft
     self.paddingRightStr = ' ' * self.paddingRight
