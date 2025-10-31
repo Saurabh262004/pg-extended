@@ -1,7 +1,7 @@
 from typing import Optional, Union, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.helpers import allIn, squish, fit, fill
+from pg_extended.UI.helpers import allIn, squish, fit, fill, roundImage
 from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
@@ -107,6 +107,9 @@ class Section:
         self.drawImage = fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
       else:
         self.drawImage = self.background
+
+      if self.borderRadius > 0:
+        self.drawImage = roundImage(self.drawImage, self.borderRadius)
 
       # set x position
       if self.backgroundPosition.endswith('left'):

@@ -1,5 +1,5 @@
 from typing import Iterable, Optional
-from pygame import Surface as pgSurface, transform as pgTransform
+import pygame as pg
 
 # maps a number from one range to another
 def mapRange(num: float, start1: float, start2: float, end1: float, end2: float) -> float:
@@ -17,9 +17,9 @@ def allIn(values: Iterable, itr: Iterable) -> bool:
   return True
 
 # deforms the image to perfectly fit in the container
-def squish(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pgSurface:
+def squish(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
   if smoothscale:
-    return pgTransform.smoothscale(
+    return pg.transform.smoothscale(
       image,
       (
         containerSize[0] * (scalePercent / 100),
@@ -27,7 +27,7 @@ def squish(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, 
       )
     )
   else:
-    return pgTransform.scale(
+    return pg.transform.scale(
       image,
       (
         containerSize[0] * (scalePercent / 100),
@@ -36,7 +36,7 @@ def squish(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, 
     )
 
 # resizes the image to the smallest possible fit while preserving the original aspect ratio
-def fit(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pgSurface:
+def fit(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
   containerWidth, containerHeight = containerSize
 
   imageWidth, imageHeight = image.get_width(), image.get_height()
@@ -47,12 +47,12 @@ def fit(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, sca
   newHeight = int(imageHeight * scale)
 
   if smoothscale:
-    return pgTransform.smoothscale(image, (newWidth, newHeight))
+    return pg.transform.smoothscale(image, (newWidth, newHeight))
   else:
-    return pgTransform.scale(image, (newWidth, newHeight))
+    return pg.transform.scale(image, (newWidth, newHeight))
 
 # resizes the image to the largest possible fit while preserving the original aspect ratio
-def fill(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pgSurface:
+def fill(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
   containerWidth, containerHeight = containerSize
 
   imageWidth, imageHeight = image.get_width(), image.get_height()
@@ -63,6 +63,20 @@ def fill(image: pgSurface, containerSize: Iterable, smoothscale: bool = True, sc
   newHeight = int(imageHeight * scale)
 
   if smoothscale:
-    return pgTransform.smoothscale(image, (newWidth, newHeight))
+    return pg.transform.smoothscale(image, (newWidth, newHeight))
   else:
-    return pgTransform.scale(image, (newWidth, newHeight))
+    return pg.transform.scale(image, (newWidth, newHeight))
+
+def roundImage(img: pg.Surface, radius: float) -> pg.Surface:
+  w, h = img.get_size()
+
+  mask = pg.Surface((w, h), pg.SRCALPHA)
+
+  pg.draw.rect(mask, (255, 255, 255, 255), (0, 0, w, h), border_radius=radius)
+
+  result = pg.Surface((w, h), pg.SRCALPHA)
+
+  result.blit(img, (0, 0))
+  result.blit(mask, (0, 0), special_flags=pg.BLEND_RGBA_MULT)
+
+  return result
