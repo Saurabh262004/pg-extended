@@ -1,3 +1,4 @@
+from pg_extended.UI.Elements.Gradient import getGradient
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
 from pg_extended.UI.Elements.TextBox import TextBox
