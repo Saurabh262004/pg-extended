@@ -1,3 +1,4 @@
+import os
 import pygame as pg
 from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
@@ -65,7 +66,14 @@ class TextBox:
     else:
       fontSize = .6 * self.section.height
 
-    self.font = pg.font.SysFont(self.fontPath, int(fontSize))
+    if os.path.exists(self.fontPath):
+      self.font = pg.font.Font(self.fontPath, int(fontSize))
+    else:
+      matched = pg.font.match_font(self.fontPath)
+      if matched:
+        self.font = pg.font.Font(matched, int(fontSize))
+      else:
+        self.font = pg.font.Font(None, int(fontSize))
 
     self.paddingLeftStr = ' ' * self.paddingLeft
     self.paddingRightStr = ' ' * self.paddingRight
