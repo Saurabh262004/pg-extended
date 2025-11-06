@@ -1,30 +1,24 @@
 import pygame as pg
 
-def getGradient(colors: list[pg.Color | tuple[int, int, int] | tuple[int, int, int, int]], sizes: list[int], direction: str) -> pg.Surface:
+def getGradient(colors: list[pg.Color | tuple[int, int, int] | tuple[int, int, int, int]], sizes: list[int], direction: str, thickness: int = 2) -> pg.Surface:
   if direction in ('up', 'left'):
     colors.reverse()
     sizes.reverse()
 
   if direction in ('up', 'down'):
-    w = 1
+    w = thickness
     h = sum(sizes)
-
-    xL = [0] * len(colors)
-    yL = sizes
   else:
     w = sum(sizes)
-    h = 1
-
-    xL = sizes
-    yL = [0] * len(colors)
+    h = thickness
 
   surface = pg.Surface((w, h), pg.SRCALPHA)
 
-  x = y = 0
-
-  for i in range(len(colors)):
-    pg.draw.line(surface, colors[i], (x, y), (x + xL[i], y + yL[i]))
-    x += xL[i]
-    y += yL[i]
+  if direction in ('up', 'down'):
+    for i in range(len(colors)):
+      pg.draw.rect(surface, colors[i], (0, sum(sizes[:i]), thickness, sizes[i]), 0)
+  else:
+    for i in range(len(colors)):
+      pg.draw.rect(surface, colors[i], (sum(sizes[:i]), 0, sizes[i], thickness), 0)
 
   return surface
