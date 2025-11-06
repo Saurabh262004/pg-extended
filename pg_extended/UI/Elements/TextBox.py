@@ -79,6 +79,9 @@ class TextBox:
     self.paddingRightStr = ' ' * self.paddingRight
     self.textSurface = self.font.render(f'{self.paddingLeftStr}{self.text}{self.paddingRightStr}', True, self.textColor)
 
+    if self.textColor.a < 255:
+      self.textSurface.set_alpha(self.textColor.a)
+
     key = (self.alignTextHorizontal, self.alignTextVertical)
     pos_attr = ALIGNMENT_MAP[key]
 
