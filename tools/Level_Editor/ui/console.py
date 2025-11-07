@@ -200,7 +200,7 @@ def add(app: pgx.Window):
     }
   )
 
-  app.customAnimatedValues.append(fileOptionsAnim)
+  app.customAnimatedValues['fileOptionsAnim'] = fileOptionsAnim
 
   app.addSystem(console, 'console')
 

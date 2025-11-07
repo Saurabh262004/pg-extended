@@ -116,7 +116,7 @@ def addOverlaySystem(window: pgx.Window):
     ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1
   )
 
-  window.customAnimatedValues.append(menuAnim)
+  window.customAnimatedValues['menuAnim'] = menuAnim
 
   menuSection.lazyUpdate = False
   toggleText.lazyUpdate = False

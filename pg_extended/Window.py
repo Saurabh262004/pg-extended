@@ -41,9 +41,9 @@ class Window:
     self.scenes: Dict[str, pgxGame.Scene] = {}
     self.activeScene: pgxGame.Scene = None
     self.viewPort: pgxGame.ViewPort = None
-    self.customDynamicValues: List[pgxCore.DynamicValue] = []
-    self.lazyDynamicValues: List[pgxCore.DynamicValue] = []
-    self.customAnimatedValues: List[pgxCore.AnimatedValue] = []
+    self.customDynamicValues: Dict[str, pgxCore.DynamicValue] = {}
+    self.lazyDynamicValues: Dict[str, pgxCore.DynamicValue] = {}
+    self.customAnimatedValues: Dict[str, pgxCore.AnimatedValue] = {}
     self.customData: dict = {}
     self.firstUpdate = True
 
@@ -235,11 +235,11 @@ class Window:
 
     self.screen.fill((0, 0, 0))
 
-    for dynamicValue in self.customDynamicValues:
-      dynamicValue.resolveValue()
+    for dvKey in self.customDynamicValues:
+      self.customDynamicValues[dvKey].resolveValue()
 
-    for animatedValue in self.customAnimatedValues:
-      animatedValue.resolveValue()
+    for avKey in self.customAnimatedValues:
+      self.customAnimatedValues[avKey].resolveValue()
 
     if self.activeScene is not None:
       self.activeScene.update()
@@ -327,11 +327,11 @@ class Window:
     if not self.running:
       return None
 
-    for dynamicValue in self.lazyDynamicValues:
-      dynamicValue.resolveValue()
+    for dvKey in self.lazyDynamicValues:
+      self.lazyDynamicValues[dvKey].resolveValue()
 
-    for animatedValue in self.customAnimatedValues:
-      animatedValue.updateRestingPos()
+    for avKey in self.customAnimatedValues:
+      self.customAnimatedValues[avKey].updateRestingPos()
 
     if self.customUpdateProcess is not None:
       self.customUpdateProcess()
