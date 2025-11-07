@@ -109,7 +109,7 @@ class AnimatedValue:
     elif t >= 1:
       return end
 
-    t = 3 * t ** 2 - 2 * t ** 3
+    t = t**3 * (t * (t * 6 - 15) + 10)
 
     return start + (end - start) * t
 
