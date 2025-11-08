@@ -1,8 +1,8 @@
 from typing import Optional, Union, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.Util import ImgManipulatoin
-from pg_extended.UI.Util import Misc
+from pg_extended.Util import ImgManipulatoin
+from pg_extended.Util import Misc
 from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')

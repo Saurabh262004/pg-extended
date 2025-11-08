@@ -1,6 +1,6 @@
 from typing import Dict, Iterable, Union
 import pygame as pg
-from pg_extended.UI.Util import Misc
+from pg_extended.Util import Misc
 from pg_extended.UI.Elements import *
 
 '''

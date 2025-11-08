@@ -1,7 +1,7 @@
 from typing import Optional, Union, Iterable, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.Util import Misc
+from pg_extended.Util import Misc
 from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
