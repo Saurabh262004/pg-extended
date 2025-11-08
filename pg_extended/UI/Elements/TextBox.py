@@ -15,20 +15,6 @@ ALIGNMENT_MAP = {
   ('right', 'bottom'): 'bottomright',
 }
 
-'''
-TextBox is a class that represents a text box UI element.
-
-Parameters:
-- [required] section:            A Section object that defines the text box's base model (position and size).
-- [required] text:               The text to display in the text box.
-- [required] fontPath:           The file path to the font to use for the text.
-- [required] textColor:          The color of the text.
-- [required] fontSize:           Size of the font in DynamicValue
-
-Usable methods:
-- update: Updates the text box's dimensions and text based on the provided Section object.
-- draw:   Draws the text box on the provided surface.
-'''
 class TextBox:
   def __init__(self, section: Section, text: str, fontPath: str, textColor: pg.Color, fontSize: DynamicValue = None):
     self.section = section

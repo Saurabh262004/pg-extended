@@ -8,26 +8,6 @@ from .MainLoop import MainLoop
 from .Lifecycle import Lifecycle
 from .Utility import Utility
 
-'''
-Window is a class that represents your main application window.
-It is used to create and manage the main window of your application, handle events, and manage UI systems.
-
-Parameters:
-- [required] title:               The title of the window.
-- [required] screenRes:           The resolution of the window (width, height).
-- [Optional] customLoopProcess:   A custom function to be called in the main loop (default is None).
-- [Optional] customUpdateProcess: A custom function to be called in the update process (default is None).
-- [Optional] customEventHandler:  A custom function to handle events (default is None).
-
-Usable methods:
-- addSystem:         Adds a system to the window.
-- activateSystems:   Activates the specified systems.
-- deactivateSystems: Deactivates the specified systems.
-- setSystemZ:        Sets the z-index of a system.
-- changeTitle:       Changes the title of the window.
-- openWindow:        Opens the main window and starts the main loop.
-- closeWindow:       Closes the main window and cleans up resources.
-'''
 class Window(SystemManager, SceneManager, EventManager, MainLoop, Lifecycle, Utility):
   def __init__(self, title: str, screenRes: Iterable[int], customLoopProcess: Optional[callable] = None, customUpdateProcess: Optional[callable] = None, customEventHandler: Optional[callable] = None, customDrawProcess: Optional[callable] = None, fps : Optional[int] = 60):
     self.title: str = title

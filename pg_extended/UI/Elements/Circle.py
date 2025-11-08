@@ -8,22 +8,6 @@ from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
-'''
-Circle is a class that represents a circular area on the screen.
-It is similar to Section just with a circular shape.
-
-Parameters:
-- [required] dimensions:            A dictionary containing the dimensions of the circle (x, y, radius).
--                                   The values in the dictionary must be instances of DynamicValue.
-- [required] background:            The background color or surface of the circle (pg.Color or pg.Surface).
-- [Optional] backgroundSizeType:    The type of background size adjustment (fit, fill, squish, none).
-- [Optional] backgroundSizePercent: The percentage of the background size adjustment (default is 100).
-
-Usable methods:
-- update: Updates the circle's dimensions and background based on the provided DynamicValue objects.
-- draw:   Draws the circle on the provided surface.
-'''
-
 class Circle:
   def __init__(self, dimensions: Dict[str, DynamicValue], background: Background, backgroundSizeType: Optional[str] = 'fit', backgroundSizePercent: Optional[int] = 100):
     self.dimensions = dimensions

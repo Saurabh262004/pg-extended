@@ -4,27 +4,6 @@ from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
-'''
-Button is a class that represents a button UI element.
-
-Parameters:
-- [required] section:            A Section object that defines the button's base model. (areas, position, size, border radius, etc.)
-- [Optional] pressedBackground:  Background color or surface when the button is pressed.
-- [Optional] borderColor: Color  for the button's border.
-- [Optional] borderColorPressed: Color for the button's border when pressed.
-- [Optional] text:               Text to display on the button.
-- [Optional] fontPath:           Path to the font file for the button's text.
-- [Optional] textColor:          Color of the button's text.
-- [Optional] onClick:            A callable function to execute when the button is clicked.
-- [Optional] onClickParams:      Parameters to pass to the onClick function.
-- [Optional] border:             Width of the button's border.
-- [Optional] onClickActuation:   Defines when the onClick function is called, either 'buttonDown' or 'buttonUp'.
-
-Usable methods:
-- checkEvent: Checks for mouse button events and toggles the button state accordingly.
-- update:     Updates the button's dimensions and text based on the provided Section object.
-- draw:       Draws the button on the provided surface.
-'''
 class Button:
   def __init__(self, section: Section, pressedBackground: Optional[Background] = None, borderColor: Optional[pg.Color] = None, borderColorPressed: Optional[pg.Color] = None, text: Optional[str] = None, fontPath: Optional[str] = None, textColor: Optional[pg.Color] = None, onClick: Optional[Callable] = None, onClickParams = None, border: Optional[int] = 0, onClickActuation: Optional[str] = 'buttonDown'):
     self.section = section

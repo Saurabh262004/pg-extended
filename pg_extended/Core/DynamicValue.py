@@ -2,30 +2,6 @@ from typing import Union, Optional, Callable, Dict, Any
 
 REFERENCE_TYPES = ('number', 'percent', 'dictNum', 'classNum', 'dictPer', 'classPer', 'callable')
 
-'''
-DynamicValue is a class that allows you to create dynamic values that can change based on different reference types.
-
-It supports the following reference types:
-- 'number':   A static number value.
-- 'percent':  A percentage of a static number value.
-- 'dictNum':  A number value from a dictionary using a specified key.
-- 'classNum': A number value from a class attribute.
-- 'dictPer':  A percentage of a number value from a dictionary using a specified key.
-- 'classPer': A percentage of a number value from a class attribute.
-- 'callable': A callable that returns a value.
--             You can also specify parameters for the callable.
-
-Parameters:
-- [required] referenceType:      The type of the reference (one of the REFERENCE_TYPES).
-- [required] reference:          The reference value, which can be a number, dictionary, class, or callable.
-- [Optional] callableParameters: Parameters to pass to the callable function (default is None).
-- [Optional] dictKey:            The key to use when accessing a value from a dictionary (default is None).
-- [Optional] classAttr:          The attribute name to use when accessing a value from a class (default is None).
-- [Optional] percent:            The percentage value to use when calculating a percentage (default is None).
-
-Useable methods:
-- resolveValue: Calculates the value based on the reference type and updates the `value` attribute.
-'''
 class DynamicValue:
   def __init__(self, referenceType: str, reference: Union[Callable, float, Dict[str, float], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttribute: Optional[str] = None, percent: Optional[float] = None):
     self.referenceType = referenceType

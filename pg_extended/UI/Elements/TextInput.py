@@ -11,34 +11,6 @@ LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\
 
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
-'''
-TextInput is a class that represents a text input UI element.
-
-Parameters:
-- [required] section:              A Section object that defines the position, size, and background of the text input.
-- [required] fontPath:             Path to the font file to render the text.
-- [required] textColor:            Color of the typed text (pg.Color).
-- [optional] placeholder:          Placeholder text to display when no input is provided (default is None).
-- [optional] placeholderTextColor: Color of the placeholder text (default is same as textColor).
-- [optional] border:               Thickness of the border around the input box (default is 0).
-- [optional] borderColor:          Color of the border when not focused (default is None).
-- [optional] focusBorderColor:     Color of the border when focused (default is None).
-- [optional] focusBackground:      Background (Color or Surface) when focused (default is None).
-- [optional] onChangeInfo:         A dictionary describing a callback to be called when the text changes.
--                                  Structure:
--                                  {
--                                    'callable':  Callable function to call on text change,
--                                    'params':    Parameters to pass to the callable (default is None),
--                                    'sendValue': Whether to also send the current input text as a parameter.
--                                  }
-- [optional] alignTextHorizontal:  Horizontal alignment of the text inside the box ('left', 'center', 'right'). (default is 'center').
-- [optional] alignTextVertical:    Vertical alignment of the text inside the box ('top', 'center', 'bottom'). (default is 'center').
-
-Usable methods:
-- checkEvent: Processes pygame events (mouse clicks, key presses, key releases) and updates the text input accordingly.
-- update:     Updates the textbox, handles held key input, and resizes the border rectangle if necessary.
-- draw:       Renders the text input (border, background, and text) onto the given surface.
-'''
 class TextInput:
   def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: Background = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section

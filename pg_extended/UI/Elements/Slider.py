@@ -8,32 +8,6 @@ from pg_extended.UI.Elements.Circle import Circle
 
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
-'''
-Slider is a class that represents a slider UI element.
-
-Parameters:
-- [required] orientation:             The orientation of the slider ('vertical' or 'horizontal').
-- [required] section:                 A Section object that defines the slider's base model (position and size).
-- [required] dragElement:             A Section or Circle object that represents the draggable element of the slider.
-- [required] valueRange:              A tuple or list containing the minimum and maximum values of the slider.
-- [required] scrollSpeed:             The speed at which the slider value changes when scrolling (pass a negative value for reverse scrolling).
-- [required] filledSliderBackground:  The background color or surface of the filled part of the slider.
-- [Optional] onChangeInfo:            A dictionary containing information for the onChange callback function.
--                                     structure of the dictionary:
--                                     {
--                                       'callable':  Callable function to be called when the slider value changes.
--                                       'params':    Parameters to pass to the callable function (default is None).
--                                       'sendValue': Whether to send the slider value as a parameter to the callable function.
--                                     }
-- [Optional] hoverToScroll:           Whether the slider should only scroll when the mouse is hovered over it (default is True).
-
-Usable methods:
-- update:      Updates the slider's dimensions and background based on the provided Section object.
-- draw:        Draws the slider on the provided surface.
-- checkEvent:  Checks for mouse button events and updates the slider value accordingly.
-- updateValue: Updates the slider value based on the current mouse position.
-- callback:    Calls the onChangeInfo callable with the current slider value and parameters.
-'''
 class Slider():
   def __init__(self, orientation: str, section: Section, dragElement: Union[Section, Circle], valueRange: Iterable[float], scrollSpeed: float, filledSliderBackground: Background, onChangeInfo: Optional[Dict] = None, hoverToScroll: Optional[bool] = True):
     self.orientation = orientation
