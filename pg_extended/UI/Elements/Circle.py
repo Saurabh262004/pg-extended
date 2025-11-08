@@ -2,7 +2,7 @@ from typing import Dict, Optional, Union
 from math import sqrt
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.Util import ImgManipulatoin
+from pg_extended.Util import ImgManipulation
 from pg_extended.Util import Misc
 from pg_extended.Core import DynamicValue
 
@@ -92,11 +92,11 @@ class Circle:
 
     if isinstance(self.background, pg.Surface):
       if self.backgroundSizeType == 'fit':
-        self.drawImage = ImgManipulatoin.fit(self.background, (self.radius * self.sqrt2, self.radius * self.sqrt2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.fit(self.background, (self.radius * self.sqrt2, self.radius * self.sqrt2), self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
-        self.drawImage = ImgManipulatoin.fill(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.fill(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
       else:
-        self.drawImage = ImgManipulatoin.squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
 
       self.backgroundWidth = self.drawImage.get_width()
       self.backgroundHeight = self.drawImage.get_height()

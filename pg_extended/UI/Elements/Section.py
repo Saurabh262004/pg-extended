@@ -1,7 +1,7 @@
-from typing import Optional, Union, Dict
+from typing import Optional, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.Util import ImgManipulatoin
+from pg_extended.Util import ImgManipulation
 from pg_extended.Util import Misc
 from pg_extended.Core import DynamicValue
 
@@ -99,18 +99,18 @@ class Section:
     if isinstance(self.background, pg.Surface):
       # resize the background image
       if self.backgroundSizeType == 'fit':
-        self.drawImage = ImgManipulatoin.fit(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.fit(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
-        self.drawImage = ImgManipulatoin.fill(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.fill(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'squish':
-        self.drawImage = ImgManipulatoin.squish(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.squish(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif not self.backgroundSizePercent == 100:
-        self.drawImage = ImgManipulatoin.fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulation.fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
       else:
         self.drawImage = self.background
 
       if self.borderRadius > 0:
-        self.drawImage = ImgManipulatoin.roundImage(self.drawImage, self.borderRadius)
+        self.drawImage = ImgManipulation.roundImage(self.drawImage, self.borderRadius)
 
       # set x position
       if self.backgroundPosition.endswith('left'):
