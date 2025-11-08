@@ -1,4 +1,3 @@
-import pygame as pg
 import pg_extended as pgx
 from demo import sharedResources
 from demo.loopProcess import loopProcess
