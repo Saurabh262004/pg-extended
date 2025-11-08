@@ -1,6 +1,6 @@
 from typing import Dict, Iterable, Union
 import pygame as pg
-from pg_extended.UI.helpers import allIn
+from pg_extended.UI.Util import Misc
 from pg_extended.UI.Elements import *
 
 '''
@@ -95,7 +95,7 @@ class System:
     if elementIDs == None:
       return self.elements
 
-    if not allIn(elementIDs, self.elements):
+    if not Misc.allIn(elementIDs, self.elements):
       print('The given iterable contains id(s) that do not exist in this system, please enter a valid iterable')
       return []
 

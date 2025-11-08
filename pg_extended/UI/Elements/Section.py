@@ -1,7 +1,8 @@
 from typing import Optional, Union, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.helpers import allIn, squish, fit, fill, roundImage
+from pg_extended.UI.Util import ImgManipulatoin
+from pg_extended.UI.Util import Misc
 from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
@@ -43,7 +44,7 @@ class Section:
     if len(self.dimensions) != 4:
       raise ValueError(f'dimensions must contain 4 Dimension objects, received: {len(self.dimensions)}')
 
-    if not allIn(('x', 'y', 'width', 'height'), self.dimensions):
+    if not Misc.allIn(('x', 'y', 'width', 'height'), self.dimensions):
       raise ValueError('dimensions must contain all of the following keys: \'x\', \'y\', \'width\' \'height\'')
 
     if not self.backgroundSizeType in VALID_SIZE_TYPES:
@@ -98,18 +99,18 @@ class Section:
     if isinstance(self.background, pg.Surface):
       # resize the background image
       if self.backgroundSizeType == 'fit':
-        self.drawImage = fit(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.fit(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
-        self.drawImage = fill(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.fill(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif self.backgroundSizeType == 'squish':
-        self.drawImage = squish(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.squish(self.background, (self.width, self.height), self.backgroundSmoothScale, self.backgroundSizePercent)
       elif not self.backgroundSizePercent == 100:
-        self.drawImage = fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.fit(self.background, (self.background.get_width(), self.background.get_height()), self.backgroundSmoothScale, self.backgroundSizePercent)
       else:
         self.drawImage = self.background
 
       if self.borderRadius > 0:
-        self.drawImage = roundImage(self.drawImage, self.borderRadius)
+        self.drawImage = ImgManipulatoin.roundImage(self.drawImage, self.borderRadius)
 
       # set x position
       if self.backgroundPosition.endswith('left'):

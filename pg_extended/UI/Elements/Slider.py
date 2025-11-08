@@ -1,7 +1,7 @@
 from typing import Optional, Union, Iterable, Dict
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.helpers import mapRange
+from pg_extended.UI.Util import Misc
 from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
@@ -82,14 +82,14 @@ class Slider():
         else:
           valueMappingCoords = (section.x + dragElement.radius, section.x + section.width - dragElement.radius)
 
-        returnValue = mapRange(sliderValue, sliderValueRange[0], sliderValueRange[1], valueMappingCoords[0], valueMappingCoords[1])
+        returnValue = Misc.mapRange(sliderValue, sliderValueRange[0], sliderValueRange[1], valueMappingCoords[0], valueMappingCoords[1])
       else:
         if elementType == 'section':
           valueMappingCoords = (section.y, section.y + section.height - dragElement.height)
         else:
           valueMappingCoords = (section.y + dragElement.radius, section.y + section.height - dragElement.radius)
 
-        returnValue = mapRange(sliderValue, sliderValueRange[0], sliderValueRange[1], valueMappingCoords[0], valueMappingCoords[1])
+        returnValue = Misc.mapRange(sliderValue, sliderValueRange[0], sliderValueRange[1], valueMappingCoords[0], valueMappingCoords[1])
 
       if returnValue < valueMappingCoords[0]: return valueMappingCoords[0]
       elif returnValue > valueMappingCoords[1]: return valueMappingCoords[1]
@@ -168,7 +168,7 @@ class Slider():
     elif relativePos > end:
       relativePos = end
 
-    self.value = mapRange(relativePos, start, end, self.valueRange[0], self.valueRange[1])
+    self.value = Misc.mapRange(relativePos, start, end, self.valueRange[0], self.valueRange[1])
 
     self.dragElement.update()
     self.mapPosition.resolveValue()

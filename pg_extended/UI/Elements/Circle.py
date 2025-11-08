@@ -2,7 +2,8 @@ from typing import Dict, Optional, Union
 from math import sqrt
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.UI.helpers import fit, fill, squish, allIn
+from pg_extended.UI.Util import ImgManipulatoin
+from pg_extended.UI.Util import Misc
 from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
@@ -43,7 +44,7 @@ class Circle:
     if len(self.dimensions) != 3:
       raise ValueError(f'dimensions must contain 4 Dimension objects, received: {len(self.dimensions)}')
 
-    if not allIn(('x', 'y', 'radius'), self.dimensions):
+    if not Misc.allIn(('x', 'y', 'radius'), self.dimensions):
       raise ValueError('dimensions must contain all of the following keys: \'x\', \'y\', \'radius\'')
 
     if not self.backgroundSizeType in VALID_SIZE_TYPES:
@@ -91,11 +92,11 @@ class Circle:
 
     if isinstance(self.background, pg.Surface):
       if self.backgroundSizeType == 'fit':
-        self.drawImage = fit(self.background, (self.radius * self.sqrt2, self.radius * self.sqrt2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.fit(self.background, (self.radius * self.sqrt2, self.radius * self.sqrt2), self.backgroundSizePercent)
       elif self.backgroundSizeType == 'fill':
-        self.drawImage = fill(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.fill(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
       else:
-        self.drawImage = squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
+        self.drawImage = ImgManipulatoin.squish(self.background, (self.radius * 2, self.radius * 2), self.backgroundSizePercent)
 
       self.backgroundWidth = self.drawImage.get_width()
       self.backgroundHeight = self.drawImage.get_height()

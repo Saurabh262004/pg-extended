@@ -1,4 +1,4 @@
-from typing import Optional, Callable, Union
+from typing import Optional, Callable
 import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
