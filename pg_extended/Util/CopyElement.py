@@ -1,10 +1,9 @@
 from copy import deepcopy
-from pg_extended.UI.Elements import UIElement
 from pg_extended.UI.Elements import *
 
 class CopyElement:
   @staticmethod
-  def copyElement(element: UIElement) -> UIElement:
+  def copyElement(element: 'UIElement') -> 'UIElement':
     if isinstance(element, Section):
       return CopyElement.copySection(element)
     elif isinstance(element, Circle):

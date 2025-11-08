@@ -1,1 +1,1 @@
-from pg_extended.Window import Window
+from pg_extended.Window.Window import Window
