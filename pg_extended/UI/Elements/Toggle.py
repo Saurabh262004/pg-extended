@@ -28,8 +28,8 @@ class Toggle:
 
     self.innerBoxAnim = AnimatedValue(
       [
-        DynamicValue('callable', lambda v: v.section.x + (v.section.width * v.innerBoxPadding), self),
-        DynamicValue('callable', lambda v: v.section.x + (v.section.width / 2), self)
+        DynamicValue(lambda v: v.section.x + (v.section.width * v.innerBoxPadding), kwargs={'v': self}),
+        DynamicValue(lambda v: v.section.x + (v.section.width / 2), kwargs={'v': self})
       ], 70, 'start', 'linear', self.animationCallback
     )
 

@@ -29,20 +29,20 @@ def add(app: pgx.Window):
 
   consoleFrame = pgx.Section(
     {
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=30),
-      'height': pgx.DynamicValue('classNum', app, classAttribute='screenHeight')
+      'x': pgx.DynamicValue(0),
+      'y': pgx.DynamicValue(0),
+      'width': pgx.DynamicValue(app, 'screenWidth', percent=30),
+      'height': pgx.DynamicValue(app, 'screenHeight')
     }, colors.themes[sharedAssets.theme]['backdrop1']
   )
 
   importAtlasButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=2.5),
-        'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=5),
-        'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=5)
+        'x': pgx.DynamicValue(consoleFrame, 'width', percent=2.5),
+        'y': pgx.DynamicValue(consoleFrame, 'width', percent=5),
+        'width': pgx.DynamicValue(consoleFrame, 'width', percent=90),
+        'height': pgx.DynamicValue(consoleFrame, 'height', percent=5)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ),
     colors.themes[sharedAssets.theme]['secondary'],
@@ -55,19 +55,19 @@ def add(app: pgx.Window):
 
   atlasList = pgx.Section(
     {
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=10),
-      'width': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-      'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=39)
+      'x': pgx.DynamicValue( 0),
+      'y': pgx.DynamicValue(consoleFrame, 'height', percent=10),
+      'width': pgx.DynamicValue(consoleFrame, 'width'),
+      'height': pgx.DynamicValue(consoleFrame, 'height', percent=39)
     }, pg.Color(217, 217, 217)
   )
 
   tilesGrid = pgx.Section(
     {
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=50),
-      'width': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-      'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=50)
+      'x': pgx.DynamicValue( 0),
+      'y': pgx.DynamicValue(consoleFrame, 'height', percent=50),
+      'width': pgx.DynamicValue(consoleFrame, 'width'),
+      'height': pgx.DynamicValue(consoleFrame, 'height', percent=50)
     }, pg.Color(217, 217, 217)
   )
 
@@ -102,37 +102,37 @@ def add(app: pgx.Window):
   fileOptionsTrigger = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-        'y': pgx.DynamicValue('number', 0),
-        'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=50),
-        'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=6)
+        'x': pgx.DynamicValue(consoleFrame, 'width'),
+        'y': pgx.DynamicValue( 0),
+        'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+        'height': pgx.DynamicValue(consoleFrame, 'height', percent=6)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ), colors.themes[sharedAssets.theme]['secondary'], text='File', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text'], onClick=fileAnimStart
   )
 
   fileOptionsAnim = pgx.AnimatedValue(
     (
-      pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=6),
-      pgx.DynamicValue('classPer', consoleFrame, classAttribute='height', percent=30)
+      pgx.DynamicValue(consoleFrame, 'height', percent=6),
+      pgx.DynamicValue(consoleFrame, 'height', percent=30)
     ), 200, 'start', 'easeInOut', fileAnimStop
   )
 
   fileOptionsSection = pgx.Section(
     {
-      'x': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=50),
-      'height': pgx.DynamicValue('classNum', fileOptionsAnim, classAttribute='value')
+      'x': pgx.DynamicValue(consoleFrame, 'width'),
+      'y': pgx.DynamicValue( 0),
+      'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+      'height': pgx.DynamicValue(fileOptionsAnim, 'value')
     }, colors.themes[sharedAssets.theme]['backdrop1'], 7
   )
 
   saveLevelButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda section: (section.x + (section.width / 100) * 5), fileOptionsSection),
-        'y': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=30),
-        'width': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=15)
+        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=30),
+        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ), colors.themes[sharedAssets.theme]['secondary'], text='Save', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
   )
@@ -140,10 +140,10 @@ def add(app: pgx.Window):
   loadLevelButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda section: (section.x + (section.width / 100) * 5), fileOptionsSection),
-        'y': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=50),
-        'width': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=15)
+        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=50),
+        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ), colors.themes[sharedAssets.theme]['secondary'], text='Load', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
   )
@@ -151,10 +151,10 @@ def add(app: pgx.Window):
   importLevelButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda section: (section.x + (section.width / 100) * 5), fileOptionsSection),
-        'y': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=70),
-        'width': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=15)
+        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=70),
+        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ), colors.themes[sharedAssets.theme]['secondary'], text='Import', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
   )
@@ -162,20 +162,20 @@ def add(app: pgx.Window):
   exportLevelButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda section: (section.x + (section.width / 100) * 5), fileOptionsSection),
-        'y': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=90),
-        'width': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=90),
-        'height': pgx.DynamicValue('classPer', fileOptionsSection, classAttribute='width', percent=15)
+        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
       }, colors.themes[sharedAssets.theme]['primary'], 7
     ), colors.themes[sharedAssets.theme]['secondary'], text='Export', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
   )
 
   fileOptionsTriggerBack = pgx.Section(
     {
-      'x': pgx.DynamicValue('classNum', consoleFrame, classAttribute='width'),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=50),
-      'height': pgx.DynamicValue('classPer', consoleFrame, classAttribute='width', percent=5)
+      'x': pgx.DynamicValue(consoleFrame, 'width'),
+      'y': pgx.DynamicValue( 0),
+      'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+      'height': pgx.DynamicValue(consoleFrame, 'width', percent=5)
     }, colors.themes[sharedAssets.theme]['primary']
   )
 

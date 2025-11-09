@@ -161,10 +161,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
 
   textureSection = pgx.Section(
     {
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('classPer', window, classAttribute='screenHeight', percent=8),
-      'width': pgx.DynamicValue('classNum', window, classAttribute='screenWidth'),
-      'height': pgx.DynamicValue('classPer', window, classAttribute='screenHeight', percent=92)
+      'x': pgx.DynamicValue(0),
+      'y': pgx.DynamicValue(window, 'screenHeight', percent=8),
+      'width': pgx.DynamicValue(window, 'screenWidth'),
+      'height': pgx.DynamicValue(window, 'screenHeight', percent=92)
     }, atlasImage, backgroundSizeType='fit'
   )
 
@@ -172,20 +172,20 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
 
   controlPanel = pgx.Section(
     {
-      'x': pgx.DynamicValue('number', 0),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classNum', window, classAttribute='screenWidth'),
-      'height': pgx.DynamicValue('classPer', window, classAttribute='screenHeight', percent=8)
+      'x': pgx.DynamicValue(0),
+      'y': pgx.DynamicValue(0),
+      'width': pgx.DynamicValue(window, 'screenWidth'),
+      'height': pgx.DynamicValue(window, 'screenHeight', percent=8)
     }, pg.Color(20, 20, 20), 0
   )
 
   doneButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=90),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=16),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=68)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=90),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=16),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=68)
       }, pg.Color(50, 50, 50), 4
     ),
     pg.Color(137, 82, 182),
@@ -199,10 +199,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   tileWidthInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=2),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=2),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',
@@ -219,10 +219,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   tileHeightInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=12),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=12),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',
@@ -239,10 +239,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   paddingXInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=22),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=22),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',
@@ -259,10 +259,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   paddingYInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=32),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=32),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',
@@ -279,10 +279,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   tilestOffsetXInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=42),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=42),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',
@@ -299,10 +299,10 @@ def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
   tilestOffsetYInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=52),
-        'y': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=25),
-        'width': pgx.DynamicValue('classPer', controlPanel, classAttribute='width', percent=8),
-        'height': pgx.DynamicValue('classPer', controlPanel, classAttribute='height', percent=50)
+        'x': pgx.DynamicValue(controlPanel, 'width', percent=52),
+        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
       }, pg.Color(50, 50, 50), 4
     ),
     fontPath='Helvetica',

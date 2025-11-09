@@ -17,7 +17,7 @@ addOverlaySystem(app)
 addScene(app)
 
 # setup viewport
-viewport = pgx.ViewPort(pgx.DynamicValue('number', 0), pgx.DynamicValue('number', 0), 1)
+viewport = pgx.ViewPort(pgx.DynamicValue(0), pgx.DynamicValue(0), 1)
 app.setViewPort(viewport)
 
 # systems must have a z-index to be used

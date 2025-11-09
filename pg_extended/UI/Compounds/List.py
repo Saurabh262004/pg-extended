@@ -13,7 +13,7 @@ class List:
     self.elements = []
 
     if spacing is None:
-      self.spacing = DynamicValue('number', 0)
+      self.spacing = DynamicValue(0)
     else:
       self.spacing = spacing
 
@@ -22,10 +22,10 @@ class List:
 
       if newElement.section:
         newElement.section.dimensions['x'] = self.listPos['x']
-        newElement.section.dimensions['y'] = DynamicValue('callable', self.getElementY, i)
+        newElement.section.dimensions['y'] = DynamicValue(self.getElementY, kwargs={'index': i})
       elif newElement.dimensions:
         newElement.dimensions['x'] = self.listPos['x']
-        newElement.dimensions['y'] = DynamicValue('callable', self.getElementY, i)
+        newElement.dimensions['y'] = DynamicValue(self.getElementY, kwargs={'index': i})
 
       self.elements.append(newElement)
 

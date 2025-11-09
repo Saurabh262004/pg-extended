@@ -52,7 +52,7 @@ class TextInput:
     self.cursorX: float = 0
 
     self.cursorAlpha: AnimatedValue = AnimatedValue(
-      [DynamicValue('number', 255), DynamicValue('number', 0)],
+      [DynamicValue(255), DynamicValue(0)],
       500, 'start', 'easeIn'
     )
 

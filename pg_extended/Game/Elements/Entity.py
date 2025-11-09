@@ -29,7 +29,7 @@ class Entity:
     self.sprite: pg.Surface = None
 
     self.animationInterpolator: AnimatedValue = AnimatedValue(
-      [DynamicValue('number', 0), DynamicValue('classNum', self, classAttribute='animationFrames')],
+      [DynamicValue(0), DynamicValue(self, 'animationFrames')],
       1,
       'start',
       'linear',

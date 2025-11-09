@@ -7,10 +7,10 @@ def add(app: pgx.Window):
 
   gridFrame = pgx.Section(
     {
-      'x': pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=30),
-      'y': pgx.DynamicValue('number', 0),
-      'width': pgx.DynamicValue('classPer', app, classAttribute='screenWidth', percent=70),
-      'height': pgx.DynamicValue('classNum', app, classAttribute='screenHeight')
+      'x': pgx.DynamicValue(app, 'screenWidth', percent=30),
+      'y': pgx.DynamicValue(0),
+      'width': pgx.DynamicValue(app, 'screenWidth', percent=70),
+      'height': pgx.DynamicValue(app, 'screenHeight')
     }, colors.themes[sharedAssets.theme]['grid']
   )
 

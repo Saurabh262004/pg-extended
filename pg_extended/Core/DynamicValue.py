@@ -1,81 +1,103 @@
-from typing import Union, Optional, Callable, Dict, Any
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any
 
-REFERENCE_TYPES = ('number', 'percent', 'dictNum', 'classNum', 'dictPer', 'classPer', 'callable')
+if TYPE_CHECKING:
+  from pg_extended.Core.AnimatedValue import AnimatedValue
+
+type reference = int | float | dict | object | callable | str | DynamicValue | AnimatedValue
 
 class DynamicValue:
-  def __init__(self, referenceType: str, reference: Union[Callable, float, Dict[str, float], object], callableParameters: Optional[Any] = None, dictKey: Optional[str] = None, classAttribute: Optional[str] = None, percent: Optional[float] = None):
-    self.referenceType = referenceType
-    self.reference = reference
-    self.callableParameters = callableParameters
-    self.dictKey = dictKey
-    self.classAttr = classAttribute
+  def __init__(self, ref: reference, lookup: str | None = None, kwargs: dict[str, Any] | None = None, percent: int | float | None = None):
+    self.reference = ref
+    self.lookup = lookup
+    self.kwargs = kwargs
     self.percent = percent
-    self.value = None
-    self.resolveValue: Callable = None
-
-    if not self.referenceType in REFERENCE_TYPES:
-      raise ValueError(f'Invalid dimType value received, value must be one of the following: {REFERENCE_TYPES}')
-
-    if (self.referenceType == 'callable') and not callable(self.reference):
-      raise ValueError('If referenceType is custumCallable then reference must be callable')
-
-    if (self.referenceType == 'dictNum' or self.referenceType == 'dictPer') and not (isinstance(self.reference, dict)):
-      raise ValueError('If referenceType is dictNum or dictPer then given reference must be a dict object')
-
-    if (self.referenceType == 'dictNum' or self.referenceType == 'dictPer') and (self.dictKey is None):
-      raise ValueError('If referenceType is dictNum or dictPer then dictKey must be defined')
-
-    if (self.referenceType == 'classNum' or self.referenceType == 'classPer') and not (isinstance(self.reference, object)):
-      raise ValueError('If referenceType is classNum or classPer then given reference must be an object')
-
-    if (self.referenceType == 'classNum' or self.referenceType == 'classPer') and (self.classAttr is None):
-      raise ValueError('If referenceType is classNum or classPer then classAttr must be defined')
-
-    if (self.referenceType == 'percent' or self.referenceType == 'dictPer' or self.referenceType == 'classPer') and (self.percent is None):
-      raise ValueError('If referenceType is percent, dictPer or classPer percent must be defined')
+    self.value: Any = None
+    self.resolveValue: callable = None
 
     self.assignResolveMethod()
 
     self.resolveValue()
 
-  def __getByNumber(self):
-    self.value = self.reference
+  def _IFPer(self):
+    self.value = self.reference / 100 * self.percent
 
-  def __getByPercent(self):
-    self.value = self.reference * (self.percent / 100)
+  def _dictLookup(self):
+    self.value = self.reference[self.lookup]
 
-  def __getByCallableWithParams(self):
-    self.value = self.reference(self.callableParameters)
+  def _dictLookupPer(self):
+    self.value = self.reference[self.lookup] / 100 * self.percent
 
-  def __getByCallableWithoutParams(self):
+  def _CV(self):
+    self.reference.resolveValue()
+    self.value = self.reference.value
+
+  def _CVPer(self):
+    self.reference.resolveValue()
+    self.value = self.reference.value / 100 * self.percent
+
+  def _call(self):
     self.value = self.reference()
 
-  def __getByDictNum(self):
-    self.value = self.reference[self.dictKey]
+  def _callPer(self):
+    self.value = self.reference() / 100 * self.percent
 
-  def __getByDictPer(self):
-    self.value = self.reference[self.dictKey] * (self.percent / 100)
+  def _callKWArgs(self):
+    self.value = self.reference(**self.kwargs)
 
-  def __getByClassNum(self):
-    self.value = getattr(self.reference, self.classAttr, 0)
+  def _callKWArgsPer(self):
+    self.value = self.reference(**self.kwargs) / 100 * self.percent
 
-  def __getByClassPer(self):
-    self.value = getattr(self.reference, self.classAttr, 0) * (self.percent / 100)
+  def _objLookup(self):
+    self.value = getattr(self.reference, self.lookup)
+
+  def _objLookupPer(self):
+    self.value = getattr(self.reference, self.lookup) / 100 * self.percent
+
+  def _direct(self):
+    self.value = self.reference
 
   def assignResolveMethod(self):
-    if self.referenceType == 'number':
-      self.resolveValue = self.__getByNumber
-    elif self.referenceType == 'percent':
-      self.resolveValue = self.__getByPercent
-    elif self.referenceType == 'callable' and self.callableParameters is None:
-      self.resolveValue = self.__getByCallableWithoutParams
-    elif self.referenceType == 'callable':
-      self.resolveValue = self.__getByCallableWithParams
-    elif self.referenceType == 'dictNum':
-      self.resolveValue = self.__getByDictNum
-    elif self.referenceType == 'dictPer':
-      self.resolveValue = self.__getByDictPer
-    elif self.referenceType == 'classNum':
-      self.resolveValue = self.__getByClassNum
-    elif self.referenceType == 'classPer':
-      self.resolveValue = self.__getByClassPer
+    from pg_extended.Core.AnimatedValue import AnimatedValue
+
+    # numbers with a percent value given
+    if isinstance(self.reference, (int, float)) and self.percent is not None:
+      self.resolveValue = self._IFPer
+
+    # dicts
+    elif isinstance(self.reference, dict) and self.lookup is not None:
+      if self.percent is None:
+        self.resolveValue = self._dictLookup
+      else:
+        self.resolveValue = self._dictLookupPer
+
+    # DV or AV
+    elif isinstance(self.reference, DynamicValue) or isinstance(self.reference, AnimatedValue):
+      if self.percent is None:
+        self.resolveValue = self._CV
+      else:
+        self.resolveValue = self._CVPer
+
+    # anything else left and lookup is provided, assume it's a class + attribute
+    elif isinstance(self.lookup, str):
+      if self.percent is None:
+        self.resolveValue = self._objLookup
+      else:
+        self.resolveValue = self._objLookupPer
+
+    # look for callable at the very end
+    elif callable(self.reference):
+      if self.kwargs is None:
+        if self.percent is None:
+          self.resolveValue = self._call
+        else:
+          self.resolveValue = self._callPer
+      else:
+        if self.percent is None:
+          self.resolveValue = self._callKWArgs
+        else:
+          self.resolveValue = self._callKWArgsPer
+
+    # dump everything else into direct
+    else:
+      self.resolveValue = self._direct

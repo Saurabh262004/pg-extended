@@ -6,8 +6,8 @@ def addOverlaySystem(window: pgx.Window):
 
   menuAnim = pgx.AnimatedValue(
     [
-      pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=-80),
-      pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=5)
+      pgx.DynamicValue(window, 'screenWidth', percent=-80),
+      pgx.DynamicValue(window, 'screenWidth', percent=5)
     ], 400, 'start', 'easeInOut'
   )
 
@@ -19,20 +19,20 @@ def addOverlaySystem(window: pgx.Window):
 
   menuSection = pgx.Section(
     {
-      'x': pgx.DynamicValue('classNum', menuAnim, classAttribute='value'),
-      'y': pgx.DynamicValue('classPer', window, classAttribute='screenHeight', percent=10),
-      'width': pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=80),
-      'height': pgx.DynamicValue('classPer', window, classAttribute='screenHeight', percent=80)
+      'x': pgx.DynamicValue(menuAnim, 'value'),
+      'y': pgx.DynamicValue(window, 'screenHeight', percent=10),
+      'width': pgx.DynamicValue(window, 'screenWidth', percent=80),
+      'height': pgx.DynamicValue(window, 'screenHeight', percent=80)
     }, colors.section, 4
   )
 
   menuButton = pgx.Button(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=92.5),
-        'y': pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=1.5),
-        'width': pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=6),
-        'height': pgx.DynamicValue('classPer', window, classAttribute='screenWidth', percent=3)
+        'x': pgx.DynamicValue(window, 'screenWidth', percent=92.5),
+        'y': pgx.DynamicValue(window, 'screenWidth', percent=1.5),
+        'width': pgx.DynamicValue(window, 'screenWidth', percent=6),
+        'height': pgx.DynamicValue(window, 'screenWidth', percent=3)
       }, colors.primary, 4
     ), colors.secondary,
     text='Menu',
@@ -44,10 +44,10 @@ def addOverlaySystem(window: pgx.Window):
   toggleText = pgx.TextBox(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 20, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 30, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=10),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=5)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 20),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 30),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=10),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=5)
       }, colors.secondary
     ), 'Toggle:', 'Helvetica', colors.text
   )
@@ -55,10 +55,10 @@ def addOverlaySystem(window: pgx.Window):
   toggle = pgx.Toggle(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 6, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 21.5, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=6),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=3)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 21.5),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=6),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=3)
       }, colors.back1, 4
     ), colors.text, colors.primary, colors.primary
   )
@@ -66,10 +66,10 @@ def addOverlaySystem(window: pgx.Window):
   sliderText = pgx.TextBox(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 20, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 10, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=10),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=5)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 20),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 10),
+        'width': pgx.DynamicValue(menuSection,'width', percent=10),
+        'height': pgx.DynamicValue(menuSection,'width', percent=5)
       }, colors.secondary
     ), 'Slider:', 'Helvetica', colors.text
   )
@@ -78,18 +78,18 @@ def addOverlaySystem(window: pgx.Window):
     'horizontal',
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 6, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 8.45, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=30),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=2)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 8.45),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=30),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=2)
       }, colors.back1, 2
     ),
     pgx.Section(
       {
-        'x': pgx.DynamicValue('number', 0),
-        'y': pgx.DynamicValue('number', 0),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=3),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=2)
+        'x': pgx.DynamicValue(0),
+        'y': pgx.DynamicValue(0),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=3),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=2)
       }, colors.primary, 2
     ), (0, 100), 5, colors.text
   )
@@ -97,10 +97,10 @@ def addOverlaySystem(window: pgx.Window):
   textInputText = pgx.TextBox(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 20, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 5.8, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=10),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=5)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 20),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 5.8),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=10),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=5)
       }, colors.secondary
     ), 'Text Input:', 'Helvetica', colors.text
   )
@@ -108,10 +108,10 @@ def addOverlaySystem(window: pgx.Window):
   textInput = pgx.TextInput(
     pgx.Section(
       {
-        'x': pgx.DynamicValue('callable', lambda menuSection: menuSection.x + menuSection.width / 6, menuSection),
-        'y': pgx.DynamicValue('callable', lambda menuSection: menuSection.y + menuSection.width / 5.6, menuSection),
-        'width': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=30),
-        'height': pgx.DynamicValue('classPer', menuSection, classAttribute='width', percent=4)
+        'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+        'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 5.6),
+        'width': pgx.DynamicValue(menuSection, 'width', percent=30),
+        'height': pgx.DynamicValue(menuSection, 'width', percent=4)
       }, colors.primary, 2
     ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1
   )
