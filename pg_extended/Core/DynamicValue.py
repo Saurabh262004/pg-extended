@@ -1,10 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any
+import types
 
 if TYPE_CHECKING:
   from pg_extended.Core.AnimatedValue import AnimatedValue
 
-type reference = int | float | dict | object | callable | str | DynamicValue | AnimatedValue
+type callableLike = types.FunctionType | types.BuiltinFunctionType | types.MethodType
+
+type reference = int | float | dict | object | callableLike | str | DynamicValue | AnimatedValue
 
 class DynamicValue:
   def __init__(self, ref: reference, lookup: str | None = None, kwargs: dict[str, Any] | None = None, percent: int | float | None = None):
@@ -13,7 +16,7 @@ class DynamicValue:
     self.kwargs = kwargs
     self.percent = percent
     self.value: Any = None
-    self.resolveValue: callable = None
+    self.resolveValue: callableLike = None
 
     self.assignResolveMethod()
 
@@ -78,15 +81,8 @@ class DynamicValue:
       else:
         self.resolveValue = self._CVPer
 
-    # anything else left and lookup is provided, assume it's a class + attribute
-    elif isinstance(self.lookup, str):
-      if self.percent is None:
-        self.resolveValue = self._objLookup
-      else:
-        self.resolveValue = self._objLookupPer
-
     # look for callable at the very end
-    elif callable(self.reference):
+    elif isinstance(self.reference, callableLike):
       if self.kwargs is None:
         if self.percent is None:
           self.resolveValue = self._call
@@ -97,6 +93,13 @@ class DynamicValue:
           self.resolveValue = self._callKWArgs
         else:
           self.resolveValue = self._callKWArgsPer
+
+    # anything else left and lookup is provided, assume it's a class + attribute
+    elif isinstance(self.lookup, str):
+      if self.percent is None:
+        self.resolveValue = self._objLookup
+      else:
+        self.resolveValue = self._objLookupPer
 
     # dump everything else into direct
     else:
