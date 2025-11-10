@@ -42,7 +42,7 @@ class SystemManager:
 
     if self.running:
       self.initiateActiveSystems(self.screen)
-      self.__resetUI()
+      self.resetUI()
 
     return not interrupted
 

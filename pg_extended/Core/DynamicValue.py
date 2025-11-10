@@ -82,7 +82,7 @@ class DynamicValue:
         self.resolveValue = self._CVPer
 
     # look for callable at the very end
-    elif isinstance(self.reference, callableLike):
+    elif isinstance(self.reference, (types.FunctionType | types.BuiltinFunctionType | types.MethodType)):
       if self.kwargs is None:
         if self.percent is None:
           self.resolveValue = self._call
