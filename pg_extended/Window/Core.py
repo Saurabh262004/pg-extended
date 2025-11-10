@@ -1,4 +1,4 @@
-from Types import callableLike
+from pg_extended.Types import callableLike
 import pg_extended as pgx
 
 from .SystemManager import SystemManager

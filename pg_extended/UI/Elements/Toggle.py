@@ -1,4 +1,4 @@
-from Types import callableLike
+from pg_extended.Types import callableLike
 import pygame as pg
 from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any
-from Types import callableLike
+from pg_extended.Types import callableLike
 import types
 
 if TYPE_CHECKING:

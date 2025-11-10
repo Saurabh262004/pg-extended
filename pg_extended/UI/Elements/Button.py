@@ -1,5 +1,5 @@
 import pygame as pg
-from Types import callableLike
+from pg_extended.Types import callableLike
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
