@@ -1,10 +1,9 @@
-from typing import Iterable, Dict, Optional
 from json import load
 import pygame as pg
 from pg_extended.Types import TileIdentifier
 
 class TextureAtlas:
-  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, tilestOffsetX: int = 0, tilestOffsetY: int = 0, namesJsonURL: str = None, sequences: Dict[str, Iterable[TileIdentifier]] = None):
+  def __init__(self, tilesetURL: str, tileWidth: int, tileHeight: int, paddingX: int = 0, paddingY: int = 0, tilestOffsetX: int = 0, tilestOffsetY: int = 0, namesJsonURL: str = None, sequences: dict[str, list[TileIdentifier] | tuple[TileIdentifier]] = None):
     self.tileWidth = tileWidth
     self.tileHeight = tileHeight
     self.paddingX = paddingX
@@ -84,7 +83,7 @@ class TextureAtlas:
           surface.fill(tileIdentifier)
           self.sequencedTiles[sequence].append(surface)
 
-  def getTile(self, identifier: TileIdentifier) -> Optional[pg.Surface]:
+  def getTile(self, identifier: TileIdentifier) -> pg.Surface | None:
     if isinstance(identifier, str):
       return self.namedTiles.get(identifier)
     elif isinstance(identifier, tuple):

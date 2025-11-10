@@ -1,10 +1,9 @@
-from typing import Iterable, Optional
 import pygame as pg
 
 class ImgManipulation:
   # deforms the image to perfectly fit in the container
   @staticmethod
-  def squish(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
+  def squish(image: pg.Surface, containerSize: tuple[int | float, int | float] | list[int | float], smoothscale: bool = True, scalePercent: int | None = 100) -> pg.Surface:
     if smoothscale:
       return pg.transform.smoothscale(
         image,
@@ -24,7 +23,7 @@ class ImgManipulation:
 
   # resizes the image to the smallest possible fit while preserving the original aspect ratio
   @staticmethod
-  def fit(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
+  def fit(image: pg.Surface, containerSize: tuple[int | float, int | float] | list[int | float], smoothscale: bool = True, scalePercent: int | None = 100) -> pg.Surface:
     containerWidth, containerHeight = containerSize
 
     imageWidth, imageHeight = image.get_width(), image.get_height()
@@ -41,7 +40,7 @@ class ImgManipulation:
 
   # resizes the image to the largest possible fit while preserving the original aspect ratio
   @staticmethod
-  def fill(image: pg.Surface, containerSize: Iterable, smoothscale: bool = True, scalePercent: Optional[int] = 100) -> pg.Surface:
+  def fill(image: pg.Surface, containerSize: tuple[int | float, int | float] | list[int | float], smoothscale: bool = True, scalePercent: int | None = 100) -> pg.Surface:
     containerWidth, containerHeight = containerSize
 
     imageWidth, imageHeight = image.get_width(), image.get_height()

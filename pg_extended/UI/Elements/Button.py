@@ -1,11 +1,11 @@
-from typing import Optional, Callable
 import pygame as pg
+from Types import callableLike
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
 class Button:
-  def __init__(self, section: Section, pressedBackground: Optional[Background] = None, borderColor: Optional[pg.Color] = None, borderColorPressed: Optional[pg.Color] = None, text: Optional[str] = None, fontPath: Optional[str] = None, textColor: Optional[pg.Color] = None, onClick: Optional[Callable] = None, onClickParams = None, border: Optional[int] = 0, onClickActuation: Optional[str] = 'buttonDown'):
+  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, onClick: callableLike | None = None, onClickParams = None, border: int | None = 0, onClickActuation: str | None = 'buttonDown'):
     self.section = section
     self.onClick = onClick
     self.onClickParams = onClickParams
@@ -38,7 +38,7 @@ class Button:
 
     self.update()
 
-  def checkEvent(self, event: pg.Event) -> Optional[bool]:
+  def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents):
       return None
 

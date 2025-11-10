@@ -1,11 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any
+from Types import callableLike
 import types
 
 if TYPE_CHECKING:
   from pg_extended.Core.AnimatedValue import AnimatedValue
-
-type callableLike = types.FunctionType | types.BuiltinFunctionType | types.MethodType
 
 type reference = int | float | dict | object | callableLike | str | DynamicValue | AnimatedValue
 

@@ -1,10 +1,10 @@
-from typing import Optional, Callable
+from Types import callableLike
 import pygame as pg
 from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.UI.Elements.Section import Section
 
 class Toggle:
-  def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, onClick: Optional[Callable] = None, onClickParams = None, sendStateInfoOnClick: Optional[bool] = False, border: int = 0):
+  def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, onClick: callableLike | None = None, onClickParams = None, sendStateInfoOnClick: bool | None = False, border: int = 0):
     self.section = section
     self.onClick = onClick
     self.sendStateInfoOnClick = sendStateInfoOnClick
@@ -49,7 +49,7 @@ class Toggle:
 
     self.innerBox.update(newX, newY, newW, newH)
 
-  def checkEvent(self, event: pg.Event) -> Optional[bool]:
+  def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents) or (self.innerBoxAnim.animStart is not None):
       return None
 

@@ -1,6 +1,8 @@
-from typing import Union
+import types
 import pygame as pg
 
-type Background = Union[pg.Color, pg.Surface]
+type Background = pg.Color | pg.Surface
 
-type TileIdentifier = Union[tuple[int, int], str, tuple[int, int, int], tuple[int, int, int, int], pg.Color]
+type TileIdentifier = tuple[int, int] | tuple[int, int, int] | tuple[int, int, int, int] | pg.Color | str
+
+type callableLike = types.FunctionType | types.BuiltinFunctionType | types.MethodType

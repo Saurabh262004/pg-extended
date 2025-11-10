@@ -1,13 +1,12 @@
-from typing import Iterable
 import pygame as pg
 from pg_extended.Types import TileIdentifier
 
 class SpriteAnimation:
-  def __init__(self, animation: Iterable[tuple[str, TileIdentifier]]):
+  def __init__(self, animation: list[tuple[str, TileIdentifier]] | tuple[tuple[str, TileIdentifier]]):
     self.animationRaw = animation
 
     self.scene: 'Scene' = None # type: ignore
-    self.sprites: Iterable[pg.Surface] = []
+    self.sprites: list[pg.Surface] = []
 
   def initiate(self, scene: 'Scene'): # type: ignore
     self.scene = scene

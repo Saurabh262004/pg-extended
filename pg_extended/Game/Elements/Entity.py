@@ -1,4 +1,3 @@
-from typing import Iterable
 from math import floor
 import pygame as pg
 from pg_extended.Types import TileIdentifier
@@ -23,7 +22,7 @@ class Entity:
     self.widthPX: float = 0.0
     self.heightPX: float = 0.0
     self.animationFrames: int = 1
-    self.animations: Iterable[dict[str, tuple[float, SpriteAnimation]]] = []
+    self.animations: list[dict[str, tuple[float, SpriteAnimation]]] = []
     self.currentAnimation: SpriteAnimation = None
     self.defaultSprite: pg.Surface = None
     self.sprite: pg.Surface = None

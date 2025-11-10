@@ -1,4 +1,3 @@
-from typing import Optional, Union, Iterable, Dict
 import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.Util import Misc
@@ -9,7 +8,7 @@ from pg_extended.UI.Elements.Circle import Circle
 ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
 
 class Slider():
-  def __init__(self, orientation: str, section: Section, dragElement: Union[Section, Circle], valueRange: Iterable[float], scrollSpeed: float, filledSliderBackground: Background, onChangeInfo: Optional[Dict] = None, hoverToScroll: Optional[bool] = True):
+  def __init__(self, orientation: str, section: Section, dragElement: Section | Circle, valueRange: list[float] | tuple[float], scrollSpeed: float, filledSliderBackground: Background, onChangeInfo: dict | None = None, hoverToScroll: bool | None = True):
     self.orientation = orientation
     self.section = section
     self.valueRange = valueRange

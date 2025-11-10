@@ -1,4 +1,3 @@
-from typing import Iterable
 from json import load
 import traceback
 import pygame as pg
@@ -20,7 +19,7 @@ class Level:
     self.activeDraw = True
     self.surface: pg.Surface = None
     self.scene: 'Scene' = None # type: ignore
-    self.entities: Iterable[Entity] = []
+    self.entities: list[Entity] = []
 
     self.width = tileWidth * numTilesX
     self.height = tileHeight * numTilesY
@@ -76,7 +75,7 @@ class Level:
 
           self.surface.blit(currentTile, tilePos)
 
-  def updateTile(self, poses: Iterable[tuple[int, int]], tiles: Iterable[tuple[int, TileIdentifier]]):
+  def updateTile(self, poses: list[tuple[int, int]] | tuple[tuple[int, int]], tiles: list[tuple[int, TileIdentifier]] | tuple[tuple[int, TileIdentifier]]):
     for i in range(len(poses)):
       x, y = poses[i]
       atlasID = tiles[i][0]

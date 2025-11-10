@@ -1,4 +1,3 @@
-from typing import Union, Dict
 import pygame as pg
 from pg_extended.Game.Elements import *
 
@@ -7,12 +6,12 @@ class Scene:
     self.locked = True
     self.surface: pg.Surface = None
 
-    self.elements: Dict[str, GameElement] = {}
-    self.textureAtlases: Dict[str, TextureAtlas] = {}
-    self.spriteAnimations: Dict[str, SpriteAnimation] = {}
-    self.levels: Dict[str, Level] = {}
+    self.elements: dict[str, GameElement] = {}
+    self.textureAtlases: dict[str, TextureAtlas] = {}
+    self.spriteAnimations: dict[str, SpriteAnimation] = {}
+    self.levels: dict[str, Level] = {}
     self.activeLevel: Level = None
-    self.players: Dict[str, Player] = {}
+    self.players: dict[str, Player] = {}
 
   def addElement(self, element: GameElement, elementID: str):
     if elementID in self.elements:

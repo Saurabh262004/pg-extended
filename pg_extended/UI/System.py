@@ -1,4 +1,3 @@
-from typing import Dict, Iterable, Union
 import pygame as pg
 from pg_extended.Util import Misc
 from pg_extended.UI.Elements import *
@@ -14,14 +13,14 @@ class System:
       else:
         self.surface = surface
 
-    self.elements: Dict[str, UIElement] = {}
-    self.sections: Dict[str, Section] = {}
-    self.circles: Dict[str, Circle] = {}
-    self.textBoxes: Dict[str, TextBox] = {}
-    self.buttons: Dict[str, Button] = {}
-    self.toggles: Dict[str, Toggle] = {}
-    self.sliders: Dict[str, Slider] = {}
-    self.textInputs: Dict[str, TextInput] = {}
+    self.elements: dict[str, UIElement] = {}
+    self.sections: dict[str, Section] = {}
+    self.circles: dict[str, Circle] = {}
+    self.textBoxes: dict[str, TextBox] = {}
+    self.buttons: dict[str, Button] = {}
+    self.toggles: dict[str, Toggle] = {}
+    self.sliders: dict[str, Slider] = {}
+    self.textInputs: dict[str, TextInput] = {}
 
     self.firstDraw = True
 
@@ -46,7 +45,7 @@ class System:
     elif isinstance(element, TextInput):
       self.textInputs[elementID] = element
 
-  def addElements(self, elements: Dict[str, UIElement]):
+  def addElements(self, elements: dict[str, UIElement]):
     for elementID in elements:
       self.addElement(elements[elementID], elementID)
 
@@ -75,7 +74,7 @@ class System:
 
     return True
 
-  def __validateIDs(self, elementIDs: Iterable = None) -> Union[Iterable, None, dict]:
+  def __validateIDs(self, elementIDs: list[str] | tuple[str] = None) -> list | dict | None:
     if elementIDs == None:
       return self.elements
 
@@ -85,7 +84,7 @@ class System:
 
     return elementIDs
 
-  def draw(self, elementIDs: Iterable = None):
+  def draw(self, elementIDs: list[str] | tuple[str] = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -98,7 +97,7 @@ class System:
 
     self.firstDraw = False
 
-  def update(self, elementIDs: Iterable[str] = None):
+  def update(self, elementIDs: list[str] | tuple[str] = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -111,7 +110,7 @@ class System:
       if element.lazyUpdateOverride or ((not element.lazyUpdate) and element.active):
         element.update()
 
-  def lazyUpdate(self, elementIDs: Iterable[str] = None):
+  def lazyUpdate(self, elementIDs: list[str] | tuple[str] = None):
     if self.locked:
       print('System is currently locked')
       return None
@@ -122,7 +121,7 @@ class System:
       if self.elements[elementID].active:
         self.elements[elementID].update()
 
-  def handleEvents(self, event: pg.Event) -> Union[str, None]:
+  def handleEvents(self, event: pg.Event) -> str | None:
     if self.locked:
       print('System is currently locked')
       return None

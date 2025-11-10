@@ -1,4 +1,3 @@
-from typing import Optional
 import os
 from math import floor
 import pygame as pg
@@ -145,7 +144,7 @@ def inputOnChange(inputValue: str, inputType: str):
 def closingSeq():
   window.closeWindow()
 
-def importAtlas(atlasURL: str) -> Optional[pgx.TextureAtlas]:
+def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
   print('what')
   if not (os.path.exists(atlasURL) and os.path.isfile(atlasURL)):
     print('File does not exist')

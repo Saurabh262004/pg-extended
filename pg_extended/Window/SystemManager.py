@@ -1,4 +1,3 @@
-from typing import Union, Iterable, Optional
 import pygame as pg
 import pg_extended as pgx
 
@@ -17,7 +16,7 @@ class SystemManager:
 
     return True
 
-  def activateSystems(self, systemIDs: Union[Iterable[str], str]) -> bool:
+  def activateSystems(self, systemIDs: list[str] | tuple[str] | str) -> bool:
     interrupted = False
 
     if not isinstance(systemIDs, str):
@@ -46,7 +45,7 @@ class SystemManager:
 
     return not interrupted
 
-  def deactivateSystems(self, systemIDs: Union[Iterable[str], str]) -> bool:
+  def deactivateSystems(self, systemIDs: list[str] | tuple[str] | str) -> bool:
     interrupted = False
 
     if not isinstance(systemIDs, str):
@@ -80,7 +79,7 @@ class SystemManager:
 
     return not interrupted
 
-  def setSystemZ(self, systemID: str, zIndex: int) -> Optional[bool]:
+  def setSystemZ(self, systemID: str, zIndex: int) -> bool | None:
     keysToRemove = [key for key, value in self.systemZ.items() if value == zIndex]
 
     for key in keysToRemove:

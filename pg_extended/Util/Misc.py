@@ -1,5 +1,3 @@
-from typing import Iterable
-
 class Misc:
   # maps a number from one range to another
   @staticmethod
@@ -12,7 +10,7 @@ class Misc:
 
   # check if all the values are in an iterable if yes return True else return False
   @staticmethod
-  def allIn(values: Iterable, itr: Iterable) -> bool:
+  def allIn(values: list | tuple, itr: list | tuple) -> bool:
     for v in values:
       if not v in itr:
         return False

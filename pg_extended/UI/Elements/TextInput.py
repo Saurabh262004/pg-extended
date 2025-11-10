@@ -1,4 +1,3 @@
-from typing import Optional, Union
 import time
 import pyperclip
 import pygame as pg
@@ -155,7 +154,7 @@ class TextInput:
         else:
           self.onChangeInfo['callable']()
 
-  def checkEvent(self, event: pg.Event) -> Optional[bool]:
+  def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents):
       return None
 

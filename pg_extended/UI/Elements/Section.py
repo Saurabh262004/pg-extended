@@ -1,4 +1,3 @@
-from typing import Optional, Dict
 import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.Util import ImgManipulation
@@ -8,7 +7,7 @@ from pg_extended.Core import DynamicValue
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
 class Section:
-  def __init__(self, dimensions: Dict['str', DynamicValue], background: Background, borderRadius: Optional[float] = 0, backgroundSizeType: Optional[str] = 'fit', backgroundPosition: Optional[str] = 'center', backgroundSizePercent: Optional[int] = 100):
+  def __init__(self, dimensions: dict[str, DynamicValue], background: Background, borderRadius: float | None = 0, backgroundSizeType: str | None = 'fit', backgroundPosition: str | None = 'center', backgroundSizePercent: int | None = 100):
     self.dimensions = dimensions
     self.background = background
     self.drawImage = None

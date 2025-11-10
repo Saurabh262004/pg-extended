@@ -1,4 +1,3 @@
-from typing import Dict, Optional, Union
 from math import sqrt
 import pygame as pg
 from pg_extended.Types import Background
@@ -9,7 +8,7 @@ from pg_extended.Core import DynamicValue
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
 class Circle:
-  def __init__(self, dimensions: Dict[str, DynamicValue], background: Background, backgroundSizeType: Optional[str] = 'fit', backgroundSizePercent: Optional[int] = 100):
+  def __init__(self, dimensions: dict[str, DynamicValue], background: Background, backgroundSizeType: str | None = 'fit', backgroundSizePercent: int | None = 100):
     self.dimensions = dimensions
     self.background = background
     self.backgroundSizeType = backgroundSizeType

@@ -1,11 +1,10 @@
-from typing import Dict
 from pg_extended.UI.Elements import UIElement
 from pg_extended.UI.Elements import Circle
 from pg_extended.Util.CopyElement import CopyElement
 from pg_extended.Core.DynamicValue import DynamicValue
 
 class List:
-  def __init__(self, listPos: Dict[str, DynamicValue], listElement: UIElement, length: int, spacing: DynamicValue = None):
+  def __init__(self, listPos: dict[str, DynamicValue], listElement: UIElement, length: int, spacing: DynamicValue = None):
     self.listPos = listPos
     self.listElement = listElement
     self.length = length
