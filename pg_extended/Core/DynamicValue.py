@@ -1,12 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any
-from pg_extended.Types import callableLike
+from pg_extended.Types import callableLike, AnyObject
 import types
 
 if TYPE_CHECKING:
   from pg_extended.Core.AnimatedValue import AnimatedValue
 
-type reference = int | float | dict | object | callableLike | str | DynamicValue | AnimatedValue
+type reference = int | float | dict | AnyObject | callableLike | str | DynamicValue | AnimatedValue
 
 class DynamicValue:
   def __init__(self, ref: reference, lookup: str | None = None, args: dict[str, Any] | None = None, percent: int | float | None = None):
