@@ -21,10 +21,10 @@ class List:
 
       if newElement.section:
         newElement.section.dimensions['x'] = self.listPos['x']
-        newElement.section.dimensions['y'] = DynamicValue(self.getElementY, kwargs={'index': i})
+        newElement.section.dimensions['y'] = DynamicValue(self.getElementY, args={'index': i})
       elif newElement.dimensions:
         newElement.dimensions['x'] = self.listPos['x']
-        newElement.dimensions['y'] = DynamicValue(self.getElementY, kwargs={'index': i})
+        newElement.dimensions['y'] = DynamicValue(self.getElementY, args={'index': i})
 
       self.elements.append(newElement)
 

@@ -9,10 +9,10 @@ if TYPE_CHECKING:
 type reference = int | float | dict | object | callableLike | str | DynamicValue | AnimatedValue
 
 class DynamicValue:
-  def __init__(self, ref: reference, lookup: str | None = None, kwargs: dict[str, Any] | None = None, percent: int | float | None = None):
+  def __init__(self, ref: reference, lookup: str | None = None, args: dict[str, Any] | None = None, percent: int | float | None = None):
     self.reference = ref
     self.lookup = lookup
-    self.kwargs = kwargs
+    self.args = args
     self.percent = percent
     self.value: Any = None
     self.resolveValue: callableLike = None
@@ -44,11 +44,11 @@ class DynamicValue:
   def _callPer(self):
     self.value = self.reference() / 100 * self.percent
 
-  def _callKWArgs(self):
-    self.value = self.reference(**self.kwargs)
+  def _callArgs(self):
+    self.value = self.reference(**self.args)
 
-  def _callKWArgsPer(self):
-    self.value = self.reference(**self.kwargs) / 100 * self.percent
+  def _callArgsPer(self):
+    self.value = self.reference(**self.args) / 100 * self.percent
 
   def _objLookup(self):
     self.value = getattr(self.reference, self.lookup)
@@ -82,16 +82,16 @@ class DynamicValue:
 
     # look for callable at the very end
     elif isinstance(self.reference, (types.FunctionType | types.BuiltinFunctionType | types.MethodType)):
-      if self.kwargs is None:
+      if self.args is None:
         if self.percent is None:
           self.resolveValue = self._call
         else:
           self.resolveValue = self._callPer
       else:
         if self.percent is None:
-          self.resolveValue = self._callKWArgs
+          self.resolveValue = self._callArgs
         else:
-          self.resolveValue = self._callKWArgsPer
+          self.resolveValue = self._callArgsPer
 
     # anything else left and lookup is provided, assume it's a class + attribute
     elif isinstance(self.lookup, str):
