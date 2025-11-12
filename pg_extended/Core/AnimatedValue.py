@@ -134,10 +134,11 @@ class AnimatedValue:
       if self.repeats > 0:
         self.repeats -= 1
         self.trigger(self.reverse, self.repeats, self.alternate)
-        return
-      elif self.repeats == -1:
+        return None
+
+      if self.repeats == -1:
         self.trigger(self.reverse, self.repeats, self.alternate)
-        return
+        return None
 
       if self.callback is not None:
         self.callback()
