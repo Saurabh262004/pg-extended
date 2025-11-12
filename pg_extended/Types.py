@@ -1,4 +1,3 @@
-from typing import Any, Protocol
 import types
 import pygame as pg
 

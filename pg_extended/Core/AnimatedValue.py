@@ -148,7 +148,7 @@ class AnimatedValue:
 
       self.interpolate(t)
 
-  # handle animation ends, repeats, etc.. used by .resolveValue()
+  # handle animation ends, repeats, callbacks used by .resolveValue()
   def finishAnim(self):
     if self.reverse:
       self.value = self.rawValues[0]
