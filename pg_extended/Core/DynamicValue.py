@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from pg_extended.Types import callableLike
 import types
 
@@ -75,7 +75,7 @@ class DynamicValue:
       else:
         self.resolveValue = self._CVPer
 
-    # look for callable at the very end
+    # callable
     elif isinstance(self.reference, (types.FunctionType | types.BuiltinFunctionType | types.MethodType)):
       if self.args is None:
         if self.percent is None:
@@ -88,7 +88,7 @@ class DynamicValue:
         else:
           self.resolveValue = self._callArgsPer
 
-    # anything else left and lookup is provided, assume it's a class + attribute
+    # none of the above and lookup is provided, assume it's a class + attribute
     elif isinstance(self.lookup, str):
       if self.percent is None:
         self.resolveValue = self._objLookup

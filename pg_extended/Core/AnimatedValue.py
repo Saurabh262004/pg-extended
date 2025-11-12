@@ -1,11 +1,14 @@
 import time
+from copy import copy
 from pg_extended.Core.DynamicValue import DynamicValue
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
 DEFAULT_POS_VALS = ['start', 'end']
 
+type valuesType = list[DynamicValue | AnimatedValue | int | float] | list[DynamicValue | AnimatedValue | int | float]
+
 class AnimatedValue:
-  def __init__(self, values: list[DynamicValue] | tuple[DynamicValue], duration: float, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
+  def __init__(self, values: valuesType, duration: float, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
     if len(values) < 2:
       raise ValueError("Animator requires a minimum of two values to animate between.")
 
@@ -19,15 +22,18 @@ class AnimatedValue:
       raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
 
     self.values = values
+    self.rawValues: list[int | float] = []
     self.duration = duration
     self.interpolation = interpolation
     self.callback = callback
     self.defaultPos = defaultPos
 
+    self.updateValues()
+
     if self.defaultPos == 'start':
-      self.value = values[0].value
+      self.value = self.rawValues[0]
     else:
-      self.value = values[-1].value
+      self.value = self.rawValues[-1]
 
     self.animStart: float = None
     self.reverse: bool = False
@@ -89,17 +95,26 @@ class AnimatedValue:
 
     return start + (end - start) * t
 
+  # get raw values from animated / dynamic values
   def updateValues(self):
-    for value in self.values:
-      value.resolveValue()
+    self.rawValues = []
 
+    for value in self.values:
+      if isinstance(value, (DynamicValue, AnimatedValue)):
+        value.resolveValue()
+        self.rawValues.append(value.value)
+      else:
+        self.rawValues.append(value)
+
+  # get an interpolated value from normalized t
   def interpolate(self, t: float):
     if t <= 0:
-      return self.values[0].value
+      return self.rawValues[0]
     elif t >= 1:
-      return self.values[-1].value
+      return self.rawValues[-1]
 
-    processingVals = [value.value for value in self.values]
+    processingVals = copy(self.rawValues)
+
     while len(processingVals) > 1:
       tmp = []
 
@@ -112,6 +127,8 @@ class AnimatedValue:
 
     self.value = processingVals[0]
 
+  # calculate current animation time, get normalized t, call .interpolate() etc..
+  # most importantly this is the function you need to call to update the animated value
   def resolveValue(self):
     if self.animStart is None:
       self.updateRestingPos()
@@ -122,27 +139,7 @@ class AnimatedValue:
     self.updateValues()
 
     if elapsedTime >= self.duration:
-      if self.reverse:
-        self.value = self.values[0].value
-      else:
-        self.value = self.values[-1].value
-
-      self.animStart = None
-
-      self.hasPlayedOnce = True
-
-      if self.repeats > 0:
-        self.repeats -= 1
-        self.trigger(self.reverse, self.repeats, self.alternate)
-        return None
-
-      if self.repeats == -1:
-        self.trigger(self.reverse, self.repeats, self.alternate)
-        return None
-
-      if self.callback is not None:
-        self.callback()
-
+      self.finishAnim()
     else:
       if self.reverse:
         t = 1 - (elapsedTime / self.duration)
@@ -151,6 +148,30 @@ class AnimatedValue:
 
       self.interpolate(t)
 
+  # handle animation ends, repeats, etc.. used by .resolveValue()
+  def finishAnim(self):
+    if self.reverse:
+      self.value = self.rawValues[0]
+    else:
+      self.value = self.rawValues[-1]
+
+    self.animStart = None
+
+    self.hasPlayedOnce = True
+
+    if self.repeats > 0:
+      self.repeats -= 1
+      self.trigger(self.reverse, self.repeats, self.alternate)
+      return None
+
+    if self.repeats == -1:
+      self.trigger(self.reverse, self.repeats, self.alternate)
+      return None
+
+    if self.callback is not None:
+      self.callback()
+
+  # updates the value to a default idle position when no animation is playing
   def updateRestingPos(self):
     self.updateValues()
 
@@ -190,8 +211,9 @@ class AnimatedValue:
 
     pickStart = (A and (B == C)) or (not A and B)
 
-    self.value = self.values[0].value if pickStart else self.values[-1].value
+    self.value = self.rawValues[0] if pickStart else self.rawValues[-1]
 
+  # triggers animation
   def trigger(self, reverse: bool = False, repeats: int = 0, alternate: bool = False, delay: int = 0):
     self.animStart = time.perf_counter() * 1000
 
@@ -207,11 +229,15 @@ class AnimatedValue:
     else:
       self.reverse = reverse
 
+  # stops all animations, resets repeats and instantly snaps the value to a resting position
   def terminate(self):
+    if self.animStart is None:
+      return None
+
     self.animStart = None
     self.repeats = 0
 
     if self.reverse:
-      self.value = self.values[0].value
+      self.value = self.rawValues[0]
     else:
-      self.value = self.values[-1].value
+      self.value = self.rawValues[-1]
