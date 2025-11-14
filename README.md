@@ -32,8 +32,12 @@ A simple example of how to initialize an empty window with pg_extended.
 ```python
 from pg_extended import Window
 
+# create a window with "Demo pgx window" as the title with 1280x720 resolution
 app = Window("Demo pgx window", (1280, 720))
 
+# all the UI / Game setup can be done here
+
+# open the window
 app.openWindow()
 ```
 
