@@ -38,7 +38,10 @@ def addOverlaySystem(window: pgx.Window):
     text='Menu',
     fontPath='Helvetica',
     textColor=colors.text,
-    onClick=triggerMenuAnimation
+    callback=pgx.Callback(
+      'mouseDown',
+      triggerMenuAnimation
+    )
   )
 
   toggleText = pgx.TextBox(
@@ -60,7 +63,7 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue(menuSection, 'width', percent=6),
         'height': pgx.DynamicValue(menuSection, 'width', percent=3)
       }, colors.back1, 4
-    ), colors.text, colors.primary, colors.primary
+    ), colors.text, colors.primary, colors.primary, callback=pgx.Callback('None', lambda value: print(f'got {value}'), extraArgKeys=['value'])
   )
 
   sliderText = pgx.TextBox(

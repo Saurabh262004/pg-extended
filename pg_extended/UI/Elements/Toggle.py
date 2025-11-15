@@ -1,21 +1,20 @@
-from pg_extended.Types import callableLike
 import pygame as pg
-from pg_extended.Core import DynamicValue, AnimatedValue
+from pg_extended.Core import DynamicValue, AnimatedValue, Callback
 from pg_extended.UI.Elements.Section import Section
 
 class Toggle:
-  def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, onClick: callableLike | None = None, onClickParams = None, sendStateInfoOnClick: bool | None = False, border: int = 0):
+  def __init__(self, section: Section, indicatorColor: pg.Color, borderColor: pg.Color, borderColorToggled: pg.Color, border: int = 0, callback: Callback = None):
     self.section = section
-    self.onClick = onClick
-    self.sendStateInfoOnClick = sendStateInfoOnClick
-    self.onClickParams = onClickParams
-    self.border = border
-    self.toggled = False
     self.defaultBackground = section.background
     self.indicatorColor = indicatorColor
     self.borderColor = borderColor
     self.borderColorToggled = borderColorToggled
+    self.border = border
+    self.callback = callback
+
     self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
+
+    self.toggled = False
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -59,7 +58,7 @@ class Toggle:
       self.lazyUpdateOverride = True
 
       self.toggled = not self.toggled
-  
+
       if self.toggled:
         self.section.background = self.indicatorColor
       else:
@@ -67,19 +66,14 @@ class Toggle:
 
       self.updateInnerBox()
 
-      if self.onClick:
-        if self.onClickParams is not None:
-          if self.sendStateInfoOnClick:
-            self.onClick(self.onClickParams, self.toggled)
-          else:
-            self.onClick(self.onClickParams)
-        else:
-          if self.sendStateInfoOnClick:
-            self.onClick(self.toggled)
-          else:
-            self.onClick()
+      if self.callback is not None:
+        if 'value' in self.callback.extraArgKeys:
+          self.callback.setExtraArgs((self.toggled,))
+
+        self.callback.call()
 
       return True
+
     return False
 
   def update(self):

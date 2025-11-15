@@ -1,20 +1,18 @@
 import pygame as pg
-from pg_extended.Types import callableLike
+from pg_extended.Core import Callback
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
 class Button:
-  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, onClick: callableLike | None = None, onClickParams = None, border: int | None = 0, onClickActuation: str | None = 'buttonDown'):
+  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, border: int | None = 0, callback: Callback = None):
     self.section = section
-    self.onClick = onClick
-    self.onClickParams = onClickParams
-    self.onClickActuation = onClickActuation
-    self.border = border
     self.defaultBackground = section.background
     self.pressedBackground = pressedBackground
     self.borderColor = borderColor
     self.borderColorPressed = borderColorPressed
+    self.border = border
+    self.callback = callback
 
     self.pressed = False
     self.active = True
@@ -33,9 +31,6 @@ class Button:
     else:
       self.hasText = False
 
-    if not onClickActuation in ('buttonDown', 'buttonUp'):
-      raise ValueError('onClickActuation must be either \'buttonDown\' or \'buttonUp\'')
-
     self.update()
 
   def checkEvent(self, event: pg.Event) -> bool | None:
@@ -49,26 +44,22 @@ class Button:
         self.section.background = self.pressedBackground
         self.section.update()
 
-      if self.onClick and self.onClickActuation == 'buttonDown':
-        if self.onClickParams is None:
-          self.onClick()
-        else:
-          self.onClick(self.onClickParams)
+      if self.callback and self.callback.trigger == 'mouseDown':
+        self.callback.call()
 
       return True
-    elif event.type == pg.MOUSEBUTTONUP and self.pressed:
+
+    if event.type == pg.MOUSEBUTTONUP and self.pressed:
       self.pressed = False
       self.section.background = self.defaultBackground
 
-      if self.onClickActuation == 'buttonUp' and self.onClick and self.section.rect.collidepoint(event.pos):
-        if self.onClickParams is None:
-          self.onClick()
-        else:
-          self.onClick(self.onClickParams)
-      
+      if self.callback and self.callback.trigger == 'mouseUp' and self.section.rect.collidepoint(event.pos):
+        self.callback.call()
+
       self.section.update()
 
       return True
+
     return False
 
   def update(self):

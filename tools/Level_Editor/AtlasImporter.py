@@ -191,8 +191,10 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     text='Done',
     fontPath='Helvetica',
     textColor=pg.Color(250, 250, 250),
-    onClick=closingSeq,
-    onClickActuation='buttonUp'
+    callback=pgx.Callback(
+      'mouseUp',
+      closingSeq
+    )
   )
 
   tileWidthInput = pgx.TextInput(

@@ -74,10 +74,8 @@ class CopyElement:
       button.textBox.text,
       button.textBox.fontPath,
       button.textBox.textColor,
-      button.onClick,
-      button.onClickParams,
       button.border,
-      button.onClickActuation
+      button.callback
     )
 
   @staticmethod
@@ -87,12 +85,10 @@ class CopyElement:
       toggle.indicatorColor,
       toggle.borderColor,
       toggle.borderColorToggled,
-      toggle.onClick,
-      toggle.onClickParams,
-      toggle.sendStateInfoOnClick,
-      toggle.border
+      toggle.border,
+      toggle.callback
     )
-  
+
   @staticmethod
   def copySlider(slider: 'Slider') -> 'Slider':
     return Slider(
