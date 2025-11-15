@@ -32,3 +32,25 @@ class Callback:
     self.resolveArgs()
 
     self.func(**self.resolvedArgs)
+
+class CallbackSet:
+  def __init__(self, callbacks: list[Callback] | tuple[Callback]):
+    self.callbacks = callbacks
+    self.callbacksDict = {}
+
+    for callback in self.callbacks:
+      tgr = callback.trigger
+      if tgr not in self.callbacksDict:
+        self.callbacksDict[tgr] = []
+
+      self.callbacksDict[tgr].append(callback)
+
+  def resolveArgs(self):
+    for callback in self.callbacks:
+      callback.resolveArgs()
+
+  def call(self, trigger: str):
+    if trigger not in self.callbacksDict: return None
+
+    for callback in self.callbacksDict[trigger]:
+      callback.call()
