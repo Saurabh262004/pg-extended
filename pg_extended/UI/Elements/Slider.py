@@ -33,11 +33,11 @@ class Slider():
     else:
       self.dragElementType = 'circle'
 
-    def getDragElementPos(params):
+    def getDragElementPos(axis: str, elementType: str, slider: Slider):
       returnValue = None
-      axis: str = params[0]
-      elementType: str = params[1]
-      slider: Slider = params[2]
+      axis = axis
+      elementType = elementType
+      slider = slider
       section = slider.section
       sliderValue = slider.value
       sliderValueRange = slider.valueRange
@@ -64,18 +64,49 @@ class Slider():
 
     if self.dragElementType == 'circle':
       if self.orientation == 'horizontal':
-        self.dragElement.dimensions['x'] = DynamicValue(getDragElementPos, args={'params': ('x', 'circle', self)})
-        self.dragElement.dimensions['y'] = DynamicValue(lambda section: section.y + (section.height / 2), args={'section': self.section})
+        self.dragElement.dimensions['x'] = DynamicValue(
+          getDragElementPos,
+          args={'axis': 'x', 'elementType': 'circle', 'slider': self}
+        )
+
+        self.dragElement.dimensions['y'] = DynamicValue(
+          lambda section: section.y + (section.height / 2),
+          args={'section': self.section}
+        )
+
       else:
-        self.dragElement.dimensions['x'] = DynamicValue(lambda section: section.x + (section.width / 2), args={'section': self.section})
-        self.dragElement.dimensions['y'] = DynamicValue(getDragElementPos, args={'params': ('y', 'circle', self)})
+        self.dragElement.dimensions['x'] = DynamicValue(
+          lambda section: section.x + (section.width / 2),
+          args={'section': self.section}
+        )
+
+        self.dragElement.dimensions['y'] = DynamicValue(
+          getDragElementPos,
+          args={'axis': 'y', 'elementType': 'circle', 'slider': self}
+        )
+
     else:
       if self.orientation == 'horizontal':
-        self.dragElement.dimensions['x'] = DynamicValue(getDragElementPos, args={'params': ('x', 'section', self)})
-        self.dragElement.dimensions['y'] = DynamicValue(lambda params: params[0].y + ((params[0].height - params[1].height) / 2), args={'params': (self.section, self.dragElement)})
+        self.dragElement.dimensions['x'] = DynamicValue(
+          getDragElementPos,
+          args={'axis': 'x', 'elementType': 'section', 'slider': self}
+        )
+
+        self.dragElement.dimensions['y'] = DynamicValue(
+          lambda section, dragElement: section.y + ((section.height - dragElement.height) / 2),
+          args={'section': self.section, 'dragElement': self.dragElement}
+        )
+
       else:
-        self.dragElement.dimensions['x'] = DynamicValue(lambda params: params[0].x + ((params[0].width - params[1].width) / 2), args={'params': (self.section, self.dragElement)})
-        self.dragElement.dimensions['y'] = DynamicValue(getDragElementPos, args={'params': ('y', 'section', self)})
+        self.dragElement.dimensions['x'] = DynamicValue(
+          lambda section, dragElement: section.x + ((section.width - dragElement.width) / 2),
+          args={'section': self.section, 'dragElement': self.dragElement}
+        )
+
+        self.dragElement.dimensions['y'] = DynamicValue(
+          getDragElementPos,
+          args={'axis': 'y', 'elementType': 'section', 'slider': self}
+        )
 
     if self.dragElementType == 'section':
       if self.orientation == 'horizontal':
