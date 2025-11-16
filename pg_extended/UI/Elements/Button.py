@@ -44,8 +44,8 @@ class Button:
         self.section.background = self.pressedBackground
         self.section.update()
 
-      if self.callback and self.callback.trigger == 'mouseDown':
-        self.callback.call()
+      if self.callback:
+        self.callback.call('mouseDown')
 
       return True
 
@@ -53,8 +53,8 @@ class Button:
       self.pressed = False
       self.section.background = self.defaultBackground
 
-      if self.callback and self.callback.trigger == 'mouseUp' and self.section.rect.collidepoint(event.pos):
-        self.callback.call()
+      if self.callback and self.section.rect.collidepoint(event.pos):
+        self.callback.call('mouseUp')
 
       self.section.update()
 

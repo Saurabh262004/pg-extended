@@ -209,7 +209,8 @@ class AnimatedValue:
     (A and (B == C)) or (not A and B)
     '''
 
-    pickStart = (A and (B == C)) or (not A and B)
+    # flipped for a little bit of performance
+    pickStart = (not A and B) or (A and (B == C))
 
     self.value = self.rawValues[0] if pickStart else self.rawValues[-1]
 

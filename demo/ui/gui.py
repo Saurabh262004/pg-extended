@@ -38,10 +38,12 @@ def addOverlaySystem(window: pgx.Window):
     text='Menu',
     fontPath='Helvetica',
     textColor=colors.text,
-    callback=pgx.Callback(
-      'mouseDown',
-      triggerMenuAnimation
-    )
+    callback=pgx.CallbackSet((
+      pgx.Callback(
+        ('mouseDown',),
+        triggerMenuAnimation
+      ),
+    ))
   )
 
   toggleText = pgx.TextBox(
@@ -63,7 +65,8 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue(menuSection, 'width', percent=6),
         'height': pgx.DynamicValue(menuSection, 'width', percent=3)
       }, colors.back1, 4
-    ), colors.text, colors.primary, colors.primary, callback=pgx.Callback('None', lambda value: print(f'got {value}'), extraArgKeys=['value'])
+    ), colors.text, colors.primary, colors.primary,
+    callback=pgx.Callback(('None',), lambda value: print(f'got {value}'), extraArgKeys=['value'])
   )
 
   sliderText = pgx.TextBox(
@@ -94,7 +97,24 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue(menuSection, 'width', percent=3),
         'height': pgx.DynamicValue(menuSection, 'width', percent=2)
       }, colors.primary, 2
-    ), (0, 100), 5, colors.text
+    ), (0, 100), 5, colors.text,
+    pgx.CallbackSet((
+      pgx.Callback(
+        ('mouseUp', 'mouseDown'),
+        lambda value: print(f'got {value} via click'),
+        extraArgKeys='value'
+      ),
+      pgx.Callback(
+        ('mouseDrag',),
+        lambda value: print(f'got {value} via drag'),
+        extraArgKeys='value'
+      ),
+      pgx.Callback(
+        ('scroll',),
+        lambda value: print(f'got {value} via scroll'),
+        extraArgKeys='value'
+      )
+    ))
   )
 
   textInputText = pgx.TextBox(

@@ -3,16 +3,17 @@ from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.Types import callableLike
 
 class Callback:
-  def __init__(self, trigger: str, func: callableLike, staticArgs: dict[str, Any] = {}, extraArgKeys: list[str] | tuple[str] = ()):
-    self.trigger = trigger
+  def __init__(self, triggers: list[str] | tuple[str], func: callableLike, staticArgs: dict[str, Any] = {}, extraArgKeys: list[str] | tuple[str] = ()):
+    self.triggers = triggers
     self.func = func
     self.args = staticArgs
     self.resolvedArgs = {}
     self.extraArgKeys = extraArgKeys
 
-  def setExtraArgs(self, args: list[Any] | tuple[Any]):
-    for i in range(len(args)):
-      self.args[self.extraArgKeys[i]] = args[i]
+  def setExtraArgs(self, args: dict[str, Any] = {}):
+    for key in args:
+      if key in self.extraArgKeys:
+        self.args[key] = args[key]
 
   def resolveArgs(self):
     self.resolvedArgs = {}
@@ -39,18 +40,18 @@ class CallbackSet:
     self.callbacksDict = {}
 
     for callback in self.callbacks:
-      tgr = callback.trigger
-      if tgr not in self.callbacksDict:
-        self.callbacksDict[tgr] = []
-
-      self.callbacksDict[tgr].append(callback)
+      for tgr in callback.triggers:
+        self.callbacksDict.setdefault(tgr, []).append(callback)
 
   def resolveArgs(self):
     for callback in self.callbacks:
       callback.resolveArgs()
 
-  def call(self, trigger: str):
+  def call(self, trigger: str, extraArgs: dict[str, Any] = {}):
     if trigger not in self.callbacksDict: return None
+
+    for callback in self.callbacksDict[trigger]:
+      callback.setExtraArgs(extraArgs)
 
     for callback in self.callbacksDict[trigger]:
       callback.call()

@@ -68,7 +68,7 @@ class Toggle:
 
       if self.callback is not None:
         if 'value' in self.callback.extraArgKeys:
-          self.callback.setExtraArgs((self.toggled,))
+          self.callback.setExtraArgs({'value': self.toggled})
 
         self.callback.call()
 

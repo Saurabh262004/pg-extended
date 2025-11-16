@@ -1,24 +1,23 @@
 import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.Util import Misc
-from pg_extended.Core import DynamicValue
+from pg_extended.Core import DynamicValue, CallbackSet
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
 
-ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
-
 class Slider():
-  def __init__(self, orientation: str, section: Section, dragElement: Section | Circle, valueRange: list[float] | tuple[float], scrollSpeed: float, filledSliderBackground: Background, onChangeInfo: dict | None = None, hoverToScroll: bool | None = True):
+  def __init__(self, orientation: str, section: Section, dragElement: Section | Circle, valueRange: list[float] | tuple[float], scrollSpeed: float, filledSliderBackground: Background, callback: CallbackSet = None, hoverToScroll: bool | None = True):
     self.orientation = orientation
     self.section = section
     self.valueRange = valueRange
     self.scrollSpeed = scrollSpeed
     self.dragElement = dragElement
     self.filledSliderBackground = filledSliderBackground
-    self.onChangeInfo = onChangeInfo
+    self.callback = callback
     self.hoverToScroll = hoverToScroll
-    self.pressed = False
+
     self.value = self.valueRange[0]
+    self.pressed = False
     self.active = True
     self.activeDraw = True
     self.activeUpdate = True
@@ -28,11 +27,6 @@ class Slider():
 
     if not self.orientation in ('vertical', 'horizontal'):
       raise ValueError('Slider orientation must be \'vertical\' or \'horizontal\'')
-
-    if not self.onChangeInfo is None:
-      for k in ONCHANGE_KEYS:
-        if not k in self.onChangeInfo:
-          raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
 
     if isinstance(self.dragElement, Section):
       self.dragElementType = 'section'
@@ -155,21 +149,9 @@ class Slider():
     self.filledSlider.draw(surface)
     self.dragElement.draw(surface)
 
-  def callback(self):
-    if not self.active:
-      return None
-
-    if not self.onChangeInfo is None:
-      if not self.onChangeInfo['params'] is None:
-        if self.onChangeInfo['sendValue']:
-          self.onChangeInfo['callable'](self.value, self.onChangeInfo['params'])
-        else:
-          self.onChangeInfo['callable'](self.onChangeInfo['params'])
-      else:
-        if self.onChangeInfo['sendValue']:
-          self.onChangeInfo['callable'](self.value)
-        else:
-          self.onChangeInfo['callable']()
+  def handleCallback(self, trigger):
+    if self.callback is not None:
+      self.callback.call(trigger, {'value': self.value})
 
   def checkEvent(self, event: pg.Event) -> bool:
     if not (self.active and self.activeEvents):
@@ -177,13 +159,29 @@ class Slider():
 
     if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.section.rect.collidepoint(pg.mouse.get_pos()):
       self.pressed = True
-    elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+
+      self.updateValue()
+
+      self.handleCallback('mouseDown')
+
+    if event.type == pg.MOUSEBUTTONUP and event.button == 1:
       if self.pressed:
         self.pressed = False
-        self.callback()
-      else:
-        return False
-    elif event.type == pg.MOUSEWHEEL:
+
+        self.handleCallback('mouseUp')
+
+        return True
+
+      return False
+
+    if self.pressed and event.type == pg.MOUSEMOTION:
+      self.updateValue()
+
+      self.handleCallback('mouseDrag')
+
+      return True
+
+    if event.type == pg.MOUSEWHEEL:
       self.pressed = False
       scroll = False
       updatedValue = self.value
@@ -209,13 +207,13 @@ class Slider():
           self.value = updatedValue
 
           self.update()
-          self.callback()
-          return True
-        return False
-      return False
 
-    if self.pressed:
-      self.updateValue()
-      return True
+          self.handleCallback('scroll')
+
+          return True
+
+        return False
+
+      return False
 
     return False
