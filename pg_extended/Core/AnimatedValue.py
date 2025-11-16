@@ -207,10 +207,12 @@ class AnimatedValue:
 
     compacted:
     (A and (B == C)) or (not A and B)
+
+    maximum performance version:
+    (B and not A) or (A and (B == C))
     '''
 
-    # flipped for a little bit of performance
-    pickStart = (not A and B) or (A and (B == C))
+    pickStart = (B and not A) or (A and (B == C))
 
     self.value = self.rawValues[0] if pickStart else self.rawValues[-1]
 
