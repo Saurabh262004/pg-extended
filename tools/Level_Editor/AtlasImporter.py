@@ -113,7 +113,7 @@ def drawLoop():
         1
       )
 
-def inputOnChange(inputValue: str, inputType: str):
+def inputOnChange(value: str, inputType: str):
   if inputType == 'tileWidth':
     defaultValue = 16
   elif inputType == 'tileHeight':
@@ -128,7 +128,7 @@ def inputOnChange(inputValue: str, inputType: str):
     defaultValue = 0
 
   try:
-    value = int(inputValue)
+    value = int(value)
     if value < 1:
       value = defaultValue
   except:
@@ -191,10 +191,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     text='Done',
     fontPath='Helvetica',
     textColor=pg.Color(250, 250, 250),
-    callback=pgx.Callback(
-      'mouseUp',
-      closingSeq
-    )
+    callback=pgx.CallbackSet((
+      pgx.Callback(
+        ('mouseUp',),
+        closingSeq
+      ),
+    ))
   )
 
   tileWidthInput = pgx.TextInput(
@@ -210,11 +212,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='Tile Width',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'tileWidth',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'tileWidth'},
+      ('value',)
+    )
   )
 
   tileHeightInput = pgx.TextInput(
@@ -230,11 +233,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='Tile Height',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'tileHeight',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'tileHeight'},
+      ('value',)
+    )
   )
 
   paddingXInput = pgx.TextInput(
@@ -250,11 +254,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='paddingX',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'paddingX',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'paddingX'},
+      ('value',)
+    )
   )
 
   paddingYInput = pgx.TextInput(
@@ -270,11 +275,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='Padding Y',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'paddingY',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'paddingY'},
+      ('value',)
+    )
   )
 
   tilestOffsetXInput = pgx.TextInput(
@@ -290,11 +296,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='Offset X',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'tilestOffsetX',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'tilestOffsetX'},
+      ('value',)
+    )
   )
 
   tilestOffsetYInput = pgx.TextInput(
@@ -310,11 +317,12 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
     textColor=pg.Color(250, 250, 250),
     placeholder='Offset Y',
     placeholderTextColor=pg.Color(150, 150, 150),
-    onChangeInfo={
-      'callable': inputOnChange,
-      'params': 'tilestOffsetY',
-      'sendValue': True
-    }
+    callback=pgx.Callback(
+      ('None',),
+      inputOnChange,
+      {'inputType': 'tilestOffsetY'},
+      ('value',)
+    )
   )
 
   system.addElements(

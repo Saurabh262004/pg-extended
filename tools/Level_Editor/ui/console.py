@@ -49,10 +49,12 @@ def add(app: pgx.Window):
     text='Import  Atlas',
     fontPath='Arial',
     textColor=colors.themes[sharedAssets.theme]['text'],
-    callback=pgx.Callback(
-      'mouseUp',
-      setAtlas
-    )
+    callback=pgx.CallbackSet((
+      pgx.Callback(
+        ('mouseUp',),
+        setAtlas
+      ),
+    ))
   )
 
   atlasList = pgx.Section(
@@ -114,10 +116,12 @@ def add(app: pgx.Window):
     text='File',
     fontPath='Arial',
     textColor=colors.themes[sharedAssets.theme]['text'],
-    callback=pgx.Callback(
-      'mouseDown',
-      fileAnimStart
-    )
+    callback=pgx.CallbackSet((
+      pgx.Callback(
+        ('mouseDown',),
+        fileAnimStart
+      ),
+    ))
   )
 
   fileOptionsAnim = pgx.AnimatedValue(

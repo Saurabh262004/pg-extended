@@ -2,16 +2,14 @@ import time
 import pyperclip
 import pygame as pg
 from pg_extended.Types import Background
-from pg_extended.Core import DynamicValue, AnimatedValue
+from pg_extended.Core import DynamicValue, AnimatedValue, Callback
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
 LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\f\v'
 
-ONCHANGE_KEYS = ('callable', 'params', 'sendValue')
-
 class TextInput:
-  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: Background = None, onChangeInfo: dict = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+  def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: Background = None, callback: Callback = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
     self.section = section
     self.fontPath = fontPath
     self.textColor = textColor
@@ -23,7 +21,7 @@ class TextInput:
     self.focusBorderColor = focusBorderColor
     self.background = self.section.background
     self.focusBackground = focusBackground
-    self.onChangeInfo = onChangeInfo
+    self.callback = callback
     self.alignTextHorizontal = alignTextHorizontal
     self.alignTextVertical = alignTextVertical
 
@@ -54,11 +52,6 @@ class TextInput:
       [DynamicValue(255), DynamicValue(0)],
       500, 'start', 'easeIn'
     )
-
-    if self.onChangeInfo is not None:
-      for k in ONCHANGE_KEYS:
-        if not k in self.onChangeInfo:
-          raise ValueError(f'onChangeInfo must have these keys: {ONCHANGE_KEYS}')
 
     if self.placeholderTextColor is None:
       self.placeholderTextColor = self.textColor
@@ -136,23 +129,15 @@ class TextInput:
       self.textBox.textColor = self.textColor
       self.textBox.text = self.inputText
 
-  def callback(self):
+  def handleCallback(self):
     if not self.active:
       return None
 
-    if (not self.onChangeInfo is None) and (not self.valueOnLastCallback == self.inputText):
+    if (not self.callback is None) and (not self.valueOnLastCallback == self.inputText):
       self.valueOnLastCallback = self.inputText
 
-      if not self.onChangeInfo['params'] is None:
-        if self.onChangeInfo['sendValue']:
-          self.onChangeInfo['callable'](self.inputText, self.onChangeInfo['params'])
-        else:
-          self.onChangeInfo['callable'](self.onChangeInfo['params'])
-      else:
-        if self.onChangeInfo['sendValue']:
-          self.onChangeInfo['callable'](self.inputText)
-        else:
-          self.onChangeInfo['callable']()
+      self.callback.setExtraArgs({'value': self.inputText})
+      self.callback.call()
 
   def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents):
@@ -214,7 +199,7 @@ class TextInput:
         self.typing = False
         self.dynamicAutoInputInterval = self.autoInputInterval
 
-        self.callback()
+        self.handleCallback()
 
   def update(self):
     if not (self.active and self.activeUpdate):

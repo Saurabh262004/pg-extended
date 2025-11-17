@@ -66,7 +66,11 @@ def addOverlaySystem(window: pgx.Window):
         'height': pgx.DynamicValue(menuSection, 'width', percent=3)
       }, colors.back1, 4
     ), colors.text, colors.primary, colors.primary,
-    callback=pgx.Callback(('None',), lambda value: print(f'got {value}'), extraArgKeys=['value'])
+    callback=pgx.Callback(
+      ('None',),
+      lambda value: print(f'got {value}'),
+      extraArgKeys=('value',)
+    )
   )
 
   sliderText = pgx.TextBox(
@@ -136,7 +140,12 @@ def addOverlaySystem(window: pgx.Window):
         'width': pgx.DynamicValue(menuSection, 'width', percent=30),
         'height': pgx.DynamicValue(menuSection, 'width', percent=4)
       }, colors.primary, 2
-    ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1
+    ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1,
+    callback=pgx.Callback(
+      ('None',),
+      lambda value: print(f'got text: {value}'),
+      extraArgKeys=('value',)
+    )
   )
 
   window.customAnimatedValues['menuAnim'] = menuAnim
