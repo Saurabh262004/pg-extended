@@ -50,10 +50,6 @@ class CallbackSet:
       for tgr in callback.triggers:
         self.callbacksDict.setdefault(tgr, []).append(callback)
 
-  def resolveArgs(self):
-    for callback in self.callbacks:
-      callback.resolveArgs()
-
   def call(self, trigger: str, extraArgs: dict[str, Any] = None):
     if trigger not in self.callbacksDict: return None
 
