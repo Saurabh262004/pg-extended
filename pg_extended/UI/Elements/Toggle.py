@@ -67,10 +67,7 @@ class Toggle:
       self.updateInnerBox()
 
       if self.callback is not None:
-        if 'value' in self.callback.extraArgKeys:
-          self.callback.setExtraArgs({'value': self.toggled})
-
-        self.callback.call()
+        self.callback.call({'value': self.toggled})
 
       return True
 

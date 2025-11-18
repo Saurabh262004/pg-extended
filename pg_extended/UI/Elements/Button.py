@@ -1,11 +1,11 @@
 import pygame as pg
-from pg_extended.Core import Callback
+from pg_extended.Core import CallbackSet
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
 class Button:
-  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, border: int | None = 0, callback: Callback = None):
+  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, border: int | None = 0, callback: CallbackSet = None):
     self.section = section
     self.defaultBackground = section.background
     self.pressedBackground = pressedBackground

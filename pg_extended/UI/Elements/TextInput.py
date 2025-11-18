@@ -136,8 +136,7 @@ class TextInput:
     if (not self.callback is None) and (not self.valueOnLastCallback == self.inputText):
       self.valueOnLastCallback = self.inputText
 
-      self.callback.setExtraArgs({'value': self.inputText})
-      self.callback.call()
+      self.callback.call({'value': self.inputText})
 
   def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents):

@@ -84,6 +84,9 @@ def addOverlaySystem(window: pgx.Window):
     ), 'Slider:', 'Helvetica', colors.text
   )
 
+  def printSliderVal(v, et):
+    print(f'got {v} via {et}')
+
   slider = pgx.Slider(
     'horizontal',
     pgx.Section(
@@ -105,18 +108,21 @@ def addOverlaySystem(window: pgx.Window):
     pgx.CallbackSet((
       pgx.Callback(
         ('mouseUp', 'mouseDown'),
-        lambda v: print(f'got {v} via click'),
-        extraArgKeys={'value': 'v'}
+        printSliderVal,
+        {'et': 'click'},
+        {'value': 'v'}
       ),
       pgx.Callback(
         ('mouseDrag',),
-        lambda v: print(f'got {v} via drag'),
-        extraArgKeys={'value': 'v'}
+        printSliderVal,
+        {'et': 'drag'},
+        {'value': 'v'}
       ),
       pgx.Callback(
         ('scroll',),
-        lambda v: print(f'got {v} via scroll'),
-        extraArgKeys={'value': 'v'}
+        printSliderVal,
+        {'et': 'scroll'},
+        {'value': 'v'}
       )
     ))
   )
