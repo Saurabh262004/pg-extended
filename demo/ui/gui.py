@@ -68,8 +68,8 @@ def addOverlaySystem(window: pgx.Window):
     ), colors.text, colors.primary, colors.primary,
     callback=pgx.Callback(
       ('None',),
-      lambda value: print(f'got {value}'),
-      extraArgKeys=('value',)
+      lambda v: print(f'got {v}'),
+      extraArgKeys={'value': 'v'}
     )
   )
 
@@ -105,18 +105,18 @@ def addOverlaySystem(window: pgx.Window):
     pgx.CallbackSet((
       pgx.Callback(
         ('mouseUp', 'mouseDown'),
-        lambda value: print(f'got {value} via click'),
-        extraArgKeys='value'
+        lambda v: print(f'got {v} via click'),
+        extraArgKeys={'value': 'v'}
       ),
       pgx.Callback(
         ('mouseDrag',),
-        lambda value: print(f'got {value} via drag'),
-        extraArgKeys='value'
+        lambda v: print(f'got {v} via drag'),
+        extraArgKeys={'value': 'v'}
       ),
       pgx.Callback(
         ('scroll',),
-        lambda value: print(f'got {value} via scroll'),
-        extraArgKeys='value'
+        lambda v: print(f'got {v} via scroll'),
+        extraArgKeys={'value': 'v'}
       )
     ))
   )
@@ -143,8 +143,8 @@ def addOverlaySystem(window: pgx.Window):
     ), 'Helvetica', colors.text, -1, 'Type here...', colors.back1,
     callback=pgx.Callback(
       ('None',),
-      lambda value: print(f'got text: {value}'),
-      extraArgKeys=('value',)
+      lambda v: print(f'got text: {v}'),
+      extraArgKeys={'value': 'v'}
     )
   )
 

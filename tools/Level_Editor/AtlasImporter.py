@@ -113,7 +113,7 @@ def drawLoop():
         1
       )
 
-def inputOnChange(value: str, inputType: str):
+def inputOnChange(inputValue: str, inputType: str):
   if inputType == 'tileWidth':
     defaultValue = 16
   elif inputType == 'tileHeight':
@@ -128,17 +128,17 @@ def inputOnChange(value: str, inputType: str):
     defaultValue = 0
 
   try:
-    value = int(value)
-    if value < 1:
-      value = defaultValue
+    inputValue = int(inputValue)
+    if inputValue < 1:
+      inputValue = defaultValue
   except:
-    value = defaultValue
+    inputValue = defaultValue
 
   atlasDetails[inputType]['set'] = True
-  atlasDetails[inputType]['value'] = value
+  atlasDetails[inputType]['value'] = inputValue
 
   inputElement = system.textInputs[f'{inputType}Input']
-  inputElement.inputText = str(value)
+  inputElement.inputText = str(inputValue)
   inputElement.setTextBoxValue()
 
 def closingSeq():
@@ -216,7 +216,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'tileWidth'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 
@@ -237,7 +237,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'tileHeight'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 
@@ -258,7 +258,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'paddingX'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 
@@ -279,7 +279,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'paddingY'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 
@@ -300,7 +300,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'tilestOffsetX'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 
@@ -321,7 +321,7 @@ def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
       ('None',),
       inputOnChange,
       {'inputType': 'tilestOffsetY'},
-      ('value',)
+      {'value': 'inputValue'}
     )
   )
 

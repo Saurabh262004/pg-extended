@@ -3,7 +3,7 @@ from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.Types import callableLike
 
 class Callback:
-  def __init__(self, triggers: list[str] | tuple[str], func: callableLike, staticArgs: dict[str, Any] = {}, extraArgKeys: list[str] | tuple[str] = ()):
+  def __init__(self, triggers: list[str] | tuple[str], func: callableLike, staticArgs: dict[str, Any] = {}, extraArgKeys: dict[str, str] = {}):
     self.triggers = triggers
     self.func = func
     self.args = staticArgs
@@ -13,7 +13,7 @@ class Callback:
   def setExtraArgs(self, args: dict[str, Any] = {}):
     for key in args:
       if key in self.extraArgKeys:
-        self.args[key] = args[key]
+        self.args[self.extraArgKeys[key]] = args[key]
 
   def resolveArgs(self):
     self.resolvedArgs = {}
