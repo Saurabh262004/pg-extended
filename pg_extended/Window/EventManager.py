@@ -19,7 +19,10 @@ class EventManager:
 
         for systemID in self.systemZ:
           if systemID in self.activeSystems:
-            cursorChange = self.activeSystems[systemID].handleEvents(event)
+            if cursorChange == 'arrow':
+              cursorChange = self.activeSystems[systemID].handleEvents(event)
+            else:
+              self.activeSystems[systemID].handleEvents(event)
 
         if cursorChange == 'hand':
           pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
