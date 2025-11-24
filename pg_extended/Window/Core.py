@@ -22,7 +22,7 @@ class Window(SystemManager, SceneManager, EventManager, MainLoop, Lifecycle, Uti
 
     self.running: bool = False
     self.systems: dict[str, pgx.UI.System] = {}
-    self.activeSystems: dict[str, pgx.Game.System] = {}
+    self.activeSystems: dict[str, pgx.UI.System] = {}
     self.systemZ: dict[str, int] = {}
     self.scenes: dict[str, pgx.Game.Scene] = {}
     self.activeScene: pgx.Game.Scene = None
