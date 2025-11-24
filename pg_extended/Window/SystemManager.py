@@ -68,7 +68,7 @@ class SystemManager:
           self.activeSystems[systemID].locked = True
           del self.activeSystems[systemID].surface
 
-        self.activeSystems = []
+        self.activeSystems = {}
       elif not systemIDs in self.systems:
         print(f'A system with ID: {systemIDs} does not exist or is already deactivated. Automatically skipped this task.')
         interrupted = True
