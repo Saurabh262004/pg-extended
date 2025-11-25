@@ -129,6 +129,7 @@ class System:
     mousePos = pg.mouse.get_pos()
 
     changeCursor = None
+
     for buttonID in self.buttons:
       if self.buttons[buttonID].active:
         self.buttons[buttonID].checkEvent(event)
@@ -161,7 +162,7 @@ class System:
           if self.textInputs[textInputID].section.rect.collidepoint(mousePos):
             changeCursor = 'ibeam'
 
-    return 'arrow' if changeCursor is None else changeCursor
+    return changeCursor
 
   def initiate(self, surface: pg.Surface):
     self.surface = surface

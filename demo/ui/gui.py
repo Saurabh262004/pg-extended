@@ -27,23 +27,25 @@ def addOverlaySystem(window: pgx.Window):
   )
 
   menuButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(window, 'screenWidth', percent=92.5),
-        'y': pgx.DynamicValue(window, 'screenWidth', percent=1.5),
-        'width': pgx.DynamicValue(window, 'screenWidth', percent=6),
-        'height': pgx.DynamicValue(window, 'screenWidth', percent=3)
-      }, colors.primary, 4
-    ), colors.secondary,
-    text='Menu',
-    fontPath='Helvetica',
-    textColor=colors.text,
-    callback=pgx.CallbackSet((
+    pgx.TextBox(
+      pgx.Section(
+        {
+          'x': pgx.DynamicValue(window, 'screenWidth', percent=92.5),
+          'y': pgx.DynamicValue(window, 'screenWidth', percent=1.5),
+          'width': pgx.DynamicValue(window, 'screenWidth', percent=6),
+          'height': pgx.DynamicValue(window, 'screenWidth', percent=3)
+        }, colors.primary, 4
+      ), 'Menu', 'Helvetica', colors.text
+    ), pgx.CallbackSet((
       pgx.Callback(
         ('mouseDown',),
         triggerMenuAnimation
       ),
-    ))
+    )),
+    2,
+    colors.secondary,
+    colors.secondary,
+    colors.primary
   )
 
   toggleText = pgx.TextBox(

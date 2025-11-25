@@ -67,7 +67,7 @@ class TextInput:
     self.textBox.paddingLeft = 2
     self.textBox.paddingRight = 2
 
-    self.__setupEvents()
+    self._setupEvents()
 
     self.update()
 
@@ -94,7 +94,7 @@ class TextInput:
 
     return splitArr
 
-  def __setupEvents(self):
+  def _setupEvents(self):
     def unicode():
       self.inputText += self.lastKey
 

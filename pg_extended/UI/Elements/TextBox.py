@@ -4,15 +4,15 @@ from pg_extended.Core import DynamicValue
 from pg_extended.UI.Elements.Section import Section
 
 ALIGNMENT_MAP = {
-  ('left', 'top'): 'topleft',
-  ('left', 'center'): 'midleft',
-  ('left', 'bottom'): 'bottomleft',
-  ('center', 'top'): 'midtop',
-  ('center', 'center'): 'center',
-  ('center', 'bottom'): 'midbottom',
-  ('right', 'top'): 'topright',
-  ('right', 'center'): 'midright',
-  ('right', 'bottom'): 'bottomright',
+  'left-top': 'topleft',
+  'left-center': 'midleft',
+  'left-bottom': 'bottomleft',
+  'center-top': 'midtop',
+  'center-center': 'center',
+  'center-bottom': 'midbottom',
+  'right-top': 'topright',
+  'right-center': 'midright',
+  'right-bottom': 'bottomright',
 }
 
 class TextBox:
@@ -46,6 +46,9 @@ class TextBox:
 
     self.section.update()
 
+    if self.text == '':
+      return None
+
     if self.fontSize:
       self.fontSize.resolveValue()
       fontSize = self.fontSize.value
@@ -68,7 +71,7 @@ class TextBox:
     if self.textColor.a < 255:
       self.textSurface.set_alpha(self.textColor.a)
 
-    key = (self.alignTextHorizontal, self.alignTextVertical)
+    key = f'{self.alignTextHorizontal}-{self.alignTextVertical}'
     pos_attr = ALIGNMENT_MAP[key]
 
     self.textRect = self.textSurface.get_rect(**{pos_attr: getattr(self.section.rect, pos_attr)})
@@ -79,5 +82,8 @@ class TextBox:
 
     if (drawSection is None and self.drawSectionDefault) or drawSection:
       self.section.draw(surface)
+
+    if self.text == '':
+      return None
 
     surface.blit(self.textSurface, self.textRect)

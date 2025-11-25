@@ -1,6 +1,17 @@
 import pygame as pg
 
+CURSOR_CONSTANTS = {
+  None: pg.SYSTEM_CURSOR_ARROW,
+  'arrow': pg.SYSTEM_CURSOR_ARROW,
+  'hand': pg.SYSTEM_CURSOR_HAND,
+  'ibeam': pg.SYSTEM_CURSOR_IBEAM
+}
+
 class EventManager:
+  @staticmethod
+  def setCursor(cursor):
+    pg.mouse.set_cursor(cursor)
+
   def handleEvents(self):
     if not self.running:
       return None
@@ -12,21 +23,16 @@ class EventManager:
       if event.type == pg.QUIT:
         self.running = False
       else:
-        cursorChange = 'arrow'
+        cursorChange = None
 
         if self.activeScene is not None:
           cursorChange = self.activeScene.handleEvents(event)
 
         for systemID in self.systemZ:
           if systemID in self.activeSystems:
-            if cursorChange == 'arrow':
+            if cursorChange is None:
               cursorChange = self.activeSystems[systemID].handleEvents(event)
             else:
               self.activeSystems[systemID].handleEvents(event)
 
-        if cursorChange == 'hand':
-          pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
-        elif cursorChange == 'arrow':
-          pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
-        elif cursorChange == 'ibeam':
-          pg.mouse.set_cursor(pg.SYSTEM_CURSOR_IBEAM)
+        self.setCursor(CURSOR_CONSTANTS[cursorChange])

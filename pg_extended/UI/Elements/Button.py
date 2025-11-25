@@ -1,37 +1,73 @@
+from typing import Literal
+from copy import copy
 import pygame as pg
+from pg_extended.Core import DynamicValue
 from pg_extended.Core import CallbackSet
 from pg_extended.Types import Background
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
 class Button:
-  def __init__(self, section: Section, pressedBackground: Background | None = None, borderColor: pg.Color | None = None, borderColorPressed: pg.Color | None = None, text: str | None = None, fontPath: str | None = None, textColor: pg.Color | None = None, border: int | None = 0, callback: CallbackSet = None):
-    self.section = section
-    self.defaultBackground = section.background
-    self.pressedBackground = pressedBackground
-    self.borderColor = borderColor
-    self.borderColorPressed = borderColorPressed
-    self.border = border
+  def __init__(self, textBox: TextBox, callback: CallbackSet = None, border: int = 0, borderCol: Background = None, pressedBG: Background = None, pressedBorderBG: Background = None):
+    self.textBox = textBox
     self.callback = callback
+    self.border = border
 
-    self.pressed = False
+    self.section = textBox.section
+
+    self.pressedBG = pressedBG
+    self.pressedBorderBG = pressedBorderBG
+
+    self.defaultBG = copy(self.section.background)
+    self.defaultBorderBG = borderCol
+
+    if self.border > 0:
+      self.borderSection = Section(
+        {
+          'x': DynamicValue(lambda: self.section.x - self.border),
+          'y': DynamicValue(lambda: self.section.y - self.border),
+          'width': DynamicValue(lambda: self.border * 2 + self.section.width),
+          'height': DynamicValue(lambda: self.border * 2 + self.section.height)
+        }, self.defaultBorderBG, self.section.borderRadius
+      )
+
     self.active = True
-    self.activeDraw = True
     self.activeUpdate = True
     self.activeEvents = True
+    self.activeDraw = True
+
+    self.pressed = False
+
     self.lazyUpdate = True
     self.lazyUpdateOverride = False
 
-    if self.border > 0:
-      self.borderRect = pg.Rect(section.x - border, section.y - border, section.width + (border * 2), section.height + (border * 2))
+  def switchBG(self):
+    if self.pressed:
+      if self.pressedBG:
+        self.section.background = self.pressedBG
 
-    if text:
-      self.textBox = TextBox(section, text, fontPath, textColor)
-      self.hasText = True
+      if self.borderSection and self.pressedBorderBG:
+        self.borderSection.background = self.pressedBorderBG
+
     else:
-      self.hasText = False
+      self.section.background = self.defaultBG
 
-    self.update()
+      if self.borderSection:
+        self.borderSection.background = self.defaultBorderBG
+
+    self.section.update()
+
+    if self.borderSection:
+      self.borderSection.update()
+
+  def handleCallback(self, event: pg.Event, eventType: Literal['mouseUp'] | Literal['mouseDown']):
+    if self.callback is None:
+      return None
+
+    if eventType == 'mouseUp' and not self.section.rect.collidepoint(event.pos):
+      return None
+
+    self.callback.call(eventType)
 
   def checkEvent(self, event: pg.Event) -> bool | None:
     if not (self.active and self.activeEvents):
@@ -40,23 +76,18 @@ class Button:
     if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.section.rect.collidepoint(event.pos):
       self.pressed = True
 
-      if self.pressedBackground:
-        self.section.background = self.pressedBackground
-        self.section.update()
+      self.switchBG()
 
-      if self.callback:
-        self.callback.call('mouseDown')
+      self.handleCallback(event, 'mouseDown')
 
       return True
 
     if event.type == pg.MOUSEBUTTONUP and self.pressed:
       self.pressed = False
-      self.section.background = self.defaultBackground
 
-      if self.callback and self.section.rect.collidepoint(event.pos):
-        self.callback.call('mouseUp')
+      self.switchBG()
 
-      self.section.update()
+      self.handleCallback(event, 'mouseUp')
 
       return True
 
@@ -66,28 +97,16 @@ class Button:
     if not (self.active and self.activeUpdate):
       return None
 
-    if self.hasText:
-      self.textBox.update()
-    else:
-      self.section.update()
-
-    newX, newY = self.section.x - self.border, self.section.y - self.border
-    newWidth, newHeight = self.section.width + (self.border * 2), self.section.height + (self.border * 2)
+    self.textBox.update()
 
     if self.border > 0:
-      self.borderRect.update(newX, newY, newWidth, newHeight)
+      self.borderSection.update()
 
   def draw(self, surface: pg.Surface):
     if not (self.active and self.activeDraw):
       return None
 
     if self.border > 0:
-      if self.pressed:
-        pg.draw.rect(surface, self.borderColorPressed, self.borderRect, border_radius = self.section.borderRadius)
-      else:
-        pg.draw.rect(surface, self.borderColor, self.borderRect, border_radius = self.section.borderRadius)
+      self.borderSection.draw(surface)
 
-    self.section.draw(surface)
-
-    if self.hasText:
-      self.textBox.draw(surface)
+    self.textBox.draw(surface, True)
