@@ -21,6 +21,8 @@ class Button:
     self.defaultBG = copy(self.section.background)
     self.defaultBorderBG = borderCol
 
+    self.borderSection = None
+
     if self.border > 0:
       self.borderSection = Section(
         {

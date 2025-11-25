@@ -41,11 +41,7 @@ def addOverlaySystem(window: pgx.Window):
         ('mouseDown',),
         triggerMenuAnimation
       ),
-    )),
-    2,
-    colors.secondary,
-    colors.secondary,
-    colors.primary
+    ))
   )
 
   toggleText = pgx.TextBox(
