@@ -1,4 +1,5 @@
-from pg_extended.Core.DynamicValue import DynamicValue
-from pg_extended.Core.AnimatedValue import AnimatedValue
-from pg_extended.Core.Callback import Callback
-from pg_extended.Core.Callback import CallbackSet
+from pg_extended.Core import Composites
+from pg_extended.Core import Base
+
+from pg_extended.Core.Composites import *
+from pg_extended.Core.Base import *

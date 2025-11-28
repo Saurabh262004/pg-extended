@@ -6,7 +6,7 @@ from pg_extended.Core import DynamicValue
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
-class Section:
+class Section():
   def __init__(self, dimensions: dict[str, DynamicValue], background: Background, borderRadius: float | None = 0, backgroundSizeType: str | None = 'fit', backgroundPosition: str | None = 'center', backgroundSizePercent: int | None = 100):
     self.dimensions = dimensions
     self.background = background

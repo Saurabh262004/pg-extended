@@ -1,9 +1,9 @@
 from typing import Any
-from pg_extended.Core import DynamicValue, AnimatedValue
-from pg_extended.Types import callableLike
+from pg_extended.Core.Base import DynamicValue, AnimatedValue
+from pg_extended.Types import CallableLike
 
 class Callback:
-  def __init__(self, triggers: list[str] | tuple[str], func: callableLike, staticArgs: dict[str, Any] = None, extraArgKeys: dict[str, str] = None):
+  def __init__(self, triggers: list[str] | tuple[str], func: CallableLike, staticArgs: dict[str, Any] = None, extraArgKeys: dict[str, str] = None):
     self.triggers = triggers
     self.func = func
     self.staticArgs = staticArgs or {}

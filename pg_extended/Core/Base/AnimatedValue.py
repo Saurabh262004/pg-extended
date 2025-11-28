@@ -1,6 +1,6 @@
 import time
 from copy import copy
-from pg_extended.Core.DynamicValue import DynamicValue
+from pg_extended.Core.Base.DynamicValue import DynamicValue
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
 DEFAULT_POS_VALS = ['start', 'end']

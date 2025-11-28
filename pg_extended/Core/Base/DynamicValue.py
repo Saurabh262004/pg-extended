@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Any
-from pg_extended.Types import callableLike
+from pg_extended.Types import CallableLike
 import types
 
 class DynamicValue:
@@ -10,7 +10,7 @@ class DynamicValue:
     self.args = args
     self.percent = percent
     self.value: Any = None
-    self.resolveValue: callableLike = None
+    self.resolveValue: CallableLike = None
 
     self.assignResolveMethod()
 
@@ -55,7 +55,7 @@ class DynamicValue:
     self.value = self.reference
 
   def assignResolveMethod(self):
-    from pg_extended.Core.AnimatedValue import AnimatedValue
+    from pg_extended.Core.Base.AnimatedValue import AnimatedValue
 
     # numbers with a percent value given
     if isinstance(self.reference, (int, float)) and self.percent is not None:

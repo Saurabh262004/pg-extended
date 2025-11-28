@@ -1,7 +1,7 @@
 from math import floor
 import pygame as pg
 from pg_extended.Types import TileIdentifier
-from pg_extended.Core.AnimatedValue import DynamicValue, AnimatedValue
+from pg_extended.Core import DynamicValue, AnimatedValue
 from pg_extended.Game.Elements.SpriteAnimation import SpriteAnimation
 from pg_extended.Game.Elements import Level
 
