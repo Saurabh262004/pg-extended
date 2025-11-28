@@ -151,9 +151,6 @@ class Section(RectArea):
     if not (self.active and self.activeDraw):
       return None
 
-    print(self.background)
-    print(self.drawReady)
-
     if isinstance(self.background, pg.Surface):
       surface.blit(self.drawReady, (self.imageX, self.imageY))
     elif isinstance(self.background, pg.Color):
