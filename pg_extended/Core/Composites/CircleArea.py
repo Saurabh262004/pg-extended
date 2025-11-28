@@ -4,12 +4,15 @@ from pg_extended.Core.Base.AnimatedValue import AnimatedValue
 type NumValue = DynamicValue | AnimatedValue | int | float
 
 class CircleArea:
-  def __init__(self, x: NumValue, y: NumValue, radius: NumValue):
-    self.dims = {
-      "x": x,
-      "y": y,
-      "radius": radius
-    }
+  def __init__(self, dimensions: dict[str, NumValue]):
+    self.dimensions = dimensions
+
+    if not len(self.dimensions) == 3:
+      raise ValueError(f'dimensions must contain 3 Dimension objects, received: {len(self.dimensions)}')
+
+    for key in ('x', 'y', 'radius'):
+      if not key in self.dimensions:
+        raise ValueError('dimensions must contain all of the following keys: \'x\', \'y\', \'radius\'')
 
     self.x: int | float
     self.y: int | float
@@ -18,12 +21,12 @@ class CircleArea:
     self.update()
 
   def getDimValue(self, key: str) -> int | float:
-    return self.dims[key].value if isinstance(self.dims[key], (DynamicValue, AnimatedValue)) else self.dims[key]
+    return self.dimensions[key].value if isinstance(self.dimensions[key], (DynamicValue, AnimatedValue)) else self.dimensions[key]
 
   def update(self):
-    for key in self.dims:
-      if isinstance(self.dims[key], (DynamicValue, AnimatedValue)):
-        self.dims[key].resolveValue()
+    for key in self.dimensions:
+      if isinstance(self.dimensions[key], (DynamicValue, AnimatedValue)):
+        self.dimensions[key].resolveValue()
 
     self.x = self.getDimValue("x")
     self.y = self.getDimValue("y")

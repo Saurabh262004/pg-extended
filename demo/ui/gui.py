@@ -95,13 +95,12 @@ def addOverlaySystem(window: pgx.Window):
         'height': pgx.DynamicValue(menuSection, 'width', percent=2)
       }, colors.back1, 2
     ),
-    pgx.Section(
+    pgx.Circle(
       {
         'x': pgx.DynamicValue(0),
         'y': pgx.DynamicValue(0),
-        'width': pgx.DynamicValue(menuSection, 'width', percent=3),
-        'height': pgx.DynamicValue(menuSection, 'width', percent=2)
-      }, colors.primary, 2
+        'radius': pgx.DynamicValue(menuSection, 'width', percent=1.5)
+      }, colors.primary
     ), (0, 100), 5, colors.text,
     pgx.CallbackSet((
       pgx.Callback(

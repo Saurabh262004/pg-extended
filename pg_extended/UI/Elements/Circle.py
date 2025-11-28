@@ -3,13 +3,14 @@ import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.Util import ImgManipulation
 from pg_extended.Util import Misc
-from pg_extended.Core import DynamicValue
+from pg_extended.Core import DynamicValue, CircleArea
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
 
-class Circle:
-  def __init__(self, dimensions: dict[str, DynamicValue], background: Background, backgroundSizeType: str | None = 'fit', backgroundSizePercent: int | None = 100):
-    self.dimensions = dimensions
+type NumValue = DynamicValue | int | float
+
+class Circle(CircleArea):
+  def __init__(self, dimensions: dict[str, NumValue], background: Background, backgroundSizeType: str | None = 'fit', backgroundSizePercent: int | None = 100):
     self.background = background
     self.backgroundSizeType = backgroundSizeType
     self.backgroundSizePercent = backgroundSizePercent
@@ -24,18 +25,10 @@ class Circle:
     self.lazyUpdate = True
     self.lazyUpdateOverride = False
 
-    if len(self.dimensions) != 3:
-      raise ValueError(f'dimensions must contain 4 Dimension objects, received: {len(self.dimensions)}')
-
-    if not Misc.allIn(('x', 'y', 'radius'), self.dimensions):
-      raise ValueError('dimensions must contain all of the following keys: \'x\', \'y\', \'radius\'')
-
     if not self.backgroundSizeType in VALID_SIZE_TYPES:
       raise ValueError(f'Invalid \"backgroundSizeType\" value, must be one of the following values: {VALID_SIZE_TYPES}')
 
-    self.x = self.dimensions['x'].value
-    self.y = self.dimensions['y'].value
-    self.radius = self.dimensions['radius'].value
+    super().__init__(dimensions)
 
     self.update()
 
@@ -43,12 +36,7 @@ class Circle:
     if not (self.active and self.activeUpdate):
       return None
 
-    for dim in self.dimensions:
-      self.dimensions[dim].resolveValue()
-
-    self.x = self.dimensions['x'].value
-    self.y = self.dimensions['y'].value
-    self.radius = self.dimensions['radius'].value
+    super().update()
 
     if isinstance(self.background, pg.Surface):
       if self.backgroundSizeType == 'fit':
