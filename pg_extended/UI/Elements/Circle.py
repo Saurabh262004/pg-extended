@@ -2,7 +2,6 @@ from math import sqrt
 import pygame as pg
 from pg_extended.Types import Background
 from pg_extended.Util import ImgManipulation
-from pg_extended.Util import Misc
 from pg_extended.Core import DynamicValue, CircleArea
 
 VALID_SIZE_TYPES = ('fit', 'fill', 'squish', 'none')
