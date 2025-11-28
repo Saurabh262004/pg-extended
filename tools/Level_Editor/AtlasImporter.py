@@ -55,16 +55,16 @@ def eventLoop(event: pg.event.Event):
 
   elif event.type == pg.KEYDOWN:
     if event.key == pg.K_UP or event.key == pg.K_w:
-      textureSection.backgroundOffset[1] += textureSection.drawImage.get_height() / 20
+      textureSection.backgroundOffset[1] += textureSection.drawReady.get_height() / 20
       update = True
     elif event.key == pg.K_DOWN or event.key == pg.K_s:
-      textureSection.backgroundOffset[1] -= textureSection.drawImage.get_height() / 20
+      textureSection.backgroundOffset[1] -= textureSection.drawReady.get_height() / 20
       update = True
     elif event.key == pg.K_LEFT or event.key == pg.K_a:
-      textureSection.backgroundOffset[0] += textureSection.drawImage.get_width() / 20
+      textureSection.backgroundOffset[0] += textureSection.drawReady.get_width() / 20
       update = True
     elif event.key == pg.K_RIGHT or event.key == pg.K_d:
-      textureSection.backgroundOffset[0] -= textureSection.drawImage.get_width() / 20
+      textureSection.backgroundOffset[0] -= textureSection.drawReady.get_width() / 20
       update = True
     elif event.key == pg.K_r:
       textureSection.backgroundSizePercent = 100
@@ -81,8 +81,8 @@ def drawLoop():
   ogTextureWidth = atlasImage.get_width()
   ogTextureHeight = atlasImage.get_height()
 
-  textureWidth = textureSection.drawImage.get_width()
-  textureHeight = textureSection.drawImage.get_height()
+  textureWidth = textureSection.drawReady.get_width()
+  textureHeight = textureSection.drawReady.get_height()
 
   textureWidthChange = textureWidth / ogTextureWidth
   textureHeightChange = textureHeight / ogTextureHeight
