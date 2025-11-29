@@ -66,7 +66,7 @@ class Section(RectArea):
       self.drawReady = result
 
   def applyRadiusToBackground(self, getFrom: Literal['raw', 'mid', 'final'], setTo: Literal['raw', 'mid', 'final']):
-    if not isinstance(self.background, pg.Surface) or self.borderRadius is None or self.borderRadius <= 0:
+    if not isinstance(self.background, pg.Surface):
       return None
 
     if getFrom == 'raw':
@@ -76,8 +76,11 @@ class Section(RectArea):
     else:
       sourceImage = self.drawReady
 
-    result = ImgManipulation.roundImage(sourceImage, self.borderRadius)
-    
+    if self.borderRadius is None or self.borderRadius <= 0:
+      result = sourceImage
+    else:
+      result = ImgManipulation.roundImage(sourceImage, self.borderRadius)
+
     if setTo == 'raw':
       self.background = result
     elif setTo == 'mid':
