@@ -110,9 +110,17 @@ class Slider():
 
     if self.dragElementType == 'section':
       if self.orientation == 'horizontal':
-        self.mapPosition = DynamicValue(lambda element: element.x + (element.width / 2), args={'element': self.dragElement})
+        self.mapPosition = DynamicValue(
+          lambda element: element.x + (element.width / 2),
+          args={'element': self.dragElement}
+        )
+
       else:
-        self.mapPosition = DynamicValue(lambda element: element.y + (element.height / 2), args={'element': self.dragElement})
+        self.mapPosition = DynamicValue(
+          lambda element: element.y + (element.height / 2),
+          args={'element': self.dragElement}
+        )
+
     else:
       if self.orientation == 'horizontal':
         self.mapPosition = self.dragElement.dimensions['x']
@@ -121,12 +129,21 @@ class Slider():
 
     filledSliderWidth = None
     filledSliderHeight = None
+
     if self.orientation == 'horizontal':
-      filledSliderWidth = DynamicValue(lambda params: params[0].value - params[1].x, args={'params': (self.mapPosition, self.section)})
+      filledSliderWidth = DynamicValue(
+        lambda mapPosition, section: max(0, mapPosition.value - section.x),
+        args={'mapPosition': self.mapPosition, 'section': self.section}
+      )
+
       filledSliderHeight = self.section.dimensions['height']
     else:
       filledSliderWidth = self.section.dimensions['width']
-      filledSliderHeight = DynamicValue(lambda params: params[0].value - params[1].y, args={'params': (self.mapPosition, self.section)})
+
+      filledSliderHeight = DynamicValue(
+        lambda mapPosition, section: max(0, mapPosition.value - section.y),
+        args={'mapPosition': self.mapPosition, 'section': self.section}
+      )
 
     self.filledSlider = Section(
       {
