@@ -7,3 +7,14 @@ from pg_extended.UI.Elements.Slider import Slider
 from pg_extended.UI.Elements.TextInput import TextInput
 
 type UIElement = Section | Circle | TextBox | Button | Toggle | Slider | TextInput
+
+__all__ = [
+  'Section',
+  'Circle',
+  'TextBox',
+  'Button',
+  'Toggle',
+  'Slider',
+  'TextInput',
+  'UIElement'
+]

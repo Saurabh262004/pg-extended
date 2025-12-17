@@ -1,6 +1,6 @@
 from pg_extended.UI.Elements import UIElement
 from pg_extended.UI.Elements import Circle
-from pg_extended.Util.CopyElement import CopyElement
+from pg_extended.UI.CopyElement import CopyElement
 from pg_extended.Core import DynamicValue
 
 class List:
@@ -19,30 +19,32 @@ class List:
     for i in range(length):
       newElement = CopyElement.copyElement(listElement)
 
-      if newElement.section:
+      if hasattr(newElement, 'section'):
         newElement.section.dimensions['x'] = self.listPos['x']
         newElement.section.dimensions['y'] = DynamicValue(self.getElementY, args={'index': i})
-      elif newElement.dimensions:
+      elif hasattr(newElement, 'dimensions'):
         newElement.dimensions['x'] = self.listPos['x']
         newElement.dimensions['y'] = DynamicValue(self.getElementY, args={'index': i})
 
       self.elements.append(newElement)
 
   def getElementY(self, index: int) -> int | float:
-    if self.listElement.section:
-      elementHeight = self.listElement.section.height
-    elif self.listElement.dimensions:
-      if isinstance(self.listElement, Circle):
-        elementHeight = self.listElement.radius * 2
+    if index > 0:
+      prevElement = self.elements[index-1]
+
+      if hasattr(prevElement, 'section'):
+        prevElementBase = prevElement.section.dimensions['y'].value + prevElement.section.dimensions['height'].value
+      elif hasattr(prevElement, 'dimensions'):
+        prevElementBase = prevElement.dimensions['y'].value + prevElement.dimensions['height'].value
       else:
-        elementHeight = self.listElement.height
+        self.listPos['y'].resolveValue()
 
-    self.spacing.resolveValue()
+        return self.listPos['y'].value
 
-    spacingValue = self.spacing.value
+      self.spacing.resolveValue()
+
+      return prevElementBase + self.spacing.value
 
     self.listPos['y'].resolveValue()
 
-    containerY = self.listPos['y'].value
-
-    return containerY + (index * (elementHeight + spacingValue))
+    return self.listPos['y'].value
