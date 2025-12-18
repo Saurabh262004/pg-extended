@@ -12,14 +12,14 @@ class ImgManipulation:
           containerSize[1] * (scalePercent / 100)
         )
       )
-    else:
-      return pg.transform.scale(
-        image,
-        (
-          containerSize[0] * (scalePercent / 100),
-          containerSize[1] * (scalePercent / 100)
-        )
+
+    return pg.transform.scale(
+      image,
+      (
+        containerSize[0] * (scalePercent / 100),
+        containerSize[1] * (scalePercent / 100)
       )
+    )
 
   # resizes the image to the smallest possible fit while preserving the original aspect ratio
   @staticmethod
@@ -35,8 +35,8 @@ class ImgManipulation:
 
     if smoothscale:
       return pg.transform.smoothscale(image, (newWidth, newHeight))
-    else:
-      return pg.transform.scale(image, (newWidth, newHeight))
+
+    return pg.transform.scale(image, (newWidth, newHeight))
 
   # resizes the image to the largest possible fit while preserving the original aspect ratio
   @staticmethod
@@ -52,8 +52,8 @@ class ImgManipulation:
 
     if smoothscale:
       return pg.transform.smoothscale(image, (newWidth, newHeight))
-    else:
-      return pg.transform.scale(image, (newWidth, newHeight))
+
+    return pg.transform.scale(image, (newWidth, newHeight))
 
   # returns an image with it's borders rounded.
   @staticmethod
