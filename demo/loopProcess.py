@@ -1,4 +1,3 @@
-import pygame as pg
 from demo import colors
 import pg_extended as pgx
 from demo import sharedResources
