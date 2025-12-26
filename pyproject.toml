@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pg-extended"
+version = "0.0.1b1"
+description = "A lightweight 2d game engine built on top of pygame."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Saurabh Jadhav", email = "pgextended.2025@gmail.com" }
+]
+
+dependencies = [
+  "pygame-ce",
+  "pyperclip",
+  "easygui"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/Saurabh262004/pg-extended"
