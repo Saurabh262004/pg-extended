@@ -17,7 +17,7 @@
 pip install pg-extended
 ```
 
-Inside you python project:
+Inside your python project:
 
 ```python
 import pg_extended
