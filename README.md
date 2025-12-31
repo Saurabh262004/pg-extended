@@ -13,15 +13,15 @@
 ---
 
 ## Installation
-> [!IMPORTANT]
-> pip install support will be added later on.
-
 ```
-git clone https://github.com/Saurabh262004/pg-extended.git 
+pip install pg-extended
 ```
 
-Copy the `pg_extended/` folder into the root directory of your project.  
-Make sure that the folder name remains exactly `pg_extended/`.
+Inside your python project:
+
+```python
+import pg_extended
+```
 
 ---
 
