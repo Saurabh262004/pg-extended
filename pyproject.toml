@@ -15,8 +15,7 @@ authors = [
 
 dependencies = [
   "pygame-ce",
-  "pyperclip",
-  "easygui"
+  "pyperclip"
 ]
 
 [tool.setuptools]
