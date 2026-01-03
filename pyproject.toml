@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pg-extended"
-version = "0.0.1b1"
+version = "0.0.1b2"
 description = "A lightweight 2d game engine built on top of pygame."
 readme = "README.md"
 requires-python = ">=3.9"
