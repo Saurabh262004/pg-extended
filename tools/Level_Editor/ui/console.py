@@ -7,215 +7,215 @@ from tools.Level_Editor.ui import colors
 from tools.Level_Editor.AtlasImporter import importAtlas
 
 def setAtlas():
-  try:
-    atlasURL = fileopenbox(title='Select Texture Atlas Image', filetypes=['*.png', '*.jpg', '*.jpeg', '*.bmp', '*.tga'])
+	try:
+		atlasURL = fileopenbox(title='Select Texture Atlas Image', filetypes=['*.png', '*.jpg', '*.jpeg', '*.bmp', '*.tga'])
 
-    if atlasURL is None:
-      print('No file selected')
-      return
+		if atlasURL is None:
+			print('No file selected')
+			return
 
-    atlas = importAtlas(atlasURL)
+		atlas = importAtlas(atlasURL)
 
-    if isinstance(atlas, pgx.TextureAtlas):
-      sharedAssets.atlases.append(atlas)
-  except Exception as e:
-    print('Error importing atlas:\n', e)
-    print_exc()
+		if isinstance(atlas, pgx.TextureAtlas):
+			sharedAssets.atlases.append(atlas)
+	except Exception as e:
+		print('Error importing atlas:\n', e)
+		print_exc()
 
 def add(app: pgx.Window):
-  global setAtlas
+	global setAtlas
 
-  console = pgx.System(preLoadState=True)
+	console = pgx.System(preLoadState=True)
 
-  consoleFrame = pgx.Section(
-    {
-      'x': pgx.DynamicValue(0),
-      'y': pgx.DynamicValue(0),
-      'width': pgx.DynamicValue(app, 'screenWidth', percent=30),
-      'height': pgx.DynamicValue(app, 'screenHeight')
-    }, colors.themes[sharedAssets.theme]['backdrop1']
-  )
+	consoleFrame = pgx.Section(
+		{
+			'x': pgx.DynamicValue(0),
+			'y': pgx.DynamicValue(0),
+			'width': pgx.DynamicValue(app, 'screenWidth', percent=30),
+			'height': pgx.DynamicValue(app, 'screenHeight')
+		}, colors.themes[sharedAssets.theme]['backdrop1']
+	)
 
-  importAtlasButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(consoleFrame, 'width', percent=2.5),
-        'y': pgx.DynamicValue(consoleFrame, 'width', percent=5),
-        'width': pgx.DynamicValue(consoleFrame, 'width', percent=90),
-        'height': pgx.DynamicValue(consoleFrame, 'height', percent=5)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ),
-    colors.themes[sharedAssets.theme]['secondary'],
-    text='Import  Atlas',
-    fontPath='Arial',
-    textColor=colors.themes[sharedAssets.theme]['text'],
-    callback=pgx.CallbackSet((
-      pgx.Callback(
-        ('mouseUp',),
-        setAtlas
-      ),
-    ))
-  )
+	importAtlasButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(consoleFrame, 'width', percent=2.5),
+				'y': pgx.DynamicValue(consoleFrame, 'width', percent=5),
+				'width': pgx.DynamicValue(consoleFrame, 'width', percent=90),
+				'height': pgx.DynamicValue(consoleFrame, 'height', percent=5)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		),
+		colors.themes[sharedAssets.theme]['secondary'],
+		text='Import	Atlas',
+		fontPath='Arial',
+		textColor=colors.themes[sharedAssets.theme]['text'],
+		callback=pgx.CallbackSet((
+			pgx.Callback(
+				('mouseUp',),
+				setAtlas
+			),
+		))
+	)
 
-  atlasList = pgx.Section(
-    {
-      'x': pgx.DynamicValue( 0),
-      'y': pgx.DynamicValue(consoleFrame, 'height', percent=10),
-      'width': pgx.DynamicValue(consoleFrame, 'width'),
-      'height': pgx.DynamicValue(consoleFrame, 'height', percent=39)
-    }, pg.Color(217, 217, 217)
-  )
+	atlasList = pgx.Section(
+		{
+			'x': pgx.DynamicValue( 0),
+			'y': pgx.DynamicValue(consoleFrame, 'height', percent=10),
+			'width': pgx.DynamicValue(consoleFrame, 'width'),
+			'height': pgx.DynamicValue(consoleFrame, 'height', percent=39)
+		}, pg.Color(217, 217, 217)
+	)
 
-  tilesGrid = pgx.Section(
-    {
-      'x': pgx.DynamicValue( 0),
-      'y': pgx.DynamicValue(consoleFrame, 'height', percent=50),
-      'width': pgx.DynamicValue(consoleFrame, 'width'),
-      'height': pgx.DynamicValue(consoleFrame, 'height', percent=50)
-    }, pg.Color(217, 217, 217)
-  )
+	tilesGrid = pgx.Section(
+		{
+			'x': pgx.DynamicValue( 0),
+			'y': pgx.DynamicValue(consoleFrame, 'height', percent=50),
+			'width': pgx.DynamicValue(consoleFrame, 'width'),
+			'height': pgx.DynamicValue(consoleFrame, 'height', percent=50)
+		}, pg.Color(217, 217, 217)
+	)
 
-  fileOptionsSection = saveLevelButton = loadLevelButton = importLevelButton = exportLevelButton = None
+	fileOptionsSection = saveLevelButton = loadLevelButton = importLevelButton = exportLevelButton = None
 
-  def fileAnimStart():
-    fileOptionsSection.lazyUpdateOverride = True
+	def fileAnimStart():
+		fileOptionsSection.lazyUpdateOverride = True
 
-    if fileOptionsAnim.hasPlayedOnce:
-      fileOptionsAnim.trigger(not fileOptionsAnim.reverse)
-    else:
-      fileOptionsAnim.trigger()
+		if fileOptionsAnim.hasPlayedOnce:
+			fileOptionsAnim.trigger(not fileOptionsAnim.reverse)
+		else:
+			fileOptionsAnim.trigger()
 
-    if fileOptionsAnim.reverse:
-      saveLevelButton.activeDraw = saveLevelButton.activeEvents = False
-      loadLevelButton.activeDraw = loadLevelButton.activeEvents = False
-      importLevelButton.activeDraw = importLevelButton.activeEvents = False
-      exportLevelButton.activeDraw = exportLevelButton.activeEvents = False
+		if fileOptionsAnim.reverse:
+			saveLevelButton.activeDraw = saveLevelButton.activeEvents = False
+			loadLevelButton.activeDraw = loadLevelButton.activeEvents = False
+			importLevelButton.activeDraw = importLevelButton.activeEvents = False
+			exportLevelButton.activeDraw = exportLevelButton.activeEvents = False
 
-  def fileAnimStop():
-    if fileOptionsSection is not None:
-      fileOptionsSection.lazyUpdateOverride = False
+	def fileAnimStop():
+		if fileOptionsSection is not None:
+			fileOptionsSection.lazyUpdateOverride = False
 
-      if not fileOptionsAnim.reverse:
-        saveLevelButton.activeDraw = saveLevelButton.activeEvents = True
-        loadLevelButton.activeDraw = loadLevelButton.activeEvents = True
-        importLevelButton.activeDraw = importLevelButton.activeEvents = True
-        exportLevelButton.activeDraw = exportLevelButton.activeEvents = True
+			if not fileOptionsAnim.reverse:
+				saveLevelButton.activeDraw = saveLevelButton.activeEvents = True
+				loadLevelButton.activeDraw = loadLevelButton.activeEvents = True
+				importLevelButton.activeDraw = importLevelButton.activeEvents = True
+				exportLevelButton.activeDraw = exportLevelButton.activeEvents = True
 
-    fileOptionsSection.update()
+		fileOptionsSection.update()
 
-  fileOptionsTrigger = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(consoleFrame, 'width'),
-        'y': pgx.DynamicValue( 0),
-        'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
-        'height': pgx.DynamicValue(consoleFrame, 'height', percent=6)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ),
-    colors.themes[sharedAssets.theme]['secondary'],
-    text='File',
-    fontPath='Arial',
-    textColor=colors.themes[sharedAssets.theme]['text'],
-    callback=pgx.CallbackSet((
-      pgx.Callback(
-        ('mouseDown',),
-        fileAnimStart
-      ),
-    ))
-  )
+	fileOptionsTrigger = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(consoleFrame, 'width'),
+				'y': pgx.DynamicValue( 0),
+				'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+				'height': pgx.DynamicValue(consoleFrame, 'height', percent=6)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		),
+		colors.themes[sharedAssets.theme]['secondary'],
+		text='File',
+		fontPath='Arial',
+		textColor=colors.themes[sharedAssets.theme]['text'],
+		callback=pgx.CallbackSet((
+			pgx.Callback(
+				('mouseDown',),
+				fileAnimStart
+			),
+		))
+	)
 
-  fileOptionsAnim = pgx.AnimatedValue(
-    (
-      pgx.DynamicValue(consoleFrame, 'height', percent=6),
-      pgx.DynamicValue(consoleFrame, 'height', percent=30)
-    ), 200, 'start', 'easeInOut', fileAnimStop
-  )
+	fileOptionsAnim = pgx.AnimatedValue(
+		(
+			pgx.DynamicValue(consoleFrame, 'height', percent=6),
+			pgx.DynamicValue(consoleFrame, 'height', percent=30)
+		), 200, 'start', 'easeInOut', fileAnimStop
+	)
 
-  fileOptionsSection = pgx.Section(
-    {
-      'x': pgx.DynamicValue(consoleFrame, 'width'),
-      'y': pgx.DynamicValue( 0),
-      'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
-      'height': pgx.DynamicValue(fileOptionsAnim, 'value')
-    }, colors.themes[sharedAssets.theme]['backdrop1'], 7
-  )
+	fileOptionsSection = pgx.Section(
+		{
+			'x': pgx.DynamicValue(consoleFrame, 'width'),
+			'y': pgx.DynamicValue( 0),
+			'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+			'height': pgx.DynamicValue(fileOptionsAnim, 'value')
+		}, colors.themes[sharedAssets.theme]['backdrop1'], 7
+	)
 
-  saveLevelButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
-        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=30),
-        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
-        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ), colors.themes[sharedAssets.theme]['secondary'], text='Save', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
-  )
+	saveLevelButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+				'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=30),
+				'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+				'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		), colors.themes[sharedAssets.theme]['secondary'], text='Save', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
+	)
 
-  loadLevelButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
-        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=50),
-        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
-        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ), colors.themes[sharedAssets.theme]['secondary'], text='Load', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
-  )
+	loadLevelButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+				'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=50),
+				'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+				'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		), colors.themes[sharedAssets.theme]['secondary'], text='Load', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
+	)
 
-  importLevelButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
-        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=70),
-        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
-        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ), colors.themes[sharedAssets.theme]['secondary'], text='Import', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
-  )
+	importLevelButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+				'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=70),
+				'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+				'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		), colors.themes[sharedAssets.theme]['secondary'], text='Import', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
+	)
 
-  exportLevelButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
-        'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
-        'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
-        'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
-      }, colors.themes[sharedAssets.theme]['primary'], 7
-    ), colors.themes[sharedAssets.theme]['secondary'], text='Export', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
-  )
+	exportLevelButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(lambda: (fileOptionsSection.x + (fileOptionsSection.width / 100) * 5)),
+				'y': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+				'width': pgx.DynamicValue(fileOptionsSection, 'width', percent=90),
+				'height': pgx.DynamicValue(fileOptionsSection, 'width', percent=15)
+			}, colors.themes[sharedAssets.theme]['primary'], 7
+		), colors.themes[sharedAssets.theme]['secondary'], text='Export', fontPath='Arial', textColor=colors.themes[sharedAssets.theme]['text']
+	)
 
-  fileOptionsTriggerBack = pgx.Section(
-    {
-      'x': pgx.DynamicValue(consoleFrame, 'width'),
-      'y': pgx.DynamicValue( 0),
-      'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
-      'height': pgx.DynamicValue(consoleFrame, 'width', percent=5)
-    }, colors.themes[sharedAssets.theme]['primary']
-  )
+	fileOptionsTriggerBack = pgx.Section(
+		{
+			'x': pgx.DynamicValue(consoleFrame, 'width'),
+			'y': pgx.DynamicValue( 0),
+			'width': pgx.DynamicValue(consoleFrame, 'width', percent=50),
+			'height': pgx.DynamicValue(consoleFrame, 'width', percent=5)
+		}, colors.themes[sharedAssets.theme]['primary']
+	)
 
-  saveLevelButton.activeDraw = False
-  loadLevelButton.activeDraw = False
-  importLevelButton.activeDraw = False
-  exportLevelButton.activeDraw = False
+	saveLevelButton.activeDraw = False
+	loadLevelButton.activeDraw = False
+	importLevelButton.activeDraw = False
+	exportLevelButton.activeDraw = False
 
-  console.addElements(
-    {
-      'consoleFrame': consoleFrame,
-      'importAtlasButton': importAtlasButton,
-      'atlasList': atlasList,
-      'fileOptionsTriggerBack': fileOptionsTriggerBack,
-      'fileOptionsSection': fileOptionsSection,
-      'saveLevelButton': saveLevelButton,
-      'loadLevelButton': loadLevelButton,
-      'importLevelButton': importLevelButton,
-      'exportLevelButton': exportLevelButton,
-      'fileOptionsTrigger': fileOptionsTrigger,
-      'tilesGrid': tilesGrid
-    }
-  )
+	console.addElements(
+		{
+			'consoleFrame': consoleFrame,
+			'importAtlasButton': importAtlasButton,
+			'atlasList': atlasList,
+			'fileOptionsTriggerBack': fileOptionsTriggerBack,
+			'fileOptionsSection': fileOptionsSection,
+			'saveLevelButton': saveLevelButton,
+			'loadLevelButton': loadLevelButton,
+			'importLevelButton': importLevelButton,
+			'exportLevelButton': exportLevelButton,
+			'fileOptionsTrigger': fileOptionsTrigger,
+			'tilesGrid': tilesGrid
+		}
+	)
 
-  app.customAnimatedValues['fileOptionsAnim'] = fileOptionsAnim
+	app.customAnimatedValues['fileOptionsAnim'] = fileOptionsAnim
 
-  app.addSystem(console, 'console')
+	app.addSystem(console, 'console')
 
-  app.setSystemZ('console', 1)
+	app.setSystemZ('console', 1)

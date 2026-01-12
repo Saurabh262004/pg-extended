@@ -5,12 +5,12 @@ import pg_extended as pgx
 
 # initialize stuff globally for access in other functions
 atlasDetails = {
-  'tileWidth': {'set': False, 'value': 16},
-  'tileHeight': {'set': False, 'value': 16},
-  'paddingX': {'set': False, 'value': 0},
-  'paddingY': {'set': False, 'value': 0},
-  'tilestOffsetX': {'set': False, 'value': 0},
-  'tilestOffsetY': {'set': False, 'value': 0}
+	'tileWidth': {'set': False, 'value': 16},
+	'tileHeight': {'set': False, 'value': 16},
+	'paddingX': {'set': False, 'value': 0},
+	'paddingY': {'set': False, 'value': 0},
+	'tilestOffsetX': {'set': False, 'value': 0},
+	'tilestOffsetY': {'set': False, 'value': 0}
 }
 
 window = None
@@ -24,337 +24,337 @@ initialMousePose = None
 dragging = False
 
 def eventLoop(event: pg.event.Event):
-  global initialMousePose, dragging, textureSection
-  update = False
+	global initialMousePose, dragging, textureSection
+	update = False
 
-  if event.type == pg.MOUSEWHEEL:
-    if event.y > 0:
-      textureSection.backgroundSizePercent *= 1.2
-    else:
-      textureSection.backgroundSizePercent /= 1.2
+	if event.type == pg.MOUSEWHEEL:
+		if event.y > 0:
+			textureSection.backgroundSizePercent *= 1.2
+		else:
+			textureSection.backgroundSizePercent /= 1.2
 
-    update = True
+		update = True
 
-  elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-    initialMousePose = pg.mouse.get_pos()
-    dragging = True
+	elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+		initialMousePose = pg.mouse.get_pos()
+		dragging = True
 
-  elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-    dragging = False
+	elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+		dragging = False
 
-  elif dragging and event.type == pg.MOUSEMOTION:
-    currentMousePos = pg.mouse.get_pos()
-    mouseDiffX = currentMousePos[0] - initialMousePose[0]
-    mouseDiffY = currentMousePos[1] - initialMousePose[1]
+	elif dragging and event.type == pg.MOUSEMOTION:
+		currentMousePos = pg.mouse.get_pos()
+		mouseDiffX = currentMousePos[0] - initialMousePose[0]
+		mouseDiffY = currentMousePos[1] - initialMousePose[1]
 
-    textureSection.backgroundOffset[0] += mouseDiffX
-    textureSection.backgroundOffset[1] += mouseDiffY
+		textureSection.backgroundOffset[0] += mouseDiffX
+		textureSection.backgroundOffset[1] += mouseDiffY
 
-    initialMousePose = currentMousePos
-    update = True
+		initialMousePose = currentMousePos
+		update = True
 
-  elif event.type == pg.KEYDOWN:
-    if event.key == pg.K_UP or event.key == pg.K_w:
-      textureSection.backgroundOffset[1] += textureSection.drawReady.get_height() / 20
-      update = True
-    elif event.key == pg.K_DOWN or event.key == pg.K_s:
-      textureSection.backgroundOffset[1] -= textureSection.drawReady.get_height() / 20
-      update = True
-    elif event.key == pg.K_LEFT or event.key == pg.K_a:
-      textureSection.backgroundOffset[0] += textureSection.drawReady.get_width() / 20
-      update = True
-    elif event.key == pg.K_RIGHT or event.key == pg.K_d:
-      textureSection.backgroundOffset[0] -= textureSection.drawReady.get_width() / 20
-      update = True
-    elif event.key == pg.K_r:
-      textureSection.backgroundSizePercent = 100
-      textureSection.backgroundOffset = [0, 0]
-      update = True
+	elif event.type == pg.KEYDOWN:
+		if event.key == pg.K_UP or event.key == pg.K_w:
+			textureSection.backgroundOffset[1] += textureSection.drawReady.get_height() / 20
+			update = True
+		elif event.key == pg.K_DOWN or event.key == pg.K_s:
+			textureSection.backgroundOffset[1] -= textureSection.drawReady.get_height() / 20
+			update = True
+		elif event.key == pg.K_LEFT or event.key == pg.K_a:
+			textureSection.backgroundOffset[0] += textureSection.drawReady.get_width() / 20
+			update = True
+		elif event.key == pg.K_RIGHT or event.key == pg.K_d:
+			textureSection.backgroundOffset[0] -= textureSection.drawReady.get_width() / 20
+			update = True
+		elif event.key == pg.K_r:
+			textureSection.backgroundSizePercent = 100
+			textureSection.backgroundOffset = [0, 0]
+			update = True
 
-  if update:
-    textureSection.update()
+	if update:
+		textureSection.update()
 
 def drawLoop():
-  textureX = textureSection.imageX
-  textureY = textureSection.imageY
+	textureX = textureSection.imageX
+	textureY = textureSection.imageY
 
-  ogTextureWidth = atlasImage.get_width()
-  ogTextureHeight = atlasImage.get_height()
+	ogTextureWidth = atlasImage.get_width()
+	ogTextureHeight = atlasImage.get_height()
 
-  textureWidth = textureSection.drawReady.get_width()
-  textureHeight = textureSection.drawReady.get_height()
+	textureWidth = textureSection.drawReady.get_width()
+	textureHeight = textureSection.drawReady.get_height()
 
-  textureWidthChange = textureWidth / ogTextureWidth
-  textureHeightChange = textureHeight / ogTextureHeight
+	textureWidthChange = textureWidth / ogTextureWidth
+	textureHeightChange = textureHeight / ogTextureHeight
 
-  tileWidth = atlasDetails['tileWidth']['value'] * textureWidthChange
-  tileHeight = atlasDetails['tileHeight']['value'] * textureHeightChange
+	tileWidth = atlasDetails['tileWidth']['value'] * textureWidthChange
+	tileHeight = atlasDetails['tileHeight']['value'] * textureHeightChange
 
-  paddingX = atlasDetails['paddingX']['value'] * textureWidthChange
-  paddingY = atlasDetails['paddingY']['value'] * textureHeightChange
+	paddingX = atlasDetails['paddingX']['value'] * textureWidthChange
+	paddingY = atlasDetails['paddingY']['value'] * textureHeightChange
 
-  textureOffsetX = atlasDetails['tilestOffsetX']['value'] * textureWidthChange
-  textureOffsetY = atlasDetails['tilestOffsetY']['value'] * textureHeightChange
+	textureOffsetX = atlasDetails['tilestOffsetX']['value'] * textureWidthChange
+	textureOffsetY = atlasDetails['tilestOffsetY']['value'] * textureHeightChange
 
-  totalTilesX = floor((textureWidth - textureOffsetX) / (tileWidth + paddingX))
-  totalTilesY = floor((textureHeight - textureOffsetY) / (tileHeight + paddingY))
+	totalTilesX = floor((textureWidth - textureOffsetX) / (tileWidth + paddingX))
+	totalTilesY = floor((textureHeight - textureOffsetY) / (tileHeight + paddingY))
 
-  for x in range(totalTilesX):
-    for y in range(totalTilesY):
-      pg.draw.rect(
-        window.screen,
-        pg.Color(255, 255, 255),
-        pg.Rect(
-          textureX + textureOffsetX + (x * (tileWidth + paddingX)),
-          textureY + textureOffsetY + (y * (tileHeight + paddingY)),
-          tileWidth,
-          tileHeight
-        ),
-        1
-      )
+	for x in range(totalTilesX):
+		for y in range(totalTilesY):
+			pg.draw.rect(
+				window.screen,
+				pg.Color(255, 255, 255),
+				pg.Rect(
+					textureX + textureOffsetX + (x * (tileWidth + paddingX)),
+					textureY + textureOffsetY + (y * (tileHeight + paddingY)),
+					tileWidth,
+					tileHeight
+				),
+				1
+			)
 
 def inputOnChange(inputValue: str, inputType: str):
-  if inputType == 'tileWidth':
-    defaultValue = 16
-  elif inputType == 'tileHeight':
-    defaultValue = 16
-  elif inputType == 'paddingX':
-    defaultValue = 0
-  elif inputType == 'paddingY':
-    defaultValue = 0
-  elif inputType == 'tilestOffsetX':
-    defaultValue = 0
-  elif inputType == 'tilestOffsetY':
-    defaultValue = 0
+	if inputType == 'tileWidth':
+		defaultValue = 16
+	elif inputType == 'tileHeight':
+		defaultValue = 16
+	elif inputType == 'paddingX':
+		defaultValue = 0
+	elif inputType == 'paddingY':
+		defaultValue = 0
+	elif inputType == 'tilestOffsetX':
+		defaultValue = 0
+	elif inputType == 'tilestOffsetY':
+		defaultValue = 0
 
-  try:
-    inputValue = int(inputValue)
-    if inputValue < 1:
-      inputValue = defaultValue
-  except:
-    inputValue = defaultValue
+	try:
+		inputValue = int(inputValue)
+		if inputValue < 1:
+			inputValue = defaultValue
+	except:
+		inputValue = defaultValue
 
-  atlasDetails[inputType]['set'] = True
-  atlasDetails[inputType]['value'] = inputValue
+	atlasDetails[inputType]['set'] = True
+	atlasDetails[inputType]['value'] = inputValue
 
-  inputElement = system.textInputs[f'{inputType}Input']
-  inputElement.inputText = str(inputValue)
-  inputElement.setTextBoxValue()
+	inputElement = system.textInputs[f'{inputType}Input']
+	inputElement.inputText = str(inputValue)
+	inputElement.setTextBoxValue()
 
 def closingSeq():
-  window.closeWindow()
+	window.closeWindow()
 
 def importAtlas(atlasURL: str) -> pgx.TextureAtlas | None:
-  print('what')
-  if not (os.path.exists(atlasURL) and os.path.isfile(atlasURL)):
-    print('File does not exist')
-    return None
+	print('what')
+	if not (os.path.exists(atlasURL) and os.path.isfile(atlasURL)):
+		print('File does not exist')
+		return None
 
-  global atlasDetails, window, system, atlasImage, textureSection, controlPanel, doneButton, atlas, eventLoop, drawLoop, inputOnChange, closingSeq
+	global atlasDetails, window, system, atlasImage, textureSection, controlPanel, doneButton, atlas, eventLoop, drawLoop, inputOnChange, closingSeq
 
-  window = pgx.Window('Atlas Importer', (1024, 576), customEventHandler=eventLoop, customDrawProcess=drawLoop)
+	window = pgx.Window('Atlas Importer', (1024, 576), customEventHandler=eventLoop, customDrawProcess=drawLoop)
 
-  system = pgx.System()
+	system = pgx.System()
 
-  atlasImage = pg.image.load(atlasURL)
+	atlasImage = pg.image.load(atlasURL)
 
-  textureSection = pgx.Section(
-    {
-      'x': pgx.DynamicValue(0),
-      'y': pgx.DynamicValue(window, 'screenHeight', percent=8),
-      'width': pgx.DynamicValue(window, 'screenWidth'),
-      'height': pgx.DynamicValue(window, 'screenHeight', percent=92)
-    }, atlasImage, backgroundSizeType='fit'
-  )
+	textureSection = pgx.Section(
+		{
+			'x': pgx.DynamicValue(0),
+			'y': pgx.DynamicValue(window, 'screenHeight', percent=8),
+			'width': pgx.DynamicValue(window, 'screenWidth'),
+			'height': pgx.DynamicValue(window, 'screenHeight', percent=92)
+		}, atlasImage, backgroundSizeType='fit'
+	)
 
-  textureSection.backgroundSmoothScale = False
+	textureSection.backgroundSmoothScale = False
 
-  controlPanel = pgx.Section(
-    {
-      'x': pgx.DynamicValue(0),
-      'y': pgx.DynamicValue(0),
-      'width': pgx.DynamicValue(window, 'screenWidth'),
-      'height': pgx.DynamicValue(window, 'screenHeight', percent=8)
-    }, pg.Color(20, 20, 20), 0
-  )
+	controlPanel = pgx.Section(
+		{
+			'x': pgx.DynamicValue(0),
+			'y': pgx.DynamicValue(0),
+			'width': pgx.DynamicValue(window, 'screenWidth'),
+			'height': pgx.DynamicValue(window, 'screenHeight', percent=8)
+		}, pg.Color(20, 20, 20), 0
+	)
 
-  doneButton = pgx.Button(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=90),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=16),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=68)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    pg.Color(137, 82, 182),
-    text='Done',
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    callback=pgx.CallbackSet((
-      pgx.Callback(
-        ('mouseUp',),
-        closingSeq
-      ),
-    ))
-  )
+	doneButton = pgx.Button(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=90),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=16),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=68)
+			}, pg.Color(50, 50, 50), 4
+		),
+		pg.Color(137, 82, 182),
+		text='Done',
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		callback=pgx.CallbackSet((
+			pgx.Callback(
+				('mouseUp',),
+				closingSeq
+			),
+		))
+	)
 
-  tileWidthInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=2),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='Tile Width',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'tileWidth'},
-      {'value': 'inputValue'}
-    )
-  )
+	tileWidthInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=2),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='Tile Width',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'tileWidth'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  tileHeightInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=12),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='Tile Height',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'tileHeight'},
-      {'value': 'inputValue'}
-    )
-  )
+	tileHeightInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=12),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='Tile Height',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'tileHeight'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  paddingXInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=22),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='paddingX',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'paddingX'},
-      {'value': 'inputValue'}
-    )
-  )
+	paddingXInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=22),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='paddingX',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'paddingX'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  paddingYInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=32),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='Padding Y',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'paddingY'},
-      {'value': 'inputValue'}
-    )
-  )
+	paddingYInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=32),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='Padding Y',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'paddingY'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  tilestOffsetXInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=42),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='Offset X',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'tilestOffsetX'},
-      {'value': 'inputValue'}
-    )
-  )
+	tilestOffsetXInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=42),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='Offset X',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'tilestOffsetX'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  tilestOffsetYInput = pgx.TextInput(
-    pgx.Section(
-      {
-        'x': pgx.DynamicValue(controlPanel, 'width', percent=52),
-        'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
-        'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
-        'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
-      }, pg.Color(50, 50, 50), 4
-    ),
-    fontPath='Helvetica',
-    textColor=pg.Color(250, 250, 250),
-    placeholder='Offset Y',
-    placeholderTextColor=pg.Color(150, 150, 150),
-    callback=pgx.Callback(
-      ('None',),
-      inputOnChange,
-      {'inputType': 'tilestOffsetY'},
-      {'value': 'inputValue'}
-    )
-  )
+	tilestOffsetYInput = pgx.TextInput(
+		pgx.Section(
+			{
+				'x': pgx.DynamicValue(controlPanel, 'width', percent=52),
+				'y': pgx.DynamicValue(controlPanel, 'height', percent=25),
+				'width': pgx.DynamicValue(controlPanel, 'width', percent=8),
+				'height': pgx.DynamicValue(controlPanel, 'height', percent=50)
+			}, pg.Color(50, 50, 50), 4
+		),
+		fontPath='Helvetica',
+		textColor=pg.Color(250, 250, 250),
+		placeholder='Offset Y',
+		placeholderTextColor=pg.Color(150, 150, 150),
+		callback=pgx.Callback(
+			('None',),
+			inputOnChange,
+			{'inputType': 'tilestOffsetY'},
+			{'value': 'inputValue'}
+		)
+	)
 
-  system.addElements(
-    {
-      'textureSection': textureSection,
-      'controlPanel': controlPanel,
-      'doneButton': doneButton,
-      'tileWidthInput': tileWidthInput,
-      'tileHeightInput': tileHeightInput,
-      'paddingXInput': paddingXInput,
-      'paddingYInput': paddingYInput,
-      'tilestOffsetXInput': tilestOffsetXInput,
-      'tilestOffsetYInput': tilestOffsetYInput
-    }
-  )
+	system.addElements(
+		{
+			'textureSection': textureSection,
+			'controlPanel': controlPanel,
+			'doneButton': doneButton,
+			'tileWidthInput': tileWidthInput,
+			'tileHeightInput': tileHeightInput,
+			'paddingXInput': paddingXInput,
+			'paddingYInput': paddingYInput,
+			'tilestOffsetXInput': tilestOffsetXInput,
+			'tilestOffsetYInput': tilestOffsetYInput
+		}
+	)
 
-  window.addSystem(system, 'system')
+	window.addSystem(system, 'system')
 
-  window.setSystemZ('system', 1)
+	window.setSystemZ('system', 1)
 
-  window.activateSystems('system')
+	window.activateSystems('system')
 
-  window.openWindow()
+	window.openWindow()
 
-  atlas = pgx.TextureAtlas(
-    atlasURL,
-    atlasDetails['tileWidth']['value'],
-    atlasDetails['tileHeight']['value'],
-    atlasDetails['paddingX']['value'],
-    atlasDetails['paddingY']['value'],
-    atlasDetails['tilestOffsetX']['value'],
-    atlasDetails['tilestOffsetY']['value']
-  )
+	atlas = pgx.TextureAtlas(
+		atlasURL,
+		atlasDetails['tileWidth']['value'],
+		atlasDetails['tileHeight']['value'],
+		atlasDetails['paddingX']['value'],
+		atlasDetails['paddingY']['value'],
+		atlasDetails['tilestOffsetX']['value'],
+		atlasDetails['tilestOffsetY']['value']
+	)
 
-  return atlas
+	return atlas

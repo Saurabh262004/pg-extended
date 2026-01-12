@@ -5,11 +5,11 @@ from pg_extended.Game.ViewPort import ViewPort
 from pg_extended.Game.Elements import *
 
 __all__ = [
-  'TextureAtlas',
-  'SpriteAnimation',
-  'Entity',
-  'Player',
-  'Level',
-  'Scene',
-  'ViewPort'
+	'TextureAtlas',
+	'SpriteAnimation',
+	'Entity',
+	'Player',
+	'Level',
+	'Scene',
+	'ViewPort'
 ]

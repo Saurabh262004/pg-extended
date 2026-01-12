@@ -3,6 +3,6 @@ import pg_extended as pgx
 from demo import sharedResources
 
 def loopProcess():
-  app: pgx.Window = sharedResources.data['app']
+	app: pgx.Window = sharedResources.data['app']
 
-  app.screen.fill(colors.back1)
+	app.screen.fill(colors.back1)

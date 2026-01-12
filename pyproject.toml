@@ -10,12 +10,12 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-  { name = "Saurabh Jadhav", email = "pgextended.2025@gmail.com" }
+	{ name = "Saurabh Jadhav", email = "pgextended.2025@gmail.com" }
 ]
 
 dependencies = [
-  "pygame-ce",
-  "pyperclip"
+	"pygame-ce",
+	"pyperclip"
 ]
 
 [tool.setuptools]

@@ -1,11 +1,11 @@
 {
-  "names": [
-    ["Mid1", "Mid2", "Mid3", "Mid4", "MidFloor1", "MidFloor2", "MidFloor3", "MidFloor4"],
-    ["TopLeft1", "TopLeft2", "TopLeft3", "TopLeft4", "TopRight1", "TopRight2", "TopRight3", "TopRight4"],
-    ["Left1", "Left2", "Left3", "Left4", "Right1", "Right2", "Right3", "Right4"],
-    ["BotLeft1", "BotLeft2", "BotLeft3", "BotLeft4", "BotRight1", "BotRight2", "BotRight3", "BotRight4"],
-    ["MidLeft1", "MidLeft2", "MidLeft3", "MidLeft4", "MidRight1", "MidRight2", "MidRight3", "MidRight4"],
-    ["LeftFloor1", "LeftFloor2", "LeftFloor3", "LeftFloor4", "RightFloor1", "RightFloor2", "RightFloor3", "RightFloor4"],
-    ["TopMid1", "TopMid2", "TopMid3", "TopMid4", "BotMid1", "BotMid2", "BotMid3", "BotMid4"]
-  ]
+	"names": [
+		["Mid1", "Mid2", "Mid3", "Mid4", "MidFloor1", "MidFloor2", "MidFloor3", "MidFloor4"],
+		["TopLeft1", "TopLeft2", "TopLeft3", "TopLeft4", "TopRight1", "TopRight2", "TopRight3", "TopRight4"],
+		["Left1", "Left2", "Left3", "Left4", "Right1", "Right2", "Right3", "Right4"],
+		["BotLeft1", "BotLeft2", "BotLeft3", "BotLeft4", "BotRight1", "BotRight2", "BotRight3", "BotRight4"],
+		["MidLeft1", "MidLeft2", "MidLeft3", "MidLeft4", "MidRight1", "MidRight2", "MidRight3", "MidRight4"],
+		["LeftFloor1", "LeftFloor2", "LeftFloor3", "LeftFloor4", "RightFloor1", "RightFloor2", "RightFloor3", "RightFloor4"],
+		["TopMid1", "TopMid2", "TopMid3", "TopMid4", "BotMid1", "BotMid2", "BotMid3", "BotMid4"]
+	]
 }
