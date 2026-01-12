@@ -9,7 +9,23 @@ from pg_extended.UI.Elements.TextBox import TextBox
 LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\f\v'
 
 class TextInput:
-	def __init__(self, section: Section, fontPath: str, textColor: pg.Color, max: int = -1, placeholder: str = None, placeholderTextColor: pg.Color = None, border: int = 0, borderColor: pg.Color = None, focusBorderColor: pg.Color = None, focusBackground: Background = None, callback: Callback = None, alignTextHorizontal: str = 'center', alignTextVertical: str = 'center'):
+	def __init__(
+			self,
+			section: Section,
+			fontPath: str,
+			textColor: pg.Color,
+			max: int = -1,
+			placeholder: str = '',
+			placeholderTextColor: pg.Color = pg.Color(50, 50, 50),
+			border: int = 0,
+			borderColor: pg.Color = None,
+			focusBorderColor: pg.Color = None,
+			focusBackground: Background = None,
+			callback: Callback = None,
+			alignTextHorizontal: str = 'center',
+			alignTextVertical: str = 'center'
+		):
+
 		self.section = section
 		self.fontPath = fontPath
 		self.textColor = textColor

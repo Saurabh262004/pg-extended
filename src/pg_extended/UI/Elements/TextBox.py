@@ -46,9 +46,6 @@ class TextBox:
 
 		self.section.update()
 
-		if self.text == '':
-			return None
-
 		if self.fontSize:
 			self.fontSize.resolveValue()
 			fontSize = self.fontSize.value
@@ -66,7 +63,9 @@ class TextBox:
 
 		self.paddingLeftStr = ' ' * self.paddingLeft
 		self.paddingRightStr = ' ' * self.paddingRight
-		self.textSurface = self.font.render(f'{self.paddingLeftStr}{self.text}{self.paddingRightStr}', True, self.textColor)
+		renderText = f'{self.paddingLeftStr}{self.text}{self.paddingRightStr}'
+
+		self.textSurface = self.font.render(renderText, True, self.textColor)
 
 		if self.textColor.a < 255:
 			self.textSurface.set_alpha(self.textColor.a)
@@ -83,7 +82,7 @@ class TextBox:
 		if (drawSection is None and self.drawSectionDefault) or drawSection:
 			self.section.draw(surface)
 
-		if self.text == '':
+		if self.text == '' or self.text is None:
 			return None
 
 		surface.blit(self.textSurface, self.textRect)
