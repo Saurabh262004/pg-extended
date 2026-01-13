@@ -14,9 +14,6 @@ class TextInput:
 			section: Section,
 			fontPath: str,
 			textColor: pg.Color,
-			max: int = -1,
-			placeholder: str = '',
-			placeholderTextColor: pg.Color = pg.Color(50, 50, 50),
 			border: int = 0,
 			borderColor: pg.Color = None,
 			focusBorderColor: pg.Color = None,
@@ -26,29 +23,36 @@ class TextInput:
 			alignTextVertical: str = 'center'
 		):
 
+		# controllable properties
 		self.section = section
 		self.fontPath = fontPath
 		self.textColor = textColor
-		self.max = max
-		self.placeholder = placeholder
-		self.placeholderTextColor = placeholderTextColor
+		self.max = -1
+		self.placeholder = ''
+		self.placeholderTextColor = textColor
 		self.border = border
 		self.borderColor = borderColor
 		self.focusBorderColor = focusBorderColor
 		self.background = self.section.background
 		self.focusBackground = focusBackground
 		self.callback = callback
+
 		self.alignTextHorizontal = alignTextHorizontal
 		self.alignTextVertical = alignTextVertical
 
-		self.inFocus = False
-		self.typing = False
 		self.active = True
 		self.activeDraw = True
 		self.activeUpdate = True
 		self.activeEvents = True
 		self.lazyUpdate = True
+
+		self.autoInputDelay = 0.5
+		self.autoInputInterval = 0.06
+		self.autoInputSpeedIncrease = 0.8
+
 		self.lazyUpdateOverride = False
+		self.inFocus = False
+		self.typing = False
 		self.inputText = ''
 		self.lastEvent = ''
 		self.lastKey = ''
@@ -56,10 +60,7 @@ class TextInput:
 		self.valueOnLastCallback = ''
 		self.typingStart = 0
 		self.lastAutoInputTime = 0
-		self.autoInputDelay = 0.5
-		self.autoInputInterval = 0.06
 		self.dynamicAutoInputInterval = self.autoInputInterval
-		self.autoInputSpeedIncrease = 0.8
 		self.autoInputMinInterval = 0.01
 		self.cursor: pg.Surface = None
 		self.cursorX: float = 0
@@ -226,7 +227,8 @@ class TextInput:
 		if self.inFocus:
 			self.cursorAlpha.resolveValue()
 
-			self.cursor = pg.Surface((2, self.textBox.textRect.height), pg.SRCALPHA)
+			if self.cursor is None or self.cursor.get_height() != self.textBox.textRect.height:
+				self.cursor = pg.Surface((2, self.textBox.textRect.height), pg.SRCALPHA)
 
 			self.cursor.fill((self.textColor.r, self.textColor.g, self.textColor.b, self.cursorAlpha.value))
 

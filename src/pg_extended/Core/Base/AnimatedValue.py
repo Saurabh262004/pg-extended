@@ -210,6 +210,8 @@ class AnimatedValue:
 
 		maximum performance version:
 		(B and not A) or (A and (B == C))
+
+		I know this shit ain't getting me a single extra frame.
 		'''
 
 		pickStart = (B and not A) or (A and (B == C))
