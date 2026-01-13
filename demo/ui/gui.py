@@ -143,13 +143,18 @@ def addOverlaySystem(window: pgx.Window):
 				'width': pgx.DynamicValue(menuSection, 'width', percent=30),
 				'height': pgx.DynamicValue(menuSection, 'width', percent=4)
 			}, colors.primary, 2
-		), 'Helvetica', colors.text, -1, 'Type here...', colors.back1,
+		), 'Helvetica', colors.text, 0,
 		callback=pgx.Callback(
 			('None',),
 			lambda v: print(f'got text: {v}'),
 			extraArgKeys={'value': 'v'}
 		)
 	)
+
+	textInput.placeholder = 'Type here...'
+	textInput.placeholderTextColor = colors.back1
+
+	textInput.setTextBoxValue()
 
 	window.customAnimatedValues['menuAnim'] = menuAnim
 
