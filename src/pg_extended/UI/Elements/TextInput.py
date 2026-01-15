@@ -141,7 +141,7 @@ class TextInput:
 			self.textBox.textColor = self.textColor
 			self.textBox.text = self.inputText
 
-	def handleCallback(self):
+	def _handleCallback(self):
 		if not self.active:
 			return None
 
@@ -150,31 +150,28 @@ class TextInput:
 
 			self.callback.call({'value': self.inputText})
 
-	def checkEvent(self, event: pg.Event) -> bool | None:
-		if not (self.active and self.activeEvents):
-			return None
+	def _mouseDownEvent(self, event: pg.Event):
+		if event.button == 1 and self.section.rect.collidepoint(event.pos):
+			if not self.inFocus:
+				self.inFocus = True
+				self.lazyUpdateOverride = True
 
-		if event.type == pg.MOUSEBUTTONDOWN:
-			if event.button == 1 and self.section.rect.collidepoint(event.pos):
-				if not self.inFocus:
-					self.inFocus = True
-					self.lazyUpdateOverride = True
+				self.cursorAlpha.trigger(False, -1, True)
 
-					self.cursorAlpha.trigger(False, -1, True)
+				if self.focusBackground:
+					self.section.background = self.focusBackground
+					self.section.update()
+		else:
+			self.inFocus = False
+			self.lazyUpdateOverride = False
 
-					if self.focusBackground:
-						self.section.background = self.focusBackground
-						self.section.update()
-			else:
-				self.inFocus = False
-				self.lazyUpdateOverride = False
+			self.cursorAlpha.terminate()
 
-				self.cursorAlpha.terminate()
+			self.section.background = self.background
+			self.section.update()
 
-				self.section.background = self.background
-				self.section.update()
-
-		elif self.inFocus and event.type == pg.KEYDOWN:
+	def _keyEvent(self, event: pg.Event):
+		if event.type == pg.KEYDOWN:
 			self.typing = True
 			self.typingStart = time.perf_counter()
 
@@ -210,7 +207,16 @@ class TextInput:
 				self.typing = False
 				self.dynamicAutoInputInterval = self.autoInputInterval
 
-				self.handleCallback()
+				self._handleCallback()
+
+	def checkEvent(self, event: pg.Event) -> bool | None:
+		if not (self.active and self.activeEvents):
+			return None
+
+		if event.type == pg.MOUSEBUTTONDOWN:
+			self._mouseDownEvent(event)
+		elif self.inFocus:
+			self._keyEvent(event)
 
 	def update(self):
 		if not (self.active and self.activeUpdate):
