@@ -55,10 +55,12 @@ def addOverlaySystem(window: pgx.Window):
 		), 'Toggle:', 'Helvetica', colors.text
 	)
 
+	toggleText.alignTextHorizontal = 'left'
+
 	toggle = pgx.Toggle(
 		pgx.Section(
 			{
-				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 5),
 				'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 21.5),
 				'width': pgx.DynamicValue(menuSection, 'width', percent=6),
 				'height': pgx.DynamicValue(menuSection, 'width', percent=3)
@@ -82,6 +84,8 @@ def addOverlaySystem(window: pgx.Window):
 		), 'Slider:', 'Helvetica', colors.text
 	)
 
+	sliderText.alignTextHorizontal = 'left'
+
 	def printSliderVal(v, et):
 		print(f'got {v} via {et}')
 
@@ -89,7 +93,7 @@ def addOverlaySystem(window: pgx.Window):
 		'horizontal',
 		pgx.Section(
 			{
-				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 5),
 				'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 8.45),
 				'width': pgx.DynamicValue(menuSection, 'width', percent=30),
 				'height': pgx.DynamicValue(menuSection, 'width', percent=2)
@@ -135,15 +139,17 @@ def addOverlaySystem(window: pgx.Window):
 		), 'Text Input:', 'Helvetica', colors.text
 	)
 
+	textInputText.alignTextHorizontal = 'left'
+
 	textInput = pgx.TextInput(
 		pgx.Section(
 			{
-				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 6),
+				'x': pgx.DynamicValue(lambda: menuSection.x + menuSection.width / 5),
 				'y': pgx.DynamicValue(lambda: menuSection.y + menuSection.width / 5.6),
 				'width': pgx.DynamicValue(menuSection, 'width', percent=30),
 				'height': pgx.DynamicValue(menuSection, 'width', percent=4)
 			}, colors.primary, 2
-		), 'Helvetica', colors.text, 0,
+		), 'Helvetica', colors.text,
 		callback=pgx.Callback(
 			('None',),
 			lambda v: print(f'got text: {v}'),
@@ -151,6 +157,7 @@ def addOverlaySystem(window: pgx.Window):
 		)
 	)
 
+	textInput.border = 0
 	textInput.placeholder = 'Type here...'
 	textInput.placeholderTextColor = colors.back1
 

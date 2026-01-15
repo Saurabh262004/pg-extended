@@ -41,6 +41,7 @@ class TextInput:
 		self.lazyUpdate = True
 
 		self.autoInputDelay = 0.5
+		self.autoInputMinInterval = 0.01
 		self.autoInputInterval = 0.06
 		self.autoInputSpeedIncrease = 0.8
 
@@ -48,19 +49,21 @@ class TextInput:
 		self.lazyUpdateOverride = False
 		self.inFocus = False
 		self.typing = False
+
 		self.inputText = ''
 		self.lastEvent = ''
 		self.lastKey = ''
-		self.events = {}
 		self.valueOnLastCallback = ''
+		self.events = {}
+
 		self.typingStart = 0
 		self.lastAutoInputTime = 0
-		self.dynamicAutoInputInterval = self.autoInputInterval
-		self.autoInputMinInterval = 0.01
+
 		self.cursor: pg.Surface = None
 		self.cursorX: float = 0
-
 		self.cursorAlpha = AnimatedValue((255, 0), 500, 'start', 'easeIn')
+
+		self.dynamicAutoInputInterval = self.autoInputInterval
 
 		if self.placeholderTextColor is None:
 			self.placeholderTextColor = self.textColor
@@ -81,7 +84,7 @@ class TextInput:
 		self.update()
 
 	@staticmethod
-	def getSplitText(text):
+	def getSplitText(text: str):
 		splitArr = ['']
 
 		for char in text:
