@@ -1,8 +1,7 @@
 import time
 import pyperclip
 import pygame as pg
-from pg_extended.Types import Background
-from pg_extended.Core import DynamicValue, AnimatedValue, Callback
+from pg_extended.Core import AnimatedValue, Callback
 from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.TextBox import TextBox
 
@@ -10,35 +9,30 @@ LINE_SPLIT_UNICODES = ' \t\u00A0\u2000\u200A\u3000'+',.;:!?\'\"(){}[]/\\|-_\n\r\
 
 class TextInput:
 	def __init__(
-			self,
-			section: Section,
-			fontPath: str,
-			textColor: pg.Color,
-			border: int = 0,
-			borderColor: pg.Color = None,
-			focusBorderColor: pg.Color = None,
-			focusBackground: Background = None,
-			callback: Callback = None,
-			alignTextHorizontal: str = 'center',
-			alignTextVertical: str = 'center'
-		):
+		self,
+		section: Section,
+		fontPath: str,
+		textColor: pg.Color,
+		callback: Callback = None
+	):
 
 		# controllable properties
 		self.section = section
 		self.fontPath = fontPath
 		self.textColor = textColor
+		self.callback = callback
+		self.placeholderTextColor = textColor
+
 		self.max = -1
 		self.placeholder = ''
-		self.placeholderTextColor = textColor
-		self.border = border
-		self.borderColor = borderColor
-		self.focusBorderColor = focusBorderColor
+		self.border = 1
+		self.borderColor = pg.Color(10, 10, 10)
+		self.focusBorderColor = pg.Color(10, 10, 10)
 		self.background = self.section.background
-		self.focusBackground = focusBackground
-		self.callback = callback
+		self.focusBackground = self.section.background
 
-		self.alignTextHorizontal = alignTextHorizontal
-		self.alignTextVertical = alignTextVertical
+		self.alignTextHorizontal = 'center'
+		self.alignTextVertical = 'center'
 
 		self.active = True
 		self.activeDraw = True
@@ -50,6 +44,7 @@ class TextInput:
 		self.autoInputInterval = 0.06
 		self.autoInputSpeedIncrease = 0.8
 
+		# things you probably shouldn't touch
 		self.lazyUpdateOverride = False
 		self.inFocus = False
 		self.typing = False
@@ -65,24 +60,21 @@ class TextInput:
 		self.cursor: pg.Surface = None
 		self.cursorX: float = 0
 
-		self.cursorAlpha: AnimatedValue = AnimatedValue(
-			[DynamicValue(255), DynamicValue(0)],
-			500, 'start', 'easeIn'
-		)
+		self.cursorAlpha = AnimatedValue((255, 0), 500, 'start', 'easeIn')
 
 		if self.placeholderTextColor is None:
 			self.placeholderTextColor = self.textColor
 
 		if self.border > 0:
-			self.borderRect = pg.Rect(self.section.x - border, self.section.y - border, self.section.width + (border * 2), self.section.height + (border * 2))
+			self.borderRect = pg.Rect(self.section.x - self.border, self.section.y - self.border, self.section.width + (self.border * 2), self.section.height + (self.border * 2))
 
 		self.textBox = TextBox(self.section, self.placeholder, self.fontPath, self.placeholderTextColor, False)
 
-		self.textBox.alignTextHorizontal = alignTextHorizontal
-		self.textBox.alignTextVertical = alignTextVertical
+		self.textBox.alignTextHorizontal = self.alignTextHorizontal
+		self.textBox.alignTextVertical = self.alignTextVertical
 
-		self.textBox.paddingLeft = 2
-		self.textBox.paddingRight = 2
+		self.textBox.paddingLeft = 1
+		self.textBox.paddingRight = 1
 
 		self._setupEvents()
 
