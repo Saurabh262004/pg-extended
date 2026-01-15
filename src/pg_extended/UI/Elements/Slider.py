@@ -6,7 +6,18 @@ from pg_extended.UI.Elements.Section import Section
 from pg_extended.UI.Elements.Circle import Circle
 
 class Slider():
-	def __init__(self, orientation: str, section: Section, dragElement: Section | Circle, valueRange: list[float] | tuple[float], scrollSpeed: float, filledSliderBackground: Background, callback: CallbackSet = None, hoverToScroll: bool | None = True):
+	def __init__(
+		self,
+		orientation: str,
+		section: Section,
+		dragElement: Section | Circle,
+		valueRange: list[float] | tuple[float],
+		scrollSpeed: float,
+		filledSliderBackground: Background,
+		callback: CallbackSet = None,
+		hoverToScroll: bool | None = True
+	):
+
 		self.orientation = orientation
 		self.section = section
 		self.valueRange = valueRange
