@@ -41,7 +41,7 @@ app = Window("Demo pgx window", (1280, 720))
 app.openWindow()
 ```
 
-> For more details, please checkout the [wiki page](../../wiki).
+> For more details, please checkout the [wiki](https://github.com/Saurabh262004/pg-extended/wiki).
 
 ---
 
