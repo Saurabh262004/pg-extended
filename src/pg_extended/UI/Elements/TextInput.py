@@ -65,9 +65,6 @@ class TextInput:
 
 		self.dynamicAutoInputInterval = self.autoInputInterval
 
-		if self.placeholderTextColor is None:
-			self.placeholderTextColor = self.textColor
-
 		if self.border > 0:
 			self.borderRect = pg.Rect(self.section.x - self.border, self.section.y - self.border, self.section.width + (self.border * 2), self.section.height + (self.border * 2))
 

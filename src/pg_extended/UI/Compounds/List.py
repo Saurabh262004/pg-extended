@@ -1,5 +1,4 @@
 from pg_extended.UI.Elements import UIElement
-from pg_extended.UI.Elements import Circle
 from pg_extended.UI.CopyElement import CopyElement
 from pg_extended.Core import DynamicValue
 

@@ -1,14 +1,19 @@
+from typing import Literal
 import time
 from copy import copy
 from pg_extended.Core.Base.DynamicValue import DynamicValue
+from pg_extended.Types import CallableLike
 
 INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
 DEFAULT_POS_VALS = ['start', 'end']
 
+INTERPOLATION_TYPES_TYPE = Literal['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
+DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
+
 type valuesType = list[DynamicValue | AnimatedValue | int | float] | list[DynamicValue | AnimatedValue | int | float]
 
 class AnimatedValue:
-	def __init__(self, values: valuesType, duration: float, defaultPos: str = 'start', interpolation: str = 'linear', callback: callable = None, customInterpolation: callable = None):
+	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None):
 		if len(values) < 2:
 			raise ValueError("Animator requires a minimum of two values to animate between.")
 
