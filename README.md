@@ -47,4 +47,4 @@ app.openWindow()
 
 ## [HVision](https://github.com/Saurabh262004/HVision)
 
-### A large project by me that uses pg_extended in a real environment.
+### A project by me that uses pg_extended in an actual real environment.
