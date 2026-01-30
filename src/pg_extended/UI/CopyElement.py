@@ -69,15 +69,12 @@ class CopyElement:
 	@staticmethod
 	def copyButton(button: Button) -> Button:
 		return Button(
-			CopyElement.copySection(button.section),
-			button.pressedBackground,
-			button.borderColor,
-			button.borderColorPressed,
-			button.textBox.text,
-			button.textBox.fontPath,
-			button.textBox.textColor,
+			CopyElement.copyTextBox(button.textBox),
+			button.callback,
 			button.border,
-			button.callback
+			button.defaultBorderBG,
+			button.pressedBG,
+			button.pressedBorderBG
 		)
 
 	@staticmethod

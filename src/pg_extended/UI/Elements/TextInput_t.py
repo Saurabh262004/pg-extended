@@ -102,8 +102,10 @@ class TextInput_t:
 					splitArr[-1] += char
 				else:
 					splitArr.append(char)
+
 			elif char in LINE_SPLIT_UNICODES:
 				splitArr.append(char)
+
 			else:
 				if splitArr[-1] and not splitArr[-1].isspace() and splitArr[-1] not in LINE_SPLIT_UNICODES:
 					splitArr[-1] += char
