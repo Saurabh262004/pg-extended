@@ -85,12 +85,23 @@ class TextInput_t:
 		self.lastAutoInputTime = 0
 		self.dynamicAutoInputInterval = self.autoInputInterval
 
-		self.cursor: Cursor = Cursor(2, self.section.height - 4)
+		if self.fontSize is None:
+			self.fontSize = DynamicValue(24)
 
 		if self.border > 0:
 			self.borderRect = pg.Rect(self.section.x - self.border, self.section.y - self.border, self.section.width + (self.border * 2), self.section.height + (self.border * 2))
 
-		self.textBoxes: list[TextBox] = []
+		self.textBoxes: list[TextBox] = [
+			TextBox(
+				{
+					'x': self.section.dimensions['x'],
+					'y': self.section.dimensions['y'],
+					'width': self.section.dimensions['width'],
+					'height': self.fontSize
+				},
+				self.placeholder, self.fontPath, self.placeholderTextColor, self.fontSize
+			)
+		]
 
 	@staticmethod
 	def getSplitText(text: str):
@@ -127,27 +138,62 @@ class TextInput_t:
 
 	def _setupEvents(self):
 		def unicode():
-			self.inputText += self.lastKey
+			self.rawInput += self.lastKey
 
 		def backspace():
-			self.inputText = self.inputText[:-1]
+			self.rawInput = self.rawInput[:-1]
+			self._removeEmptyTextBoxes()
 
 		def ctrlBackspace():
-			splitArr = self.getSplitText(self.inputText)
+			splitArr = self.getSplitText(self.rawInput)
 
-			self.inputText = ''.join(splitArr[:-1])
+			self.rawInput = ''.join(splitArr[:-1])
+
+			self._removeEmptyTextBoxes()
+
+		def enter():
+			self.rawInput += '\n'
+			self._addNewTextBox()
 
 		def copy():
-			pyperclip.copy(self.inputText)
+			pyperclip.copy(self.rawInput)
 
 		def paste():
-			self.inputText += pyperclip.paste()
+			self.rawInput += pyperclip.paste()
 
 		self.events = {
 			'unicode': unicode,
 			'backspace': backspace,
 			'ctrlBackspace': ctrlBackspace,
+			'enter': enter,
 			'copy': copy,
 			'paste': paste,
 			'pass': lambda: None
 		}
+
+	def _addNewTextBox(self):
+		boxIndex = len(self.textBoxes)
+
+		newBox = TextBox(
+			{
+				'x': self.section.dimensions['x'],
+				'y': DynamicValue(lambda: self.section.y + (boxIndex * self.fontSize.value)),
+				'width': self.section.dimensions['width'],
+				'height': self.fontSize
+			},
+			'', self.fontPath, self.textColor, self.fontSize
+		 )
+
+		newBox.alignTextHorizontal = self.alignTextHorizontal
+
+		self.textBoxes.append(newBox)
+
+	def _removeEmptyTextBoxes(self):
+		popBoxes = []
+
+		for i in range(len(self.textBoxes)-1, 0, -1):
+			if self.textBoxes[i].text == '':
+				popBoxes.append(i)
+
+		for index in popBoxes:
+			self.textBoxes.pop(index)
