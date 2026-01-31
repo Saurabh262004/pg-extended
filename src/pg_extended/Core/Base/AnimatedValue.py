@@ -10,7 +10,7 @@ DEFAULT_POS_VALS = ['start', 'end']
 INTERPOLATION_TYPES_TYPE = Literal['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
 DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
 
-type valuesType = list[DynamicValue | AnimatedValue | int | float] | list[DynamicValue | AnimatedValue | int | float]
+type valuesType = list[DynamicValue | AnimatedValue | int | float] | tuple[DynamicValue | AnimatedValue | int | float]
 
 class AnimatedValue:
 	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None):
@@ -132,6 +132,9 @@ class AnimatedValue:
 
 		self.value = processingVals[0]
 
+	def _getNormalizedT(self, elapsedTime: float) -> float:
+		return 1 - (elapsedTime / self.duration) if self.reverse else (elapsedTime / self.duration)
+
 	# calculate current animation time, get normalized t, call .interpolate() etc..
 	# most importantly this is the function you need to call to update the animated value
 	def resolveValue(self):
@@ -146,12 +149,7 @@ class AnimatedValue:
 		if elapsedTime >= self.duration:
 			self.finishAnim()
 		else:
-			if self.reverse:
-				t = 1 - (elapsedTime / self.duration)
-			else:
-				t = elapsedTime / self.duration
-
-			self.interpolate(t)
+			self.interpolate(self._getNormalizedT(elapsedTime))
 
 	# handle animation ends, repeats, callbacks used by .resolveValue()
 	def finishAnim(self):
