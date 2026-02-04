@@ -22,7 +22,7 @@ class Cursor:
 		self.textBox = textBox
 
 	def update(self):
-		# self.surface.x = self.x * 
+		# self.surface.x = self.x *
 		pass
 
 	def draw(self, surface: pg.Surface):
@@ -172,12 +172,12 @@ class TextInput_t:
 		}
 
 	def _addNewTextBox(self):
-		boxIndex = len(self.textBoxes)
+		newBox = None
 
 		newBox = TextBox(
 			{
 				'x': self.section.dimensions['x'],
-				'y': DynamicValue(lambda: self.section.y + (boxIndex * self.fontSize.value)),
+				'y': DynamicValue(lambda: self.section.y + (self.textBoxes.index(newBox) * self.fontSize.value), resolveNow=False),
 				'width': self.section.dimensions['width'],
 				'height': self.fontSize
 			},
@@ -191,7 +191,7 @@ class TextInput_t:
 	def _removeEmptyTextBoxes(self):
 		popBoxes = []
 
-		for i in range(len(self.textBoxes)-1, 0, -1):
+		for i in range(len(self.textBoxes)-2, 0, -1):
 			if self.textBoxes[i].text == '':
 				popBoxes.append(i)
 
