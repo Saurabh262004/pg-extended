@@ -33,8 +33,6 @@ class AnimatedValue:
 		self.callback = callback
 		self.defaultPos = defaultPos
 
-		self.updateValues()
-
 		if self.defaultPos == 'start':
 			self.value = self.rawValues[0]
 		else:

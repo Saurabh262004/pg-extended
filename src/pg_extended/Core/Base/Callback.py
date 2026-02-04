@@ -42,12 +42,15 @@ class Callback:
 
 		self.resolveArgs()
 
-		self.func(**self.resolvedArgs)
+		try:
+			self.func(**self.resolvedArgs)
+		except Exception as e:
+			print(f'Error calling callback function: {e}')
 
 class CallbackSet:
 	def __init__(self, callbacks: list[Callback] | tuple[Callback]):
 		self.callbacks = callbacks
-		self.callbacksDict = {}
+		self.callbacksDict: dict[str, list[Callback]] = {}
 
 		for callback in self.callbacks:
 			for tgr in callback.triggers:

@@ -4,7 +4,7 @@ from pg_extended.Types import CallableLike
 import types
 
 class DynamicValue:
-	def __init__(self, ref: Any, lookup: str | None = None, args: dict[str, Any] | None = None, percent: int | float | None = None):
+	def __init__(self, ref: Any, lookup: str | None = None, args: dict[str, Any] | None = None, percent: int | float | None = None, resolveNow: bool = True):
 		self.reference = ref
 		self.lookup = lookup
 		self.args = args
@@ -14,7 +14,7 @@ class DynamicValue:
 
 		self.assignResolveMethod()
 
-		self.resolveValue()
+		if resolveNow: self.resolveValue()
 
 	def _IFPer(self):
 		self.value = self.reference / 100 * self.percent
