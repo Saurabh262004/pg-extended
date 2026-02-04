@@ -13,7 +13,7 @@ DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
 type valuesType = list[DynamicValue | AnimatedValue | int | float] | tuple[DynamicValue | AnimatedValue | int | float]
 
 class AnimatedValue:
-	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None):
+	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None, resolveNow: bool = True):
 		if len(values) < 2:
 			raise ValueError("Animator requires a minimum of two values to animate between.")
 
@@ -33,10 +33,13 @@ class AnimatedValue:
 		self.callback = callback
 		self.defaultPos = defaultPos
 
-		if self.defaultPos == 'start':
-			self.value = self.rawValues[0]
-		else:
-			self.value = self.rawValues[-1]
+		if resolveNow:
+			self.updateValues()
+
+			if self.defaultPos == 'start':
+				self.value = self.rawValues[0]
+			else:
+				self.value = self.rawValues[-1]
 
 		self.animStart: float = None
 		self.reverse: bool = False
