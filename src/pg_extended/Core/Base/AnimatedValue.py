@@ -32,6 +32,7 @@ class AnimatedValue:
 		self.interpolation = interpolation
 		self.callback = callback
 		self.defaultPos = defaultPos
+		self.value = None
 
 		if resolveNow:
 			self.updateValues()

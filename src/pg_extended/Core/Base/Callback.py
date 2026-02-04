@@ -1,4 +1,5 @@
 from typing import Any
+from traceback import print_exc
 from pg_extended.Core.Base import DynamicValue, AnimatedValue
 from pg_extended.Types import CallableLike
 
@@ -46,6 +47,7 @@ class Callback:
 			self.func(**self.resolvedArgs)
 		except Exception as e:
 			print(f'Error calling callback function: {e}')
+			print_exc()
 
 class CallbackSet:
 	def __init__(self, callbacks: list[Callback] | tuple[Callback]):
