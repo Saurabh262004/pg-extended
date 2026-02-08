@@ -17,6 +17,9 @@ class AnimatedValue:
 		if len(values) < 2:
 			raise ValueError("Animator requires a minimum of two values to animate between.")
 
+		if duration <= 0:
+			raise ValueError("Invalid duration for animation.")
+
 		if not interpolation in INTERPOLATION_TYPES:
 			raise ValueError(f'Invalid interpolation type: {interpolation}. Must be one of: {INTERPOLATION_TYPES}')
 
@@ -33,6 +36,7 @@ class AnimatedValue:
 		self.callback = callback
 		self.defaultPos = defaultPos
 		self.value = None
+		self.reducer = self.deCasteljau
 
 		if resolveNow:
 			self.updateValues()
@@ -60,6 +64,7 @@ class AnimatedValue:
 		elif self.interpolation == 'custom':
 			self.interpolationStep = customInterpolation
 
+	# ---  interpolation functions ---
 	@staticmethod
 	def linear(start: float, end: float, t: float) -> float:
 		if t <= 0:
@@ -102,6 +107,21 @@ class AnimatedValue:
 
 		return start + (end - start) * t
 
+	# --- reduction functions ---
+	@staticmethod
+	def deCasteljau(vals: list[int | float], t: float, interpolation: CallableLike) -> int | float:
+		while len(vals) > 1:
+			tmp = []
+
+			for i in range(len(vals) - 1):
+				tmp.append(
+					interpolation(vals[i], vals[i + 1], t)
+				)
+
+			vals = tmp
+
+		return vals[0]
+
 	# get raw values from animated / dynamic values
 	def updateValues(self):
 		self.rawValues = []
@@ -123,19 +143,7 @@ class AnimatedValue:
 			self.value = self.rawValues[-1]
 			return
 
-		processingVals = copy(self.rawValues)
-
-		while len(processingVals) > 1:
-			tmp = []
-
-			for i in range(len(processingVals) - 1):
-				tmp.append(
-					self.interpolationStep(processingVals[i], processingVals[i + 1], t)
-				)
-
-			processingVals = tmp
-
-		self.value = processingVals[0]
+		self.value = self.reducer(copy(self.rawValues), t, self.interpolationStep)
 
 	def _getNormalizedT(self, elapsedTime: float) -> float:
 		return 1 - (elapsedTime / self.duration) if self.reverse else (elapsedTime / self.duration)
