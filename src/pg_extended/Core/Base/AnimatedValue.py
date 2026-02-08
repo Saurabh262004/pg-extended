@@ -1,6 +1,5 @@
 from typing import Literal
 import time
-from copy import copy
 from pg_extended.Core.Base.DynamicValue import DynamicValue
 from pg_extended.Types import CallableLike
 
@@ -12,58 +11,7 @@ DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
 
 type valuesType = list[DynamicValue | AnimatedValue | int | float] | tuple[DynamicValue | AnimatedValue | int | float]
 
-class AnimatedValue:
-	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None, resolveNow: bool = True):
-		if len(values) < 2:
-			raise ValueError("Animator requires a minimum of two values to animate between.")
-
-		if duration <= 0:
-			raise ValueError("Invalid duration for animation.")
-
-		if not interpolation in INTERPOLATION_TYPES:
-			raise ValueError(f'Invalid interpolation type: {interpolation}. Must be one of: {INTERPOLATION_TYPES}')
-
-		if interpolation == 'custom' and customInterpolation is None:
-			raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
-
-		if not defaultPos in DEFAULT_POS_VALS:
-			raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
-
-		self.values = values
-		self.rawValues: list[int | float] = []
-		self.duration = duration
-		self.interpolation = interpolation
-		self.callback = callback
-		self.defaultPos = defaultPos
-		self.value = None
-		self.reducer = self.deCasteljau
-
-		if resolveNow:
-			self.updateValues()
-
-			if self.defaultPos == 'start':
-				self.value = self.rawValues[0]
-			else:
-				self.value = self.rawValues[-1]
-
-		self.animStart: float = None
-		self.reverse: bool = False
-		self.repeats: int = 0
-		self.alternate: bool = False
-		self.hasPlayedOnce: bool = False
-		self.delay: int = 0
-
-		if self.interpolation == 'linear':
-			self.interpolationStep = self.linear
-		elif self.interpolation == 'easeIn':
-			self.interpolationStep = self.easeIn
-		elif self.interpolation == 'easeOut':
-			self.interpolationStep = self.easeOut
-		elif self.interpolation == 'easeInOut':
-			self.interpolationStep = self.easeInOut
-		elif self.interpolation == 'custom':
-			self.interpolationStep = customInterpolation
-
+class InterpolationAlgos:
 	# ---  interpolation functions ---
 	@staticmethod
 	def linear(start: float, end: float, t: float) -> float:
@@ -122,6 +70,58 @@ class AnimatedValue:
 
 		return vals[0]
 
+class AnimatedValue:
+	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None, resolveNow: bool = True):
+		if len(values) < 2:
+			raise ValueError("Animator requires a minimum of two values to animate between.")
+
+		if duration <= 0:
+			raise ValueError("Invalid duration for animation.")
+
+		if not interpolation in INTERPOLATION_TYPES:
+			raise ValueError(f'Invalid interpolation type: {interpolation}. Must be one of: {INTERPOLATION_TYPES}')
+
+		if interpolation == 'custom' and customInterpolation is None:
+			raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
+
+		if not defaultPos in DEFAULT_POS_VALS:
+			raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
+
+		self.values = values
+		self.rawValues: list[int | float] = []
+		self.duration = duration
+		self.interpolation = interpolation
+		self.callback = callback
+		self.defaultPos = defaultPos
+		self.value = None
+		self.reducer = InterpolationAlgos.deCasteljau
+
+		if resolveNow:
+			self.updateValues()
+
+			if self.defaultPos == 'start':
+				self.value = self.rawValues[0]
+			else:
+				self.value = self.rawValues[-1]
+
+		self.animStart: float = None
+		self.reverse: bool = False
+		self.repeats: int = 0
+		self.alternate: bool = False
+		self.hasPlayedOnce: bool = False
+		self.delay: int = 0
+
+		if self.interpolation == 'linear':
+			self.interpolationStep = InterpolationAlgos.linear
+		elif self.interpolation == 'easeIn':
+			self.interpolationStep = InterpolationAlgos.easeIn
+		elif self.interpolation == 'easeOut':
+			self.interpolationStep = InterpolationAlgos.easeOut
+		elif self.interpolation == 'easeInOut':
+			self.interpolationStep = InterpolationAlgos.easeInOut
+		elif self.interpolation == 'custom':
+			self.interpolationStep = customInterpolation
+
 	# get raw values from animated / dynamic values
 	def updateValues(self):
 		self.rawValues = []
@@ -143,7 +143,7 @@ class AnimatedValue:
 			self.value = self.rawValues[-1]
 			return
 
-		self.value = self.reducer(copy(self.rawValues), t, self.interpolationStep)
+		self.value = self.reducer(list(self.rawValues), t, self.interpolationStep)
 
 	def _getNormalizedT(self, elapsedTime: float) -> float:
 		return 1 - (elapsedTime / self.duration) if self.reverse else (elapsedTime / self.duration)
