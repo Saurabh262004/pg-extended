@@ -175,13 +175,15 @@ def addOverlaySystem(window: pgx.Window):
 
 	textInput.textBox.alignTextHorizontal = 'center'
 
-	overlaySystem.addElement(menuSection, 'menuSection')
-	overlaySystem.addElement(menuButton, 'menuButton')
-	overlaySystem.addElement(toggleText, 'toggleText')
-	overlaySystem.addElement(toggle, 'toggle')
-	overlaySystem.addElement(sliderText, 'sliderText')
-	overlaySystem.addElement(slider, 'slider')
-	overlaySystem.addElement(textInputText, 'textInputText')
-	overlaySystem.addElement(textInput, 'textInput')
+	overlaySystem.addElements({
+		'menuSection': menuSection,
+		'menuButton': menuButton,
+		'toggleText': toggleText,
+		'toggle': toggle,
+		'sliderText': sliderText,
+		'slider': slider,
+		'textInputText': textInputText,
+		'textInput': textInput
+	})
 
 	window.addSystem(overlaySystem, 'overlay')
