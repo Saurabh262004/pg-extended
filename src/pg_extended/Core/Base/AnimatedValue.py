@@ -117,8 +117,11 @@ class AnimatedValue:
 	def interpolate(self, t: float):
 		if t <= 0:
 			self.value = self.rawValues[0]
-		elif t >= 1:
+			return
+
+		if t >= 1:
 			self.value = self.rawValues[-1]
+			return
 
 		processingVals = copy(self.rawValues)
 
