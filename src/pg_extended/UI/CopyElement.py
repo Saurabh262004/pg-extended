@@ -97,24 +97,35 @@ class CopyElement:
 			slider.valueRange,	
 			slider.scrollSpeed,
 			slider.filledSliderBackground,
-			slider.onChangeInfo,
+			slider.callback,
 			slider.hoverToScroll
 		)
 
 	@staticmethod
 	def copyTextInput(textInput: TextInput) -> TextInput:
-		return TextInput(
+		element = TextInput(
 			CopyElement.copySection(textInput.section),
 			textInput.fontPath,
 			textInput.textColor,
-			textInput.max,
-			textInput.placeholder,
-			textInput.placeholderTextColor,
-			textInput.border,
-			textInput.borderColor,
-			textInput.focusBorderColor,
-			textInput.focusBackground,
-			textInput.onChangeInfo,
-			textInput.alignTextHorizontal,
-			textInput.alignTextVertical
+			textInput.callback
 		)
+
+		element.max = textInput.max
+		element.placeholder = textInput.placeholder
+		element.border = textInput.border
+		element.borderColor = textInput.borderColor
+		element.focusBorderColor = textInput.focusBorderColor
+		element.background = textInput.background
+		element.focusBackground = textInput.focusBackground
+		element.alignTextHorizontal = textInput.alignTextHorizontal
+		element.active = textInput.active
+		element.activeDraw = textInput.activeDraw
+		element.activeUpdate = textInput.activeUpdate
+		element.activeEvents = textInput.activeEvents
+		element.lazyUpdate = textInput.lazyUpdate
+		element.autoInputDelay = textInput.autoInputDelay
+		element.autoInputMinInterval = textInput.autoInputMinInterval
+		element.autoInputInterval = textInput.autoInputInterval
+		element.autoInputSpeedIncrease = textInput.autoInputSpeedIncrease
+
+		return element
