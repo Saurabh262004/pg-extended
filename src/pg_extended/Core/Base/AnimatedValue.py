@@ -3,14 +3,6 @@ import time
 from pg_extended.Core.Base.DynamicValue import DynamicValue
 from pg_extended.Types import CallableLike
 
-INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
-DEFAULT_POS_VALS = ['start', 'end']
-
-INTERPOLATION_TYPES_TYPE = Literal['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
-DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
-
-type valuesType = list[DynamicValue | AnimatedValue | int | float] | tuple[DynamicValue | AnimatedValue | int | float]
-
 class InterpolationAlgos:
 	# ---  interpolation functions ---
 	@staticmethod
@@ -70,8 +62,89 @@ class InterpolationAlgos:
 
 		return vals[0]
 
+	@staticmethod
+	def linearChain(vals: list[int | float], t: float, interpolation: CallableLike) -> int | float:
+		n = len(vals) - 1
+
+		segment = min(int(t * n), n - 1)
+
+		local_t = (t - (segment / n)) * n
+
+		return interpolation(vals[segment], vals[segment + 1], local_t)
+
+	@staticmethod
+	def step(vals: list[int | float], t: float, *_args) -> int | float:
+		index = int(t * len(vals))
+
+		index = min(index, len(vals) - 1)
+
+		return vals[index]
+
+	@staticmethod
+	def weighted(vals: list[int | float], t: float, *_args) -> int | float:
+		n = len(vals)
+
+		total_weight = 0.0
+		acc = 0.0
+
+		for i, v in enumerate(vals):
+			pos = i / (n - 1)
+			w = max(0.0, 1.0 - abs(t - pos))
+			acc += v * w
+			total_weight += w
+
+		return acc / total_weight if total_weight != 0 else vals[0]
+
+	@staticmethod
+	def catmullRom(vals: list[int | float], t: float, *_args) -> int | float:
+		padded = [vals[0]] + vals + [vals[-1]]
+		n = len(padded) - 3  # number of spline segments
+
+		seg = min(int(t * n), n - 1)
+		local_t = (t - seg / n) * n
+
+		p0, p1, p2, p3 = padded[seg:seg + 4]
+
+		t2 = local_t * local_t
+		t3 = t2 * local_t
+
+		val = 0.5 * (
+			2 * p1 +
+			(-p0 + p2) * local_t +
+			(2*p0 - 5*p1 + 4*p2 - p3) * t2 +
+			(-p0 + 3*p1 - 3*p2 + p3) * t3
+		)
+
+		return val
+
+INTERPOLATION_TYPES = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
+INTERPOLATION_TYPES_TYPE = Literal['linear', 'easeIn', 'easeOut', 'easeInOut', 'custom']
+
+REDUCER_TYPES = ['deCasteljau', 'linearChain', 'step', 'weighted', 'catmullRom', 'custom']
+REDUCER_TYPES_TYPE = Literal['deCasteljau', 'linearChain', 'step', 'weighted', 'catmullRom', 'custom']
+
+DEFAULT_POS_VALS = ['start', 'end']
+DEFAULT_POS_VALS_TYPE = Literal['start', 'end']
+
+type valuesType = list[DynamicValue | AnimatedValue | int | float] | tuple[DynamicValue | AnimatedValue | int | float]
+
+INTERPOLATION_MAP = {
+	'linear': InterpolationAlgos.linear,
+	'easeIn': InterpolationAlgos.easeIn,
+	'easeOut': InterpolationAlgos.easeOut,
+	'easeInOut': InterpolationAlgos.easeInOut
+}
+
+REDUCER_MAP = {
+	'deCasteljau': InterpolationAlgos.deCasteljau,
+	'linearChain': InterpolationAlgos.linearChain,
+	'step': InterpolationAlgos.step,
+	'weighted': InterpolationAlgos.weighted,
+	'catmullRom': InterpolationAlgos.catmullRom
+}
+
 class AnimatedValue:
-	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', callback: CallableLike = None, customInterpolation: CallableLike = None, resolveNow: bool = True):
+	def __init__(self, values: valuesType, duration: float, defaultPos: DEFAULT_POS_VALS_TYPE = 'start', interpolation: INTERPOLATION_TYPES_TYPE = 'linear', reducer: REDUCER_TYPES_TYPE = 'deCasteljau', callback: CallableLike = None, customInterpolation: CallableLike = None, customReducer: CallableLike = None, resolveNow: bool = True):
 		if len(values) < 2:
 			raise ValueError("Animator requires a minimum of two values to animate between.")
 
@@ -84,17 +157,17 @@ class AnimatedValue:
 		if interpolation == 'custom' and customInterpolation is None:
 			raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
 
-		if not defaultPos in DEFAULT_POS_VALS:
+		if not reducer in REDUCER_TYPES:
 			raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
 
 		self.values = values
 		self.rawValues: list[int | float] = []
 		self.duration = duration
 		self.interpolation = interpolation
+		self.reducer = reducer
 		self.callback = callback
 		self.defaultPos = defaultPos
 		self.value = None
-		self.reducer = InterpolationAlgos.deCasteljau
 
 		if resolveNow:
 			self.updateValues()
@@ -111,16 +184,15 @@ class AnimatedValue:
 		self.hasPlayedOnce: bool = False
 		self.delay: int = 0
 
-		if self.interpolation == 'linear':
-			self.interpolationStep = InterpolationAlgos.linear
-		elif self.interpolation == 'easeIn':
-			self.interpolationStep = InterpolationAlgos.easeIn
-		elif self.interpolation == 'easeOut':
-			self.interpolationStep = InterpolationAlgos.easeOut
-		elif self.interpolation == 'easeInOut':
-			self.interpolationStep = InterpolationAlgos.easeInOut
+		if self.interpolation in INTERPOLATION_MAP:
+			self.interpolationStep = INTERPOLATION_MAP[self.interpolation]
 		elif self.interpolation == 'custom':
 			self.interpolationStep = customInterpolation
+
+		if self.reducer in REDUCER_MAP:
+			self.reducer = REDUCER_MAP[self.reducer]
+		elif self.reducer == 'custom':
+			self.reducer = customReducer
 
 	# get raw values from animated / dynamic values
 	def updateValues(self):
@@ -218,16 +290,11 @@ class AnimatedValue:
 
 		condition for choosing first value:
 		(A and B and C) or (A and not B and not C) or (not A and B)
-		condition for choosing last value:
-		(A and B and not C) or (A and not B and C) or (not A and not B)
 
 		compacted:
-		(A and (B == C)) or (not A and B)
-
-		maximum performance version:
 		(B and not A) or (A and (B == C))
 
-		I know this shit ain't getting me a single extra frame.
+		I know this shit ain't getting me a single extra frame
 		'''
 
 		pickStart = (B and not A) or (A and (B == C))
