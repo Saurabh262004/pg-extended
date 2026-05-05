@@ -128,7 +128,7 @@ def add(app: pgx.Window):
 		(
 			pgx.DynamicValue(consoleFrame, 'height', percent=6),
 			pgx.DynamicValue(consoleFrame, 'height', percent=30)
-		), 200, 'start', 'easeInOut', fileAnimStop
+		), 200, interpolation='easeInOut', callback=fileAnimStop
 	)
 
 	fileOptionsSection = pgx.Section(

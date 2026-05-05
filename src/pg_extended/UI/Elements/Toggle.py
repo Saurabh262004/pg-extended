@@ -29,7 +29,7 @@ class Toggle:
 			[
 				DynamicValue(lambda v: v.section.x + (v.section.width * v.innerBoxPadding), args={'v': self}),
 				DynamicValue(lambda v: v.section.x + (v.section.width / 2), args={'v': self})
-			], 70, 'start', 'linear', self.animationCallback
+			], 70, callback=self.animationCallback
 		)
 
 		self.update()

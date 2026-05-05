@@ -30,9 +30,7 @@ class Entity:
 		self.animationInterpolator: AnimatedValue = AnimatedValue(
 			[DynamicValue(0), DynamicValue(self, 'animationFrames')],
 			1,
-			'start',
-			'linear',
-			self.terminateAnimation
+			callback=self.terminateAnimation
 		)
 
 	def initiate(self, level: Level, scene: 'Scene'): # type: ignore
