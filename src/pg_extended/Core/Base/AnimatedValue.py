@@ -151,6 +151,9 @@ class AnimatedValue:
 		if duration <= 0:
 			raise ValueError("Invalid duration for animation.")
 
+		if not defaultPos in DEFAULT_POS_VALS:
+			raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
+
 		if not interpolation in INTERPOLATION_TYPES:
 			raise ValueError(f'Invalid interpolation type: {interpolation}. Must be one of: {INTERPOLATION_TYPES}')
 
@@ -158,7 +161,10 @@ class AnimatedValue:
 			raise ValueError('Custom interpolation function must be provided when using "custom" interpolation type.')
 
 		if not reducer in REDUCER_TYPES:
-			raise ValueError(f'Invalid defaultPos: {defaultPos}. Must be one of: {DEFAULT_POS_VALS}')
+			raise ValueError(f'Invalid reducer: {reducer}. Must be one of: {REDUCER_TYPES}')
+
+		if reducer == 'custom' and customReducer is None:
+			raise ValueError('Custom reducer function must be provided when using "custom" reducer type.')
 
 		self.values = values
 		self.rawValues: list[int | float] = []
