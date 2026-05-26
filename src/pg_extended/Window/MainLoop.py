@@ -18,23 +18,12 @@ class MainLoop:
 		for avKey in self.customAnimatedValues:
 			self.customAnimatedValues[avKey].resolveValue()
 
-		if self.activeScene is not None:
-			self.activeScene.update()
-
 		for systemID in self.systemZ:
 			if systemID in self.activeSystems:
 				self.activeSystems[systemID].update()
 
 		if self.customLoopProcess is not None:
 			self.customLoopProcess()
-
-		if self.viewPort is not None:
-			self.viewPort.update()
-
-			if not self.viewPort.lazyRender:
-				self.viewPort.renderScene()
-
-			self.viewPort.draw()
 
 		for systemID in self.systemZ:
 			if systemID in self.activeSystems:

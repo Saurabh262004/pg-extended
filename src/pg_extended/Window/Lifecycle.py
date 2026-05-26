@@ -18,12 +18,7 @@ class Lifecycle:
 		self.running = True
 		self.secondResize = False
 
-		self.initiateActiveScene(self.screen)
-
 		self.initiateActiveSystems(self.screen)
-
-		if self.viewPort is not None:
-			self.viewPort.initiate(self.screen, self.activeScene)
 
 		self.resetUI()
 
@@ -35,7 +30,6 @@ class Lifecycle:
 	def closeWindow(self):
 		self.running = False
 		self.deactivateSystems('all')
-		self.deactivateScene()
 
 		del self.screen
 		del self.time

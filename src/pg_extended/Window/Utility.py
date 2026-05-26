@@ -19,12 +19,6 @@ class Utility:
 
 		return False
 
-	def setViewPort(self, viewPort: pgx.Game.ViewPort):
-		self.viewPort = viewPort
-
-		if self.running:
-			self.viewPort.initiate(self.screen, self.activeScene)
-
 	def resetUI(self):
 		if not self.running:
 			return None
