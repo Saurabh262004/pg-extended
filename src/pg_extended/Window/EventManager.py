@@ -25,9 +25,6 @@ class EventManager:
 			else:
 				cursorChange = None
 
-				if self.activeScene is not None:
-					cursorChange = self.activeScene.handleEvents(event)
-
 				for systemID in self.systemZ:
 					if systemID in self.activeSystems:
 						if cursorChange is None:
