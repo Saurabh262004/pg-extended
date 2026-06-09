@@ -22,6 +22,8 @@ class EventManager:
 
 			if event.type == pg.QUIT:
 				self.running = False
+			elif event.type == pg.MOUSEMOTION and self.BLOCK_EVENT_MOUSEMOTION:
+				continue
 			else:
 				cursorChange = None
 
