@@ -32,13 +32,6 @@ class Utility:
 		if self.customUpdateProcess is not None:
 			self.customUpdateProcess()
 
-		if self.activeScene is not None:
-			self.activeScene.lazyUpdate()
-
-		if self.viewPort is not None:
-			self.viewPort.update()
-			self.viewPort.renderScene()
-
 		for systemID in self.systemZ:
 			if systemID in self.activeSystems:
 				self.activeSystems[systemID].lazyUpdate()
