@@ -8,7 +8,6 @@
 ## Goal
 - Provide a dynamic, customizable, and intuitive system for building UI and game elements in pygame.
 - Handle repetitive UI / window management tasks for the user.
-- Eventually evolve into a small, modular game engine.
 
 ---
 
