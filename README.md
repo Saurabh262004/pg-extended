@@ -41,9 +41,3 @@ app.openWindow()
 ```
 
 > For more details, please checkout the [wiki](https://github.com/Saurabh262004/pg-extended/wiki).
-
----
-
-## [HVision](https://github.com/Saurabh262004/HVision)
-
-### A project by me that uses pg-extended in an actual real environment.
