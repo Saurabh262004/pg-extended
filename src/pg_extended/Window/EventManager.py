@@ -34,4 +34,6 @@ class EventManager:
 						else:
 							self.activeSystems[systemID].handleEvents(event)
 
-				self.setCursor(CURSOR_CONSTANTS[cursorChange])
+				if not (cursorChange == self.activeCursor):
+					self.setCursor(CURSOR_CONSTANTS[cursorChange])
+					self.activeCursor = cursorChange

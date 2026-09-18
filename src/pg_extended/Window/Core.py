@@ -28,5 +28,6 @@ class Window(SystemManager, EventManager, MainLoop, Lifecycle, Utility):
 		self.customAnimatedValues: dict[str, pgx.Core.AnimatedValue] = {}
 		self.customData: dict = {}
 		self.firstUpdate = True
+		self.activeCursor = None
 
 		self.BLOCK_EVENT_MOUSEMOTION = False
