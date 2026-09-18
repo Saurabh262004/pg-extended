@@ -6,6 +6,9 @@ from demo.ui.gui import addOverlaySystem
 # start a window with "demo" title, 854x480 resolution and custom loop process
 app = pgx.Window('demo', (854, 480), customLoopProcess=loopProcess)
 
+# set window fps cap to 144
+app.fps = 144
+
 # stored window in sharedResources for easy access in other modules
 sharedResources.data['app'] = app
 
