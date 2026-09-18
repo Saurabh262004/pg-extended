@@ -1,18 +1,22 @@
 # pg-extended
+
 *A lightweight UI wrapper and window manager for pygame.*
 
 > [!WARNING]
+>
 > - This library is in the early stages of development and may have many breaking changes in the future.  
 > - Some of the features are still to be refined and added.
 
 ## Goal
-- Provide a dynamic, customizable, and intuitive system for building UI and game elements in pygame.
+
+- Provide a dynamic, customizable, and intuitive system for building UI in pygame.
 - Handle repetitive UI / window management tasks for the user.
 
 ---
 
 ## Installation
-```
+
+```bash
 pip install pg-extended
 ```
 
@@ -24,7 +28,7 @@ import pg_extended
 
 ---
 
-# Example
+## Example
 
 A simple example of how to initialize an empty window with pg_extended.
 
