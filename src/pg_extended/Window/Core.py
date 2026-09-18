@@ -29,5 +29,3 @@ class Window(SystemManager, EventManager, MainLoop, Lifecycle, Utility):
 		self.customData: dict = {}
 		self.firstUpdate = True
 		self.activeCursor = None
-
-		self.BLOCK_EVENT_MOUSEMOTION = False
